@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Mezzi</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td{
+            text-align: left;
+            padding: 10px;
+            border-block: 1px solid #333;
+            color: #BBD1EA;
+        }
+        .cellContent {
+            display: flex;
+        }
+        span{
+            user-select: none;
+            cursor: pointer;
+        }
+        .elimina{
+            color: #7B0828;
+        }
+        .theadBtn, .action{
+            margin-left: 10px;
+            cursor: pointer;
+            user-select: none;
+            display: none;
+            outline: none;
+            border: none;
+            background: #0000;
+        }
+        .numero {
+            margin-left: 5px;
+        }
+
+        td a{
+            color: #7B0828;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <main>
+        <%- include('components/nuovoMezzoForm') %>
+        <table>
+            <form action="/admin/mezzi/delete" id="actionForm" method="POST">
+                <thead>
+                    <th>
+                        <span id="selectUsers" class="material-symbols-outlined">
+                            checklist
+                        </span>
+                        <button type="submit" class="elimina theadBtn action" name="action" value="elimina">
+                            <span class="material-symbols-outlined">
+                                delete_forever
+                            </span>
+                        </button>
+                    </th>
+                    <th>targa</th>
+                    <th>marca</th>
+                    <th>modello</th>
+                    <th>km</th>
+                    <th>anno</th>
+                    <th>note</th>
+                </thead>
+                <tbody>
+                    <% let index = 1 %>
+                    <% for(const mezzo of veicoli){ %>
+                        <tr>
+                            <td>
+                                <div class="cellContent">
+                                    <input class="action" type="checkbox" name="mezzo<%= index %>" value="<%= mezzo._id %>">
+                                    <div class="numero">
+                                        <%= index++ %>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="<%= `/admin/mezzo?id=${encodeURIComponent(mezzo._id)}` %> ">
+                                    <%= mezzo.targa %>
+                                </a>
+                            </td>
+                            <td><%= mezzo.marca %></td>
+                            <td><%= mezzo.modello %></td>
+                            <td><%= mezzo.km %> <strong>km</strong></td>
+                            <td><%= mezzo.anno %></td>
+                            <td><%= mezzo.note %></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </form>
+        </table>
+    </main>
+    <script>
+        const selectUsersBtn = document.getElementById('selectUsers');
+        const actionUsersTd = document.querySelectorAll('.action');
+        const actionUsersForm = document.getElementById('actionForm');
+        selectUsersBtn.addEventListener('click', () => {
+            actionUsersTd.forEach((td) => {
+                td.style.display = td.style.display != 'inline-flex' ? 'inline-flex' : 'none';
+            });
+        });
+
+        actionUsersForm.addEventListener('submit',event => {
+            const confirmSubmission = confirm("Sei sicuro di voler eliminare i mezzi selezionati?");
+            if (!confirmSubmission) event.preventDefault();
+        });
+    </script>
+</body>
+</html>

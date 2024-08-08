@@ -1,0 +1,115 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+img{
+    user-select: none;
+    -webkit-user-drag: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    padding-block: 25px;
+    max-width: 150px;
+    width: 100%;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: #71a1cb;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+form {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+form h2{
+    text-transform: uppercase;
+}
+.field{
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-block: 25px;
+}
+.field input{
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    border: none;
+    outline: none;
+    border-radius: 0;
+    background: #0000 !important;
+    border-bottom: 2px solid #333;
+    font-size: 1rem;
+}
+.field input::placeholder{
+    width: 100%;
+    transform: translateX(30px) translateY(2px);
+    transition: .5s;
+}
+.field:has(input:focus) input::placeholder{
+    transform: translateX(0) translateY(2px);
+}
+.field span{
+    position: absolute;
+    font-size: 1.5rem;
+    padding: 10px;
+    transition: .5s;
+}
+.field:has(input:focus, input:not(:placeholder-shown)) span{
+    transform: translateX(-30px);
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #1a6dcb;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+button[type="submit"]:hover {
+    background: #0056b3;
+}
+button[type="submit"] span{
+    transition: .5s;
+}
+button[type="submit"]:hover span {
+    transform: translateX(-10px);
+}
+.link {
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.link:hover {
+    color: #0056b3;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+}

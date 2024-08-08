@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: #71a1cb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100dvh;
+}
+img{
+    user-select: none;
+    -webkit-user-drag: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    padding-block: 25px;
+    max-width: 150px;
+    width: 100%;
+}
+h1 {
+    font-size: 1.5rem;
+    color: #fff;
+}
+p {
+    font-size: 1.3rem;
+    color: #f1f1f1;
+}

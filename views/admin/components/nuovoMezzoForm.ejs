@@ -1,0 +1,204 @@
+<style>
+
+#openModalBtn{
+    z-index: 1;
+    height: 150px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px 20px;
+    background: #0000;
+    border: none;
+    outline: none;
+    transition: .5s;
+}
+#openModalBtn span{
+    font-size: 2.5rem;
+    color: #f1f1f1;
+}
+#blurredBg{
+    display: none;
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f1f1f1;
+    opacity: 0;
+    transition: opacity .5s;
+}
+#modalContainer{
+    pointer-events: none;
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity .5s;
+}
+
+#nuovoMezzoForm{
+    pointer-events: all;
+    z-index: 3;
+    max-width: 400px;
+    width: 100%;
+    background: #7B0828;
+    border-radius: 10px;
+    padding: 35px;
+}
+#nuovoMezzoForm .field:has(:not(#closeModalBtn)){
+    width: 100%;
+    margin-block: 50px;
+}
+#nuovoMezzoForm .field:has(:not(#closeModalBtn, h3, button)){
+    display: flex;
+    flex-direction: column;
+    height: 30px;
+}
+#nuovoMezzoForm .field:has(#closeModalBtn){
+    cursor: pointer;
+    display: flex;
+    justify-content: end;
+    color: #A1C6EA;
+}
+#nuovoMezzoForm .title h3{
+    text-align: center;
+    font-size: 1.4rem;
+    color: #A1C6EA;
+}
+#nuovoMezzoForm .field label{
+    user-select: none;
+    cursor: text;
+    font-size: 1.2rem;
+    margin-bottom: -1.9rem; 
+    margin-left: 10px;
+    z-index: 3;
+    transition: .5s;
+}
+#nuovoMezzoForm .field input{
+    padding: 8px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background: #A1C6EA;
+    color: #7B0828;
+}
+#nuovoMezzoForm .field:has(input:focus, input:not(:placeholder-shown)) label {
+    margin-bottom: 0;
+    color: #A1C6EA;
+}
+
+#nuovoMezzoForm .field:has(button){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#nuovoMezzoForm .field button{
+    margin-top: 15px;
+}
+#nuovoMezzoForm .field button{
+    color: #507DBC;
+    font-size: 1.3rem;
+    cursor: pointer;
+    background: #A1C6EA;
+    padding: 10px 30px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    transition: .5s;
+}
+#nuovoMezzoForm .field button:hover{
+    scale: 1.2;
+    color: #7B0828;
+}
+
+</style>
+
+<div id="blurredBg"></div>
+
+<button id="openModalBtn">
+    <span class="material-symbols-outlined">
+        add
+    </span>
+</button>
+<section id="modalContainer">
+    
+    <form id="nuovoMezzoForm" action="/admin/mezzi/nuovoMezzo" method="POST">
+        <div class="field">
+            <span id="closeModalBtn" class="material-symbols-outlined">
+                close
+            </span>
+        </div>
+        <div class="title">
+            <h3>Nuovo Mezzo</h3>
+        </div>
+        <div class="field">
+            <label for="targa">Targa:</label>
+            <input type="text" id="targa" name="targa" required placeholder=" ">
+        </div>
+        <div class="field">
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" placeholder=" ">
+        </div>
+        <div class="field">
+            <label for="modello">Modello:</label>
+            <input type="text" id="modello" name="modello" placeholder=" ">
+        </div>
+        <div class="field">
+            <label for="descrizione">Descrizione:</label>
+            <input type="text" id="descrizione" name="descrizione" placeholder=" ">
+        </div>
+        <div class="field">
+            <label for="anno">Anno:</label>
+            <input type="number" id="anno" name="anno" min="1995" placeholder=" ">
+        </div>
+        <div class="field">
+            <label for="km">Km:</label>
+            <input type="number" id="km" name="km" placeholder=" ">
+        </div>
+        <div class="field">
+            <button type="submit">Salva</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const openModalBtn = document.getElementById('openModalBtn');
+        const blurredBg = document.getElementById('blurredBg');
+        const modalContainer = document.getElementById('modalContainer');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        openModalBtn.addEventListener('click', () => {
+            blurredBg.style.display = 'block';
+            modalContainer.style.display = 'flex';
+            openModalBtn.style.transform = 'rotateZ(45deg)';
+            setTimeout(() => {
+                blurredBg.style.opacity = .4;
+                modalContainer.style.opacity = 1;
+            }, 100);
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            closeSearchForm()
+        });
+        blurredBg.addEventListener('click', () => {
+            closeSearchForm()
+        });
+
+        const closeSearchForm = () => {
+            blurredBg.style.opacity = 0;
+            modalContainer.style.opacity = 0;
+            openModalBtn.style.transform = 'rotateZ(0)';
+            setTimeout(() => {
+                blurredBg.style.display = 'none';
+                modalContainer.style.display = 'none';
+            }, 500);
+        }
+    });
+</script>

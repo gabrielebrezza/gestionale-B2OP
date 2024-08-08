@@ -1,0 +1,180 @@
+@import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+body{
+    background: #04080F;
+}
+main{
+    margin-top: 150px;
+}
+.header {
+    top: 0;
+    position: fixed;
+    width: 100%;
+    height: 150px;
+    background: #7B0828;
+    color: #f1f1f1;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    z-index: 1;
+}
+#toggleMenuBtn {
+    font-size: 3.5rem;
+    cursor: pointer;
+    transition: 0.5s;
+    user-select: none;
+}
+#navBar {
+    position: fixed;
+    top: 150px;
+    background: #7B0828;
+    height: 100vh;
+    width: 0;
+    transition: 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    z-index: 1 !important;
+    overflow-x: hidden;
+}
+
+#navBar ul {
+    position: relative;
+    width: 100%;
+    display: none;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+#navBar ul li {
+    width: 100%;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 25px 10px;
+    list-style: none;
+    transition: 1s;
+}
+#navBar ul li a,
+.logoutBtn {
+    cursor: pointer;
+    text-decoration: none;
+    color: #f1f1f1;
+    font-weight: 750;
+    text-transform: capitalize;
+    margin-block: 25px;
+    transition: .5s;
+}
+#navBar ul li:has( > a):hover {
+    transform: translateX(10px);
+}
+#navBar ul li:hover {
+    background: #fff;
+}
+#navBar ul li:hover :where(a) {
+    color: #04080F;
+}
+#navBar ul li details{
+    position: relative;    
+}
+#navBar ul li details summary{
+    list-style: none;
+    color: #f1f1f1;
+    transition: .5s;
+}
+
+#navBar ul li details .headerField {
+    position: absolute;
+    transition: .5s;
+}
+
+#navBar ul li details[open] .headerField {
+    position: absolute;
+    left: 10%;
+    background-color: #7B0828;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+#navBar ul li details[open] .headerField a {
+    margin: 0 !important;
+    padding: 25px 10px;
+    border: 1px solid #fff;
+}
+#navBar ul li details .headerField a:first-child{
+    border-radius: 10px 10px 0 0;
+}
+#navBar ul li details .headerField a:last-child{
+    border-radius: 0 0 10px 10px;
+}
+
+.headerField a:not(:hover){
+    color: #fff !important;
+}
+details[open] .headerField {
+    position: absolute;
+    z-index: 435610 !important;
+}
+#navBar ul li#logOutList {
+    width: 300px;
+    border-top: 1px solid #fff;
+    border-bottom: none;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+#navBar ul li#logOutList:hover form button span{
+    color: #7B0828;
+}
+.logoutBtn {
+    height: 0;
+    background: #0000;
+    border: none;
+    outline: none;
+    padding-block: 2px;
+    font-weight: 1000;
+    color: #fff !important;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media (max-height: 870px) {
+    .header {
+        height: 75px;
+    }
+    #toggleMenuBtn {
+        font-size: 3rem !important;
+    }
+    #navBar {
+        top: 75px;
+    }
+    #navBar ul li {
+        padding: 15px 10px;
+    }
+    @media (max-height: 596px) {
+        #navBar ul li {
+            font-size: 0.8rem;
+        }
+        #navBar ul li {
+            padding: 7px 10px;
+        }
+        @media (max-height: 409px) {
+            #navBar ul li {
+                padding: 3px 10px;
+            }
+        }
+    }
+}
