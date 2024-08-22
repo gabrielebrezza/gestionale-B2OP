@@ -6,6 +6,7 @@
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
     <title>Admin - Mezzo</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         body{
             background: #71a1cb;
         }
@@ -138,14 +139,6 @@
         .imageForm input{
             display: none;
         }
-        tr:has(.attivo){
-            background: green;
-            color: #fff;
-        }
-        tr:has(.scaduto){
-            background: red;
-            color: #fff;
-        }
         .field{
             margin-top: 5px;
             display: flex;
@@ -154,18 +147,6 @@
         }
         .field p{
             font-weight: bold;
-        }
-        tr:has(input[value="respinto"]:checked){
-            background: red;
-            color: #fff;
-        }
-        tr:has(input[value="idoneo"]:checked){
-            background: green;
-            color: #fff;
-        }
-        tr:has(input[value="assente"]:checked){
-            background: orange;
-            color: #fff;
         }
 
         .formField{
@@ -196,7 +177,10 @@
         #newRentForm{
             display: flex;
         }
-        tfoot td button{
+        .customerLink, #noleggiatore{
+            text-transform: capitalize;
+        }
+        #newRentSubmitBtnContainer button{
             width: 100%;
             background: green;
             color: #f1f1f1;
@@ -212,6 +196,151 @@
             justify-content: center;
             flex-wrap: wrap;
         }
+        #blurredBg{
+            display: none;
+            z-index: 2;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f1f1f1;
+            opacity: 0;
+            transition: opacity .5s;
+        }
+        #newUserFormContainer{
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        #newUserForm{
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            background: #7B0828;
+        }
+        #newUserForm .field{
+            display: flex;
+            justify-content: space-between;
+            color:#f1f1f1;
+        }
+        #newUserForm .field:has(button){
+            width: 100%;
+            justify-content: center;
+        }
+        #newUserForm .field button{
+            padding: 10px 25px;
+            background: #5681a9;
+            color: #f1f1f1;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+.calendarWrapper{
+    max-width: 450px;
+    width: 100%;
+    background: #f1f1f1;
+    border-radius: 10px;
+    font-family: 'Poppins', 'sans-serif';
+}
+.calendarWrapper .calendarHead{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+.calendarHead .current-date{
+    text-transform: capitalize;
+    font-size: 1.45rem;
+    font-weight: 500;
+}
+.calendarHead .calendarIcons span{
+    height: 38px;
+    width: 38px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+    user-select: none;
+}
+.calendarHead .calendarIcons span:hover{
+    background: #f2f2f2;
+}
+.calendarHead .calendarIcons span:last-child{
+    margin-right: -10px;
+}
+.calendarMain{
+    padding: 20px;
+}
+.calendarMain ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.calendarMain .days{
+    margin-bottom: 20px;
+    z-index: -1;
+}
+.calendarMain .weeks li{
+    font-weight: 500;
+}
+.calendarMain ul li{
+    position: relative;
+    width: calc( 100% / 7);
+}
+.calendarMain .days li{
+    cursor: pointer;
+    margin-top: 30px;
+    z-index: 0;
+}
+.days li.inactive{
+    color: #aaa;
+}
+.days li.active{
+    color: #fff;
+}
+.calendarMain .days li:before{
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translateX(-50%) translateY(-50%);
+    background: #f2f2f2;
+}
+
+.days li:hover::before{
+    background: #f2f2f2;
+}
+.days li.active::before{
+    background: #64b659;
+}
+.days li.booked::before{
+    background: #7B0828;
+}.days li.booked.inactive::before{
+    background: #7B0828;
+    opacity: .6;
+}
+.days li.booked:not(.inactive){
+    color: #f2f2f2;
+}
+
+
     </style>
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -219,125 +348,234 @@
 </head>
 <body>
     <%- include('components/header.ejs') %>
-    <section class="documentSection">
+    
+    <main>
+        <%
+            let bookedDate = [];
+            for(const data of noleggi){
+                bookedDate.push(`${data.fromDate}:${data.toDate}`) 
+            }
+        %>
+        <div id="bookings" style="display:none;"><%=bookedDate%></div>
         
-        <div class="imageForms">
-            <form class="imageForm" id="profileImageForm">
-                <h2>Foto</h2>
-                <input type="hidden" name="id" value="<%= mezzo._id %>">
-                <input type="hidden"  name="location" id="profileLocation" value="immaginiRinnovi">
-                <img id="profilePic" src="<%= `/images?dir=${encodeURIComponent('immaginiRinnovi/')}${encodeURIComponent(mezzo._id)}.jpeg` %>" alt="Immagine Profilo" onerror="this.style.display='none';">
-
-                <input type="file" id="inputProfileFile" name="inputProfileFile" accept="image/*">
-                <div class="formField">
-                    <button type="submit" title="Salva Immagine">
-                        <span class="material-symbols-outlined">
-                            save
-                        </span>
-                    </button>
-                    <label class="uploadBtn" for="inputProfileFile" title="Carica Immagine">
-                        <span class="material-symbols-outlined">
-                            upload
-                        </span>
-                    </label>
-                    <button type="button" class="deleteButton" title="Elimina Immagine">
-                        <span class="material-symbols-outlined">
-                            delete
-                        </span>
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </section>
     <section id="tableSection">
-        <form id="updateMezzoForm" action="/admin/mezzo/updateMezzo" method="POST">
-            <table>
+        <div class="calendarWrapper">
+            <div class="calendarHead">
+                <p class="current-date"></p>
+                <div class="calendarIcons">
+                    <span id="prev" class="material-symbols-outlined">
+                        chevron_left
+                    </span>
+                    <span id="next" class="material-symbols-outlined">
+                        chevron_right
+                    </span>
+                </div>
+            </div>
+            <div class="calendarMain">
+                <ul class="weeks">
+                    <li>Lun</li>
+                    <li>Mar</li>
+                    <li>Mer</li>
+                    <li>Gio</li>
+                    <li>Ven</li>
+                    <li>Sab</li>
+                    <li>Dom</li>
+                </ul>
+                <ul class="days">
+                </ul>
+            </div>
+        </div>
+
+
+
+        
+            <table id="storicoNoleggi">
                 <thead>
-                    <tr>
-                        <th>Campo</th>
-                        <th>Valore</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <input type="hidden" name="id" value="<%= mezzo._id %>">
-                        <td>Targa</td>
-                        <td><input type="text" id="targa" name="targa" value="<%= mezzo.targa %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Marca</td>
-                        <td><input type="text" id="marca" name="marca" value="<%= mezzo.marca %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Modello</td>
-                        <td><input type="text" id="modello" name="modello" value="<%= mezzo.modello %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Descrizione</td>
-                        <td><input type="text" id="descrizione" name="descrizione" value="<%= mezzo.descrizione %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Anno</td>
-                        <td><input type="text" id="anno" name="anno" value="<%= mezzo.anno %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Km</td>
-                        <td><input type="text" id="km" name="km" value="<%= mezzo.km %>"></td>
-                    </tr>
-                    <tr>
-                        <td>Note</td>
-                        <td><textarea name="note" id="note"><%= mezzo.note %></textarea></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <td colspan="2"><button id="submitFormBtn" type="submit">Salva</button></td>
-                </tfoot>
-            </table>
-        </form>
-            <table>
-                <thead>
+                    <th>Iniziato</th>
                     <th>Da</th>
                     <th>A</th>
-                    <th>C. Fiscale</th>
+                    <th>Cliente</th>
                     <th>Km</th>
-                    <th>Serbatoio Inizio</th>
                     <th>Serbatoio Fine</th>
+                    <th>Prezzo Finale</th>
                 </thead>
-                <form id="newRentForm" action="/admin/mezzi/newRent" method="POST">
+                
                 <tbody>
-                        <% for(const noleggio of mezzo.storicoNoleggi){ %>
-                            <tr>
-                                <td><%= noleggio.fromDate.split('-').reverse().join('/') %></td>
-                                <td><%= noleggio.toDate.split('-').reverse().join('/') %></td>
-                                <td><%= noleggio.noleggiatore %></td>
-                                <td><%= noleggio.km %> <strong>KM</strong></td>
-                                <td><%= noleggio.serbatoioInizio %> <strong>L</strong></td>
-                                <td><%= noleggio.serbatoioFine %> <strong>L</strong></td>
-                            </tr>
-                        <% } %>
+                    <form id="newRentForm" action="/admin/mezzi/newRent" method="POST">
                         <tr>
-                            <td id="newRentBtnTd" colspan="6">
-                                    <span id="newRentBtn" class="material-symbols-outlined">
+                            <td id="newRentBtnTd" colspan="7">
+                                    <span id="newRentBtn" class="material-symbols-outlined" style="cursor: pointer;">
                                         add
                                     </span>
                             </td>
                             <input type="hidden" name="id" value="<%= mezzo._id %>">
+                            <td class="newRentInput"></td>
                             <td class="newRentInput"><input type="date" name="fromDate" id="fromDate"></td>
                             <td class="newRentInput"><input type="date" name="toDate" id="toDate"></td>
-                            <td class="newRentInput"><input type="text" name="noleggiatore" id="noleggiatore"></td>
-                            <td class="newRentInput"><input type="number" name="km" id="km"></td>
-                            <td class="newRentInput"><input type="number" name="serbatoioInizio" id="serbatoioInizio"></td>
+                            <td class="newRentInput">
+                                <select name="customerId" id="noleggiatore">
+                                    <option value="newUser">Nuovo Utente</option>
+                                    <% for(const cliente of clienti){ %>
+                                        <option value="<%= cliente._id %>"><%= `${cliente.cognome} ${cliente.nome}` %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td class="newRentInput"><input type="number" name="km" id="km" min="<%= mezzo.km + 1 %>"></td>
                             <td class="newRentInput"><input type="number" name="serbatoioFine" id="serbatoioFine"></td>
+                            <td class="newRentInput"></td>
                         </tr>
+                        <tr>
+                            <td id="newRentSubmitBtnContainer" colspan="7" style="display: none;">
+                                <button type="submit">Salva</button>
+                            </td>
+                        </tr>
+                        </form>
+                        <% for(const noleggio of noleggi.reverse()){ %>
+
+                            <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                            <form action="/admin/mezzi/rentEnded" method="POST">
+                                <input type="hidden" name="idMezzo" value="<%= mezzo._id %>">
+                                <input type="hidden" name="rentId" value="<%= noleggio._id %>">
+                            <% } %>
+                                <tr>
+                                    <td>
+                                        <% if (!noleggio.kmStarting && !noleggio.km) { %>
+                                            <input type="checkbox" name="rentStarted" required>
+                                        <% }else{ %>
+                                            <span class="material-symbols-outlined" style="color: green; font-size: 2.3rem;">
+                                                check_circle
+                                            </span>
+                                        <% } %>
+                                    </td>
+                                    <td><%= noleggio.fromDate.split('-').reverse().join('/') %></td>
+                                    <td><%= noleggio.toDate.split('-').reverse().join('/') %></td>
+                                    <td>
+                                        <a class="customerLink" href="/admin/cliente?id=<%= encodeURIComponent(noleggio.customerId) %>">
+                                            <% const noleggiatore = clienti.find( cliente => cliente._id == noleggio.customerId) %>
+                                            <%= `${noleggiatore.cognome} ${noleggiatore.nome}` %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <% if(noleggio.km){ %>
+                                            <%= noleggio.km %>
+                                            <strong>KM</strong>
+                                        <% }else{ %>
+                                            <input type="number" name="km" min="<%= mezzo.km + 1 %>">
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if(noleggio.serbatoioFine){ %>
+                                            <%= noleggio.serbatoioFine %>
+                                            <strong>L</strong>
+                                        <% }else{ %>
+                                            <input type="number" name="serbatoioFine">
+                                        <% } %>
+
+                                        <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                                            <button type="submit">Salva</button>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if(noleggio.finalPrice){ %>
+                                            <%= noleggio.finalPrice %> € + IVA
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                            </form>
+                            <% } %>
+                        <% } %>
+                        
                  </tbody>
-                 <tfoot >
-                    <td id="newRentSubmitBtnContainer" colspan="6" style="display: none;">
-                        <button type="submit">Salva</button>
-                    </td>
-                 </tfoot>
                 </form>
             </table>
+
+
+
+
+            <form id="updateMezzoForm" action="/admin/mezzo/updateMezzo" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Valore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <input type="hidden" name="id" value="<%= mezzo._id %>">
+                            <td>Targa</td>
+                            <td><input type="text" id="targa" name="targa" value="<%= mezzo.targa %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Marca</td>
+                            <td><input type="text" name="marca" value="<%= mezzo.marca %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Modello</td>
+                            <td><input type="text" name="modello" value="<%= mezzo.modello %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Descrizione</td>
+                            <td><input type="text" name="descrizione" value="<%= mezzo.descrizione %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Anno</td>
+                            <td><input type="text" name="anno" value="<%= mezzo.anno %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Km</td>
+                            <td><input type="text" name="km" value="<%= mezzo.km %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Tipologia</td>
+                            <td>
+                                <select name="type">
+                                    <% 
+                                        let veicolsTypes = [ 'furgone', 'auto', 'moto'];
+                                        veicolsTypes = veicolsTypes.filter(type => type != mezzo.type)
+                                    %>
+                                    <option value="<%= mezzo.type %>"><%= mezzo.type %></option>
+                                    <% for(const type of veicolsTypes){ %>
+                                        <option value="<%= type %>"><%= type %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>€/D + IVA</td>
+                            <td><input type="number" name="dayPrice" min="1"  value="<%= mezzo.dayPrice %>"></td>
+                        </tr>
+                        <tr>
+                            <td>€/KM + IVA</td>
+                            <td><input type="number" name="kmPrice" min="0.01" step="0.01" value="<%= mezzo.kmPrice %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Km Inclusi</td>
+                            <td><input type="number" name="kmIncluded" min="0" value="<%= mezzo.kmIncluded %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Bollo</td>
+                            <td><input type="date" name="expPropTax" value="<%= mezzo.expPropTax %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Assicurazione</td>
+                            <td><input type="date" name="expInsurance" value="<%= mezzo.expInsurance %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Revisione</td>
+                            <td><input type="date" name="expRev" value="<%= mezzo.expRev %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Note</td>
+                            <td><textarea name="note"><%= mezzo.note %></textarea></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="2"><button id="submitFormBtn" type="submit">Salva</button></td>
+                    </tfoot>
+                </table>
+            </form>
     </section>
     
         <script>
@@ -353,5 +591,332 @@
                 }
             });
         </script>
+        <div id="blurredBg"></div>
+        <div id="newUserFormContainer">
+            <form action="/admin/mezzi/newRent" method="POST" id="newUserForm">
+                <input type="hidden" name="id" value="<%= mezzo._id %>">
+                <input type="hidden" name="fromDate" id="fromDateInputNewUser">
+                <input type="hidden" name="toDate" id="toDateInputNewUser">
+                <input type="hidden" name="km" id="kmInputNewUser">
+                <input type="hidden" name="serbatoioFine" id="serbatoioFineInputNewUser">
+                <div class="field">
+                    <label for="newUserName">Nome:</label>
+                    <input type="text" name="nome" id="newUserName">
+                </div>
+                <div class="field">
+                    <label for="newUserSurname">Cognome:</label>
+                    <input type="text" name="cognome" id="newUserSurname">
+                </div>
+                <div class="field">
+                    <label for="newUserCf">Codice Fiscale:</label>
+                    <input type="text" name="cf" id="newUserCf">
+                </div>
+                <div class="field">
+                    <label for="newUserVia">Via:</label>
+                    <input type="text" name="residenza[via]" id="newUserVia">
+                </div>
+                <div class="field">
+                    <label for="newUserCivico">Civico:</label>
+                    <input type="text" name="residenza[nCivico]" id="newUserCivico">
+                </div>
+                <div class="field">
+                    <label for="newUserCap">CAP:</label>
+                    <input type="text" name="residenza[cap]" id="newUserCap">
+                </div>
+                <div class="field">
+                    <label for="newUserComune">Comune:</label>
+                    <input type="text" name="residenza[comune]" id="newUserComune">
+                </div>
+                <div class="field">
+                    <label for="newUserProvincia">Provincia:</label>
+                    <input type="text" name="residenza[provincia]" id="newUserProvincia">
+                </div>
+                <div class="field">
+                    <label for="newUserEmail">Email:</label>
+                    <input type="text" name="contatti[email]" id="newUserEmail">
+                </div>
+                <div class="field">
+                    <label for="newUserTel">Tel:</label>
+                    <input type="text" name="contatti[tel]" id="newUserTel">
+                </div>
+                <div class="field">
+                    <button type="submit">Salva</button>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            const newRentForm = document.getElementById('newRentForm');
+            const noleggiatoreInput = document.getElementById('noleggiatore');
+            const blurredBg = document.getElementById('blurredBg');
+            const newUserFormContainer = document.getElementById('newUserFormContainer');
+            const fromDateoldInput = document.getElementById('fromDate');
+            const toDateoldInput = document.getElementById('toDate');
+            const kmoldInput = document.getElementById('km');
+            const serbatoioFineoldInput = document.getElementById('serbatoioFine');
+            const fromDateNewInput = document.getElementById('fromDateInputNewUser');
+            const toDateNewInput = document.getElementById('toDateInputNewUser');
+            const kmNewInput = document.getElementById('kmInputNewUser');
+            const serbatoioFineNewInput = document.getElementById('serbatoioFineInputNewUser');
+            newRentForm.addEventListener('submit', event =>{
+                if(new Date(fromDateoldInput.value) > new Date(toDateoldInput.value)){
+                    alert('La data di inizio non può essere maggiore di quella di fine');
+                    event.preventDefault();
+                    fromDateoldInput.focus();
+                    return;
+                };
+                if(noleggiatoreInput.value != 'newUser') return;
+                event.preventDefault();
+                blurredBg.style.display = 'block';
+                newUserFormContainer.style.display = 'flex';
+                setTimeout(() => {
+                    blurredBg.style.opacity = .4;
+                    modalContainer.style.opacity = 1;
+                }, 100);
+                fromDateNewInput.value = fromDateoldInput.value;
+                toDateNewInput.value = toDateoldInput.value;
+                kmNewInput.value = kmoldInput.value;
+                serbatoioFineNewInput.value = serbatoioFineoldInput.value;
+            })
+        </script>
+        <script>
+            const bookings = document.getElementById('bookings').innerText.split(',');
+            const currentDate = document.querySelector('.current-date'),
+            daysTag = document.querySelector('.days'),
+            prevNextIcons = document.querySelectorAll('.calendarIcons span')
+
+            let date = new Date(),
+            currYear = date.getFullYear(),
+            currMonth = date.getMonth();
+
+            const months = ['gennaio', 'febbrario', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+            const renderCalendar = () => {
+                let firstDateOfMonth = new Date(currYear, currMonth, 1).getDate(),
+                lastDateOfMonth = new Date(currYear, currMonth +1, 0).getDate(),
+                lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
+                let liTag = '';
+                let shownDays = 0;
+                for (let i = firstDateOfMonth; i > 0; i--) {
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split(':');
+                        const data = `${currMonth == 0 ? currYear-1 : currYear}-${currMonth == 0 ? 12 : currMonth < 10 ? `0${currMonth}`: currMonth}-${lastDateOfLastMonth-i+1 < 10 ? `0${lastDateOfLastMonth-i+1}`: lastDateOfLastMonth-i+1}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${lastDateOfLastMonth-i+1}</li>`;
+                    shownDays++;
+                }
+
+                for (let i = 1; i <= lastDateOfMonth; i++) {
+                    let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+                    && currYear === new Date().getFullYear() ? 'active' : '';
+
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split(':');
+                        const data = `${currYear}-${currMonth+1 < 10 ? `0${currMonth+1}`: currMonth+1}-${i < 10 ? `0${i}`: i}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+
+                    liTag += `<li class="${isToday} ${isBooked ? 'booked' : ''}">${i}</li>`;
+                    shownDays++
+                }
+                
+                for (let i = 35; i > shownDays; i--) {
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split(':');
+                        const data = `${currMonth == 11 ? currYear+1 : currYear}-${currMonth == 11 ? 1 : currMonth+2 < 10 ? `0${currMonth+2}`: currMonth+2}-${35-i+1 < 10 ? `0${35-i+1}`: 35-i+1}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+
+                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${35-i+1}</li>`;
+                }
+                currentDate.innerText = `${months[currMonth]} ${currYear}`;
+                daysTag.innerHTML = liTag;
+            }
+            renderCalendar();
+            
+            for(const icon of prevNextIcons){
+                icon.addEventListener('click', () =>{
+                    currMonth = icon.id == 'prev' ? currMonth-1 : currMonth +1;
+                    if(currMonth < 0 || currMonth > 11){
+                        date = new Date(currYear, currMonth);
+                        currYear = date.getFullYear();
+                        currMonth = date.getMonth();
+                    }else{
+                        date = new Date();
+                    }
+                    renderCalendar();
+                });
+            }
+        </script>
+    </main>
+
+    <%  const expAlert = new Date();
+        expAlert.setDate(expAlert.getDate() + 10);
+        expAlert.setUTCHours(0, 0, 0, 0);
+        const propTaxExpired = new Date(mezzo.expPropTax) <= expAlert,
+            insuranceExpired = new Date(mezzo.expInsurance) <= expAlert,
+            revExpired = new Date(mezzo.expRev) <= expAlert;
+    %>
+    <% if (propTaxExpired || insuranceExpired || revExpired) { %>
+        <style>
+            #alertModal{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                display: flex;
+                flex-direction: column;
+                background: #cccbcb;
+                color: #7B0828;
+                padding: 25px;
+                border-radius: 15px;
+                transition: opacity .5s ease-in-out;
+            }
+            .closeModal{
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 1.7rem;
+                cursor: pointer;
+            }
+            #alertModal h1{
+                margin-top: 15px;
+            }
+            #alertModal h1 ul{
+                display: flex;
+                flex-direction: column;
+                gap: 35px;
+            }
+            #alertModal h1 ul li{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .alarmIcon{
+                display: inline-block;
+                animation: shake .5s ease-in-out;
+                animation-iteration-count: infinite;
+            }
+            .alertIcon{
+                display: inline-block;
+                animation: scaleIcon .5s ease-in-out;
+                animation-iteration-count: infinite;
+            }
+            @keyframes scaleIcon {
+                0%, 100% { transform: scale(1);}
+                25%, 75% { transform: scale(1.1);}
+                50% { transform: scale(.9);}
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0);}
+                25%, 75% { transform: translateX(-3px) rotateZ(-15deg);}
+                50% { transform: translateX(3px) rotateZ(15deg);}
+            }
+        </style>
+        <article id="alertModal">
+            <span class="material-symbols-outlined closeModal">
+                close
+            </span>
+            <div class="head">
+                <h1>
+                    <ul>
+                        <% if (propTaxExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Bollo in scadenza
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span> 
+                                    <span class="countDown" data-expiration="<%= mezzo.expPropTax %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                        <% if (insuranceExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Assicurazione in scadenza
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span>
+                                    <span class="countDown" data-expiration="<%= mezzo.expInsurance %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                        <% if (revExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Revisione in scadenza 
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span>
+                                    <span class="countDown" data-expiration="<%= mezzo.expRev %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </h1>
+            </div>
+        </article>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const countDown = document.querySelectorAll('.countDown');
+
+            function updateCountDown(element) {
+                const expirationDate = new Date(element.dataset.expiration).getTime();
+                const now = new Date().getTime();
+                const distance = expirationDate - now;
+
+                if(distance <= 0){
+                    element.innerText = 'SCADUTA!!!';
+                    return;
+                }
+                const giorni = Math.floor(distance / (1000 * 60 *60 *24)),
+                      ore = Math.floor((distance % (1000 * 60 *60 *24)) / (1000 * 60 * 60)),
+                      minuti = Math.floor((distance % (1000 * 60 *60)) / (1000 * 60)),
+                      secondi = Math.floor((distance % (1000 * 60)) / 1000);
+                console.log(giorni, ore, minuti, secondi)
+                element.innerText = `${giorni} d ${ore} h ${minuti} min ${secondi} s`;
+            }
+
+            function updateAllCountDown(){
+                countDown.forEach(updateCountDown);
+            }
+            setInterval(updateAllCountDown, 1000);
+            updateAllCountDown();
+            const closeModal = document.querySelector('.closeModal');
+            const alertModal = document.getElementById('alertModal');
+
+            closeModal.addEventListener('click', () => {
+                alertModal.style.opacity = 0;
+                setTimeout(() =>{
+                    alertModal.style.display = 'none'; 
+                }, 500);
+            });
+            });
+            
+        </script>
+    <% } %>
+
+
+
 </body>
 </html>

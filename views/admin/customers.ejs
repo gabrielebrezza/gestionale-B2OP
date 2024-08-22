@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Clienti</title>
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td{
+            text-align: left;
+            padding: 10px;
+            border-block: 1px solid #333;
+            color: #BBD1EA;
+        }
+        .cellContent {
+            display: flex;
+        }
+        span{
+            user-select: none;
+            cursor: pointer;
+        }
+        .elimina{
+            color: #7B0828;
+        }
+        .theadBtn, .action{
+            margin-left: 10px;
+            cursor: pointer;
+            user-select: none;
+            display: none;
+            outline: none;
+            border: none;
+            background: #0000;
+        }
+        .numero {
+            margin-left: 5px;
+        }
+
+        td a{
+            color: #7B0828;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <main>
+        <table>
+            <form action="/admin/clienti/delete" id="actionForm" method="POST">
+                <thead>
+                    <th>
+                        <span id="selectUsers" class="material-symbols-outlined">
+                            checklist
+                        </span>
+                        <button type="submit" class="elimina theadBtn action" name="action" value="elimina">
+                            <span class="material-symbols-outlined">
+                                delete_forever
+                            </span>
+                        </button>
+                    </th>
+                    <th>Cognome</th>
+                    <th>Nome</th>
+                    <th>Codice Fiscale</th>
+                    <th>Email</th>
+                    <th>Tel</th>
+                </thead>
+            <tbody>
+                <% let index = 1 %>
+                <% for(const cliente of clienti){ %>
+                    <tr>
+                        <td>
+                            <div class="cellContent">
+                                <input class="action" type="checkbox" name="cliente<%= index %>" value="<%= cliente._id %>">
+                                <div class="numero">
+                                    <%= index++ %>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="<%= `/admin/cliente?id=${encodeURIComponent(cliente._id)}` %> ">
+                                <%= cliente.cognome %>
+                            </a>
+                        </td>
+                        <td><%= cliente.nome %></td>
+                        <td><%= cliente.cf %></td>
+                        <td><%= cliente.contatti.email %></td>
+                        <td><%= cliente.contatti.tel %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </form>
+        </table>
+    </main>
+
+
+    <script>
+        const selectUsersBtn = document.getElementById('selectUsers');
+        const actionUsersTd = document.querySelectorAll('.action');
+        const actionUsersForm = document.getElementById('actionForm');
+        selectUsersBtn.addEventListener('click', () => {
+            actionUsersTd.forEach((td) => {
+                td.style.display = td.style.display != 'inline-flex' ? 'inline-flex' : 'none';
+            });
+        });
+
+        actionUsersForm.addEventListener('submit',event => {
+            const confirmSubmission = confirm("Sei sicuro di voler eliminare i clienti selezionati?");
+            if (!confirmSubmission) event.preventDefault();
+        });
+    </script>
+</body>
+</html>

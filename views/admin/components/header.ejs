@@ -11,9 +11,9 @@
 </header>
 <nav id="navBar">
     <ul>
-        <li><a href="/admin">Utenti</a></li>
-        <li><a href="/admin/price">Prezzi</a></li>
+        <li><a href="/admin/clienti">Utenti</a></li>
         <li><a href="/admin/mezzi">Mezzi</a></li>
+        <li><a href="/admin/approveUsers">Approva Admin</a></li>
         <!-- <li>
             <details>
                 <summary><a>Fatture</a></summary>
@@ -23,7 +23,6 @@
                 </div>
             </details>
         </li> -->
-        <li><a href="/admin/approveUsers">Approva Admin</a></li>
         <li id="logOutList">
             <form action="/logout" method="POST">
                 <button class="logoutBtn" type="submit"> 
@@ -48,5 +47,62 @@
                 });
             }
         });
+    });
+</script>
+
+<style>
+    #loaderContainer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        background: #04080F;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transition: opacity .5s ease;
+    }
+    #loaderContainer img{
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
+        animation: loader 2s infinite;
+    }
+    @keyframes loader {
+        0%{
+            transform: rotateX(45deg) rotateY(0deg) rotateZ(90deg);
+        }
+        25%{
+            transform: rotateX(0deg) rotateY(45deg);
+        }
+        50%{
+            transform: rotateX(45deg) rotateY(0deg);
+        }
+        75%{
+            transform: rotateX(0deg) rotateY(-45deg) rotateZ(-90deg);
+        }
+        100%{
+            transform: rotateX(-45deg) rotateY(0deg) rotateZ(90deg);
+        }
+    }
+</style>
+
+<div id="loaderContainer">
+    <img id="loader" src="/img/logo.png" alt="loader">
+</div>
+
+<script>
+    const loaderContainer = document.getElementById('loaderContainer');
+    const loader = document.getElementById('loader');
+    window.addEventListener('load', () =>{
+        setTimeout(() => {
+            loaderContainer.style.opacity = 0;
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                loaderContainer.style.display = 'none';
+                loader.style.animation = 'none';
+            }, 500);
+        }, 500);
     });
 </script>

@@ -25,7 +25,7 @@ async function authenticateJWT(req, res, next) {
             }
         } catch (error) {
             console.error('Errore durante il recupero dello stato di approvazione dell\'utente:', error);
-            return res.render('errorPage', { error: 'Errore durante il recupero dello stato di approvazione dell\'utente' });
+            return res.render('errorPage', { err: 'Errore durante il recupero dello stato di approvazione dell\'utente' });
         }
         
         req.user = user;

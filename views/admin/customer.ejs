@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Cliente</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        body{
+            background: #71a1cb;
+        }
+        .documentSection{
+            margin-top: 150px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .printForm{
+            margin: 10px;
+            max-width: 200px;
+            width: 100%;
+            color: #f1f1f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        .printForm button{
+            cursor: pointer;
+            background: #0000;
+            outline: none;
+            border: none;
+            color: #f1f1f1;
+        }
+        #updateUserForm{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        table {
+            /* width: 50%; */
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 50px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            background: #f1f1f1;
+        }
+
+        th {
+            color: #fff;
+            background: #5681a9;
+            text-transform: uppercase;
+        }
+        th:first-child{
+            border-radius: 5px 0 0  0;
+        }
+        th:last-child{
+            border-radius:  0 5px 0  0;
+        }
+        tfoot td{
+            padding: 0;
+            background: #0000;
+            border: none;
+        }
+        #submitFormBtn{
+            width: 100%;
+            /* margin-top: 5px; */
+            cursor: pointer;
+            padding: 10px 20px;
+            background: green;
+            color: #fff;
+            transition: .5s;
+            outline: none;
+            border: none;
+            border-radius: 0 0 5px 5px;
+        }
+        #submitFormBtn:hover{
+            opacity: .7;
+        }
+        .imageForms{
+            width: 50%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .imageForm{
+            max-width: 250px;
+            width: 100%;
+            background: #eee;
+            height: fit-content;
+            padding: 25px;
+            border-radius: 5px;
+            text-align: center;
+            color: #333;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-block: 15px;
+        }
+        #signPic{
+            width: 175px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        } 
+        #profilePic{
+            object-fit: contain;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .imageForm button, .imageForm label{
+            width: fit-content;
+            background: #71a1cb;
+            color: #fff;
+            padding: 12px 12px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: .5s;
+            font-size: 1rem;
+        }
+        .uploadBtn{
+            padding: 12px 20px;
+        }
+        .imageForm button:hover, .imageForm label:hover {
+            background: #5681a9;
+        }
+        .imageForm input{
+            display: none;
+        }
+        .field{
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            text-align: justify;
+        }
+        .field p{
+            font-weight: bold;
+        }
+
+        .formField{
+            display: flex;
+            align-items: center;
+        }
+        .formField button{
+            width: fit-content;
+            height: 40px;
+            margin-inline: 10px;
+            display: flex;
+            align-items: center;
+        }
+        button.deleteButton {
+            background: red;
+            transition: .5s;
+        }
+        button.deleteButton:hover {
+            background: rgb(119, 64, 64);
+        }
+
+    </style>
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    
+    <main>
+        <form id="updateCustomerForm" action="/admin/cliente/update" method="POST">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valore</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <input type="hidden" name="id" value="<%= customer._id %>">
+                        <td>Cognome</td>
+                        <td><input type="text" name="cognome" value="<%= customer.cognome %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Nome</td>
+                        <td><input type="text" name="nome" value="<%= customer.nome %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Codice Fiscale</td>
+                        <td><input type="text" name="cf" value="<%= customer.cf %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Residenza:</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Via</td>
+                        <td><input type="text" name="residenza[via]" value="<%= customer.residenza.via %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Civico</td>
+                        <td><input type="text" name="residenza[nCivico]" value="<%= customer.residenza.nCivico %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Comune</td>
+                        <td><input type="text" name="residenza[comune]" value="<%= customer.residenza.comune %>"></td>
+                    </tr>
+                    <tr>
+                        <td>CAP</td>
+                        <td><input type="text" name="residenza[cap]" value="<%= customer.residenza.cap %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Provincia</td>
+                        <td><input type="text" name="residenza[provincia]" value="<%= customer.residenza.provincia %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Contatti:</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td><input type="text" name="contatti[email]" value="<%= customer.contatti.email %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Tel</td>
+                        <td><input type="text" name="contatti[tel]" value="<%= customer.contatti.tel %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Note</td>
+                        <td><textarea name="note"><%= customer.note %></textarea></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <td colspan="2"><button id="submitFormBtn" type="submit">Salva</button></td>
+                </tfoot>
+            </table>
+        </form>
+    </main>
+</body>
+</html>

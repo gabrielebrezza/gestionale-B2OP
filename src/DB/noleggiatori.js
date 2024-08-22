@@ -44,6 +44,10 @@ const noleggiatoriSchema = new mongoose.Schema({
             type: String,
             required: false
         }
+    },
+    note: {
+        type: String,
+        required: false
     }
 });
 const noleggiatori = new mongoose.model('noleggiatori', noleggiatoriSchema);

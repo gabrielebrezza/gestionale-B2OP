@@ -32,34 +32,34 @@ const mezziSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    storicoNoleggi: [
-        {
-            fromDate: {
-                type: String,
-                required: false
-            },
-            toDate: {
-                type: String,
-                required: false
-            },
-            noleggiatore: {
-                type: String,
-                required: false
-            },
-            km: {
-                type: Number,
-                required: false
-            },
-            serbatoioInizio: {
-                type: String,
-                required: false
-            },
-            serbatoioFine: {
-                type: String,
-                required: false
-            }
-        }
-    ],
+    dayPrice: {
+        type: Number,
+        required: false
+    },
+    kmIncluded: {
+        type: Number,
+        required: false
+    },
+    kmPrice: {
+        type: Number,
+        required: false
+    },
+    expPropTax: {
+        type: String,
+        required: false
+    },
+    expInsurance: {
+        type: String,
+        required: false
+    },
+    expRev: {
+        type: String,
+        required: false
+    },
+    type: {
+        type: String,
+        required: false
+    },
     note: {
         type: String,
         required: false
