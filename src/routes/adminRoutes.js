@@ -5,7 +5,6 @@ const { authenticateJWT } = require('../utils/authUtils');
 const router = express.Router();
 
 const mezzi = require('./../DB/mezzi.js');
-const invoices = require('./../DB/invoices.js');
 const bookings = require('./../DB/bookings.js');
 const noleggiatori = require('./../DB/noleggiatori.js');
 
@@ -95,13 +94,6 @@ router.post('/admin/mezzi/newRent', authenticateJWT, async (req, res) =>{
             dati.km = dati.km - km;
             dati.finalPrice = dati.days * dayPrice;
             if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
-            const newBooking = new bookings(dati);
-            await newBooking.save();
-            let today = new Date();
-            date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const invoice = new invoices({"rentId": newBooking._id, "importo": dati.finalPrice, "date": date}); 
-            await invoice.save();
-            return res.redirect(`/admin/mezzo?id=${encodeURIComponent(mezzoId)}`);
         }
         
         const newBooking = new bookings(dati);
@@ -133,10 +125,6 @@ router.post('/admin/mezzi/rentEnded', authenticateJWT, async (req, res) =>{
             const { dayPrice, kmIncluded, kmPrice } = await mezzi.findOne({"_id": idMezzo});
             dati.finalPrice = days * dayPrice;
             if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
-            let today = new Date();
-            date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const invoice = new invoices({"rentId": rentId, "importo": dati.finalPrice, "date": date}); 
-            await invoice.save();
         }
         if(!dati.serbatoioFine) dati.serbatoioFine = serbatoioFine ? serbatoioFine : 0;
         await bookings.findOneAndUpdate({"_id": rentId}, dati);

@@ -29,6 +29,10 @@ router.get('/waitingApprovation', async (req, res) =>{
     const {nome, cognome} = admin;
     res.render('admin/auth/waitingApprovation', {utente: `${nome} ${cognome}`}); 
 });
+router.get('/admin/approveUsers', authenticateJWT, async (req, res) =>{
+    const needApprovationAdmins = await admins.find({"approved": false})
+    res.render('admin/auth/approveUsers', {needApprovationAdmins});
+});
 
 router.post('/admin/signup', async (req, res) => {
     const nome = req.body.nome.replace(/\s/g, "").toLowerCase();
@@ -131,6 +135,24 @@ router.post('/admin/verificaOTP', async (req, res) =>{
         res.cookie('token', token, { httpOnly: true, maxAge: 1000*60*60*24*21 });
         res.redirect(`/admin`);
     }
+});
+
+router.post('/admin/adminApprovation', authenticateJWT, async (req, res) =>{
+    const dati = req.body;
+    if(dati.disapprove){
+        await admins.deleteOne({"_id": dati.id});
+        return res.redirect('/admin/approveUsers');
+    }
+    const admin = await admins.findOneAndUpdate({"_id": dati.id}, {approved: true});
+    // const subject = 'Approvazione Admin';
+    // const text = `Gentile ${admin.nome} ${admin.cognome}, ti informiamo che il tuo account Admin è stato approvato. Per accedere clicca qui ${process.env.SERVER_URL}/admin`;
+    // try {
+    //     const result = await sendEmail(email, subject, text);
+    //     console.log(result)
+    // } catch (error) {
+    //     console.error(error)
+    // }
+    res.redirect('/admin/approveUsers');
 });
 
 router.post('/admin/logout', authenticateJWT, async (req, res) =>{
