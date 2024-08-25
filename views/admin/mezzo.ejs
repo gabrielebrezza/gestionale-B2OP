@@ -7,9 +7,6 @@
     <title>Admin - Mezzo</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-        body{
-            background: #71a1cb;
-        }
         .documentSection{
             margin-top: 150px;
             display: flex;
@@ -40,7 +37,6 @@
             flex-direction: column;
         }
         table {
-            /* width: 50%; */
             border-collapse: collapse;
             border-spacing: 0;
             margin: 50px;
@@ -54,7 +50,7 @@
 
         th {
             color: #fff;
-            background: #5681a9;
+            background: #7B0828;
             text-transform: uppercase;
         }
         th:first-child{
@@ -70,10 +66,9 @@
         }
         #submitFormBtn{
             width: 100%;
-            /* margin-top: 5px; */
             cursor: pointer;
             padding: 10px 20px;
-            background: green;
+            background: rgb(26, 204, 26);
             color: #fff;
             transition: .5s;
             outline: none;
@@ -177,12 +172,16 @@
         #newRentForm{
             display: flex;
         }
+        .customerLink{
+            color: rgb(26, 204, 26);
+            text-decoration: none;
+        }
         .customerLink, #noleggiatore{
             text-transform: capitalize;
         }
         #newRentSubmitBtnContainer button{
             width: 100%;
-            background: green;
+            background: rgb(26, 204, 26);
             color: #f1f1f1;
             cursor: pointer;
             padding-block: 10px;
@@ -223,26 +222,17 @@
             border-radius: 10px;
             padding: 20px;
             display: flex;
-            gap: 10px;
             flex-direction: column;
             background: #7B0828;
         }
         #newUserForm .field{
+            padding-block: 5px;
             display: flex;
             justify-content: space-between;
             color:#f1f1f1;
         }
-        #newUserForm .field:has(button){
-            width: 100%;
-            justify-content: center;
-        }
-        #newUserForm .field button{
-            padding: 10px 25px;
-            background: #5681a9;
-            color: #f1f1f1;
-            border: none;
-            outline: none;
-            cursor: pointer;
+        #newUserForm .field input{
+            padding: 5px;
         }
 .calendarWrapper{
     max-width: 450px;
@@ -273,12 +263,17 @@
     color: #878787;
     font-size: 1.9rem;
     user-select: none;
+    transition: .4s ease-in-out;
 }
 .calendarHead .calendarIcons span:hover{
-    background: #f2f2f2;
+    background: #7e4cce;
+    color: #cccbcb;
 }
-.calendarHead .calendarIcons span:last-child{
-    margin-right: -10px;
+.calendarHead .calendarIcons span:first-child:hover{
+    transform: translateX(-3px);
+}
+.calendarHead .calendarIcons span:last-child:hover{
+    transform: translateX(3px);
 }
 .calendarMain{
     padding: 20px;
@@ -311,7 +306,7 @@
 .days li.active{
     color: #fff;
 }
-.calendarMain .days li:before{
+.calendarMain .days li::before{
     position: absolute;
     content: '';
     border-radius: 50%;
@@ -328,7 +323,7 @@
     background: #f2f2f2;
 }
 .days li.active::before{
-    background: #64b659;
+    background: rgb(26, 204, 26);
 }
 .days li.booked::before{
     background: #7B0828;
@@ -341,6 +336,38 @@
 }
 
 
+#prevFormPage, #nextFormPage{
+    height: 28px;
+    width: 28px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+    user-select: none;
+    background: #f2f2f2;
+}
+#prevFormPage.disabled, #nextFormPage.disabled{
+    background: #0000;
+    cursor: auto;
+}
+#nextFormPage{
+    margin-right: -10px;
+}
+.buttonContainer{
+    display: flex;
+    justify-content: space-between;
+}
+.buttonContainer button{
+    padding: 10px 25px;
+    background: rgb(26, 204, 26);
+    color: #f1f1f1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
     </style>
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -410,8 +437,8 @@
                             </td>
                             <input type="hidden" name="id" value="<%= mezzo._id %>">
                             <td class="newRentInput"></td>
-                            <td class="newRentInput"><input type="date" name="fromDate" id="fromDate"></td>
-                            <td class="newRentInput"><input type="date" name="toDate" id="toDate"></td>
+                            <td class="newRentInput"><input type="date" name="fromDate" id="fromDate" required></td>
+                            <td class="newRentInput"><input type="date" name="toDate" id="toDate" required></td>
                             <td class="newRentInput">
                                 <select name="customerId" id="noleggiatore">
                                     <option value="newUser">Nuovo Utente</option>
@@ -504,31 +531,31 @@
                     <tbody>
                         <tr>
                             <input type="hidden" name="id" value="<%= mezzo._id %>">
-                            <td>Targa</td>
+                            <td>Targa:</td>
                             <td><input type="text" id="targa" name="targa" value="<%= mezzo.targa %>"></td>
                         </tr>
                         <tr>
-                            <td>Marca</td>
+                            <td>Marca:</td>
                             <td><input type="text" name="marca" value="<%= mezzo.marca %>"></td>
                         </tr>
                         <tr>
-                            <td>Modello</td>
+                            <td>Modello:</td>
                             <td><input type="text" name="modello" value="<%= mezzo.modello %>"></td>
                         </tr>
                         <tr>
-                            <td>Descrizione</td>
+                            <td>Descrizione:</td>
                             <td><input type="text" name="descrizione" value="<%= mezzo.descrizione %>"></td>
                         </tr>
                         <tr>
-                            <td>Anno</td>
+                            <td>Anno:</td>
                             <td><input type="text" name="anno" value="<%= mezzo.anno %>"></td>
                         </tr>
                         <tr>
-                            <td>Km</td>
+                            <td>Km:</td>
                             <td><input type="text" name="km" value="<%= mezzo.km %>"></td>
                         </tr>
                         <tr>
-                            <td>Tipologia</td>
+                            <td>Tipologia:</td>
                             <td>
                                 <select name="type">
                                     <% 
@@ -543,31 +570,35 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>€/D + IVA</td>
+                            <td>€/D + IVA:</td>
                             <td><input type="number" name="dayPrice" min="1"  value="<%= mezzo.dayPrice %>"></td>
                         </tr>
                         <tr>
-                            <td>€/KM + IVA</td>
+                            <td>€/KM + IVA:</td>
                             <td><input type="number" name="kmPrice" min="0.01" step="0.01" value="<%= mezzo.kmPrice %>"></td>
                         </tr>
                         <tr>
-                            <td>Km Inclusi</td>
+                            <td>Km Inclusi:</td>
                             <td><input type="number" name="kmIncluded" min="0" value="<%= mezzo.kmIncluded %>"></td>
                         </tr>
                         <tr>
-                            <td>Scadenza Bollo</td>
-                            <td><input type="date" name="expPropTax" value="<%= mezzo.expPropTax %>"></td>
+                            <td>Assicurazione:</td>
+                            <td><input type="text" name="insuranceCompany" value="<%= mezzo.insuranceCompany %>"></td>
                         </tr>
                         <tr>
-                            <td>Scadenza Assicurazione</td>
+                            <td>Scadenza Assicurazione:</td>
                             <td><input type="date" name="expInsurance" value="<%= mezzo.expInsurance %>"></td>
                         </tr>
                         <tr>
-                            <td>Scadenza Revisione</td>
+                            <td>Scadenza Bollo:</td>
+                            <td><input type="date" name="expPropTax" value="<%= mezzo.expPropTax %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Revisione:</td>
                             <td><input type="date" name="expRev" value="<%= mezzo.expRev %>"></td>
                         </tr>
                         <tr>
-                            <td>Note</td>
+                            <td>Note:</td>
                             <td><textarea name="note"><%= mezzo.note %></textarea></td>
                         </tr>
                     </tbody>
@@ -599,48 +630,90 @@
                 <input type="hidden" name="toDate" id="toDateInputNewUser">
                 <input type="hidden" name="km" id="kmInputNewUser">
                 <input type="hidden" name="serbatoioFine" id="serbatoioFineInputNewUser">
-                <div class="field">
-                    <label for="newUserName">Nome:</label>
-                    <input type="text" name="nome" id="newUserName">
-                </div>
-                <div class="field">
-                    <label for="newUserSurname">Cognome:</label>
-                    <input type="text" name="cognome" id="newUserSurname">
-                </div>
-                <div class="field">
-                    <label for="newUserCf">Codice Fiscale:</label>
-                    <input type="text" name="cf" id="newUserCf">
-                </div>
-                <div class="field">
-                    <label for="newUserVia">Via:</label>
-                    <input type="text" name="residenza[via]" id="newUserVia">
-                </div>
-                <div class="field">
-                    <label for="newUserCivico">Civico:</label>
-                    <input type="text" name="residenza[nCivico]" id="newUserCivico">
-                </div>
-                <div class="field">
-                    <label for="newUserCap">CAP:</label>
-                    <input type="text" name="residenza[cap]" id="newUserCap">
-                </div>
-                <div class="field">
-                    <label for="newUserComune">Comune:</label>
-                    <input type="text" name="residenza[comune]" id="newUserComune">
-                </div>
-                <div class="field">
-                    <label for="newUserProvincia">Provincia:</label>
-                    <input type="text" name="residenza[provincia]" id="newUserProvincia">
-                </div>
-                <div class="field">
-                    <label for="newUserEmail">Email:</label>
-                    <input type="text" name="contatti[email]" id="newUserEmail">
-                </div>
-                <div class="field">
-                    <label for="newUserTel">Tel:</label>
-                    <input type="text" name="contatti[tel]" id="newUserTel">
-                </div>
-                <div class="field">
-                    <button type="submit">Salva</button>
+                <section class="page page1">
+                    <div class="field">
+                        <label for="newUserName">Nome:</label>
+                        <input type="text" name="nome" id="newUserName">
+                    </div>
+                    <div class="field">
+                        <label for="newUserSurname">Cognome:</label>
+                        <input type="text" name="cognome" id="newUserSurname">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCf">Codice Fiscale:</label>
+                        <input type="text" name="cf" id="newUserCf">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCUnivoco">Codice Univoco:</label>
+                        <input type="text" name="cUnivoco" id="newUserCUnivoco">
+                    </div>
+                    <div class="field">
+                        <label for="newUserPIVA">Partita IVA:</label>
+                        <input type="text" name="pIva" id="newUserPIVA">
+                    </div>
+                </section>
+                <section class="page page2" style="display: none;">
+                    <div class="field">
+                        <label for="newUserVia">Via:</label>
+                        <input type="text" name="residenza[via]" id="newUserVia">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCivico">Civico:</label>
+                        <input type="text" name="residenza[nCivico]" id="newUserCivico">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCap">CAP:</label>
+                        <input type="text" name="residenza[cap]" id="newUserCap">
+                    </div>
+                    <div class="field">
+                        <label for="newUserComune">Comune:</label>
+                        <input type="text" name="residenza[comune]" id="newUserComune">
+                    </div>
+                    <div class="field">
+                        <label for="newUserProvincia">Provincia:</label>
+                        <input type="text" name="residenza[provincia]" id="newUserProvincia">
+                    </div>
+                    <div class="field">
+                        <label for="newUserEmail">Email:</label>
+                        <input type="text" name="contatti[email]" id="newUserEmail">
+                    </div>
+                    <div class="field">
+                        <label for="newUserTel">Tel:</label>
+                        <input type="text" name="contatti[tel]" id="newUserTel">
+                    </div>
+                    <div class="field">
+                        <label for="newUserPec">Pec:</label>
+                        <input type="text" name="contatti[pec]" id="newUserPec">
+                    </div>
+                </section>
+                <section class="page page3" style="display: none;">
+                    <div class="field">
+                        <label for="newUsernPatente">Numero Patente:</label>
+                        <input type="text" name="patente[numero]" id="newUsernPatente">
+                    </div>
+                    <div class="field">
+                        <label for="newUserRilascioPat">Rilascio Patente:</label>
+                        <input type="date" name="patente[rilascio]" id="newUserRilascioPat">
+                    </div>
+                    <div class="field">
+                        <label for="newUserOfficePat">Rilasciata Da:</label>
+                        <input type="text" name="patente[daUfficio]" id="newUserOfficePat">
+                    </div>
+                    <div class="field">
+                        <label for="newUserExpPat">Scadenza:</label>
+                        <input type="date" name="patente[scadenza]" id="newUserExpPat">
+                    </div>
+                </section>
+                <div class="buttonContainer">
+                    <div class="formIconContainer">
+                        <span id="prevFormPage" class="material-symbols-outlined disabled">
+                            chevron_left
+                        </span>
+                        <span id="nextFormPage" class="material-symbols-outlined">
+                            chevron_right
+                        </span>
+                    </div>
+                    <button id="newUserFormBtn" type="submit" style="display: none;">Salva</button>
                 </div>
             </form>
         </div>
@@ -671,13 +744,54 @@
                 newUserFormContainer.style.display = 'flex';
                 setTimeout(() => {
                     blurredBg.style.opacity = .4;
-                    modalContainer.style.opacity = 1;
+                    newUserFormContainer.style.opacity = 1;
                 }, 100);
                 fromDateNewInput.value = fromDateoldInput.value;
                 toDateNewInput.value = toDateoldInput.value;
                 kmNewInput.value = kmoldInput.value;
                 serbatoioFineNewInput.value = serbatoioFineoldInput.value;
-            })
+            });
+            const prevFormPage = document.getElementById('prevFormPage');
+            const nextFormPage = document.getElementById('nextFormPage');
+            const page1 = document.querySelector('.page1');
+            const page2 = document.querySelector('.page2');
+            const page3 = document.querySelector('.page3');
+            const newUserFormBtn = document.getElementById('newUserFormBtn');
+            prevFormPage.addEventListener('click', () => {
+                console.log('premuto')
+                if(page1.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page2.style.display = 'block';
+                    page3.style.display = 'none';
+                    nextFormPage.classList.remove('disabled');
+                    newUserFormBtn.style.display = 'none';
+                    return;
+                }
+                if(page1.style.display == 'none'){
+                    page1.style.display = 'block';
+                    page2.style.display = 'none';
+                    prevFormPage.classList.add('disabled');
+                    return;
+                }
+            });
+            nextFormPage.addEventListener('click', () => {
+                
+                console.log('primato')
+                if(page3.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page1.style.display = 'none';
+                    page2.style.display = 'block';
+                    prevFormPage.classList.remove('disabled');
+                    return;
+                }
+                if(page3.style.display == 'none') {
+                    page2.style.display = 'none';
+                    page3.style.display = 'block';
+                    nextFormPage.classList.add('disabled');
+                    newUserFormBtn.style.display = 'block';
+                    return;
+                }
+            });
         </script>
         <script>
             const bookings = document.getElementById('bookings').innerText.split(',');
@@ -846,7 +960,7 @@
                                     <span class="material-symbols-outlined alertIcon">
                                         warning
                                     </span>
-                                    Assicurazione in scadenza
+                                    Assicurazione <%= mezzo.insuranceCompany %> in scadenza
                                 </div>
                                 <div class="alertModalField">
                                     <span class="material-symbols-outlined alarmIcon">

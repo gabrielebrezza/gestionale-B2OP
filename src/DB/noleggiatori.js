@@ -13,6 +13,14 @@ const noleggiatoriSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    cUnivoco : {
+        type: String,
+        required: false
+    },
+    pIva:{
+        type: String,
+        required: false
+    },
     residenza: {
         via: {
             type: String,
@@ -41,6 +49,28 @@ const noleggiatoriSchema = new mongoose.Schema({
             required: false
         },
         tel: {
+            type: String,
+            required: false
+        },
+        pec: {
+            type: String,
+            required: false
+        }
+    },
+    patente: {
+        numero: {
+            type: String,
+            required: false
+        },
+        rilascio: {
+            type: String,
+            required: false
+        },
+        daUfficio: {
+            type: String,
+            required: false
+        },
+        scadenza: {
             type: String,
             required: false
         }

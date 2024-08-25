@@ -44,11 +44,15 @@ const mezziSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    expPropTax: {
+    insuranceCompany: {
         type: String,
         required: false
     },
     expInsurance: {
+        type: String,
+        required: false
+    },
+    expPropTax: {
         type: String,
         required: false
     },

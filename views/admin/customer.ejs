@@ -7,9 +7,6 @@
     <title>Admin - Cliente</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-        body{
-            background: #71a1cb;
-        }
         .documentSection{
             margin-top: 150px;
             display: flex;
@@ -34,6 +31,11 @@
             border: none;
             color: #f1f1f1;
         }
+        main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         #updateUserForm{
             display: flex;
             align-items: center;
@@ -54,7 +56,7 @@
 
         th {
             color: #fff;
-            background: #5681a9;
+            background: #7B0828;
             text-transform: uppercase;
         }
         th:first-child{
@@ -73,7 +75,7 @@
             /* margin-top: 5px; */
             cursor: pointer;
             padding: 10px 20px;
-            background: green;
+            background: rgb(26, 204, 26);
             color: #fff;
             transition: .5s;
             outline: none;
@@ -200,6 +202,14 @@
                         <td><input type="text" name="cf" value="<%= customer.cf %>"></td>
                     </tr>
                     <tr>
+                        <td>Codice Univoco</td>
+                        <td><input type="text" name="cUnivoco" value="<%= customer.cUnivoco %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Partita Iva</td>
+                        <td><input type="text" name="pIva" value="<%= customer.pIva %>"></td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <h2>Residenza:</h2>
                         </td>
@@ -236,6 +246,31 @@
                     <tr>
                         <td>Tel</td>
                         <td><input type="text" name="contatti[tel]" value="<%= customer.contatti.tel %>"></td>
+                    </tr>
+                    <tr>
+                        <td>PEC</td>
+                        <td><input type="text" name="contatti[pec]" value="<%= customer.contatti.pec %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Patente</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero</td>
+                        <td><input type="text" name="patente[numero]" value="<%= customer.patente.numero %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Data Rilascio</td>
+                        <td><input type="date" name="patente[rilascio]" value="<%= customer.patente.rilascio %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Rilasciata da</td>
+                        <td><input type="text" name="patente[daUfficio]" value="<%= customer.patente.daUfficio %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Scadenza</td>
+                        <td><input type="date" name="patente[scadenza]" value="<%= customer.patente.scadenza %>"></td>
                     </tr>
                     <tr>
                         <td>Note</td>

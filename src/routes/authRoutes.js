@@ -133,4 +133,8 @@ router.post('/admin/verificaOTP', async (req, res) =>{
     }
 });
 
+router.post('/admin/logout', authenticateJWT, async (req, res) =>{
+    res.cookie('token', '', {maxAge: 1});
+    res.redirect('/admin/login');
+});
 module.exports = router;
