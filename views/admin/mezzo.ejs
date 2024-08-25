@@ -179,15 +179,23 @@
         .customerLink, #noleggiatore{
             text-transform: capitalize;
         }
-        #newRentSubmitBtnContainer button{
-            width: 100%;
+        :is(.storicoInput, .newRentInput) > *:where(input, select){
+            padding: 5px;
+            background: none;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #333;
+        }
+        button.saveBookingBtn{
+            margin-left: 5px;
             background: rgb(26, 204, 26);
             color: #f1f1f1;
             cursor: pointer;
-            padding-block: 10px;
+            width: fit-content;
             border: none;
             outline: none;
-            border-radius: 0 0 10px 10px;
+            padding: 10px 25px;
+            border-radius: 5px;
         }
         #tableSection{
             display: flex;
@@ -451,13 +459,11 @@
                                 </select>
                             </td>
                             <td class="newRentInput"><input type="number" name="km" id="km" min="<%= mezzo.km + 1 %>"></td>
-                            <td class="newRentInput"><input type="number" name="serbatoioFine" id="serbatoioFine"></td>
-                            <td class="newRentInput"></td>
-                        </tr>
-                        <tr>
-                            <td id="newRentSubmitBtnContainer" colspan="7" style="display: none;">
-                                <button type="submit">Salva</button>
+                            <td class="newRentInput">
+                                <input type="number" name="serbatoioFine" id="serbatoioFine">
+                                <button class="saveBookingBtn" type="submit">Salva</button>
                             </td>
+                            <td class="newRentInput"></td>
                         </tr>
                         </form>
                         <% for(const noleggio of noleggi.reverse()){ %>
@@ -485,7 +491,7 @@
                                             <%= `${noleggiatore.cognome} ${noleggiatore.nome}` %>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="storicoInput">
                                         <% if(noleggio.km){ %>
                                             <%= noleggio.km %>
                                             <strong>KM</strong>
@@ -493,7 +499,7 @@
                                             <input type="number" name="km" min="<%= mezzo.km + 1 %>">
                                         <% } %>
                                     </td>
-                                    <td>
+                                    <td class="storicoInput">
                                         <% if(noleggio.serbatoioFine){ %>
                                             <%= noleggio.serbatoioFine %>
                                             <strong>L</strong>
@@ -502,7 +508,7 @@
                                         <% } %>
 
                                         <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
-                                            <button type="submit">Salva</button>
+                                            <button type="submit" class="saveBookingBtn">Salva</button>
                                         <% } %>
                                     </td>
                                     <td>
@@ -616,10 +622,8 @@
             const newRentBtn = document.getElementById('newRentBtn');
             const newRentBtnTd = document.getElementById('newRentBtnTd');
             const newRentInput = document.querySelectorAll('.newRentInput');
-            const newRentSubmitBtnContainer = document.getElementById('newRentSubmitBtnContainer');
             newRentBtn.addEventListener('click', () => {
                 newRentBtnTd.remove();
-                newRentSubmitBtnContainer.style.display = 'table-cell';
                 for(const input of newRentInput){
                     input.style.display = 'table-cell';
                 }

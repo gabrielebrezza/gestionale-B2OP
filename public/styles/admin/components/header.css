@@ -12,14 +12,17 @@ body{
     overflow: hidden;
     background: #04080F;
 }
+:root{
+    --header-height: 150px;
+}
 main{
-    margin-top: 150px;
+    margin-top: var(--header-height);
 }
 .header {
     top: 0;
     position: fixed;
     width: 100%;
-    height: 150px;
+    height: var(--header-height);
     background: #7B0828;
     color: #f1f1f1;
     padding: 10px 20px;
@@ -153,8 +156,8 @@ details[open] .headerField {
     justify-content: center;
 }
 @media (max-height: 870px) {
-    .header {
-        height: 75px;
+    :root{
+        --header-height: 75px;
     }
     #toggleMenuBtn {
         font-size: 3rem !important;

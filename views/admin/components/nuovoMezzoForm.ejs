@@ -2,7 +2,7 @@
 
 #openModalBtn{
     z-index: 1;
-    height: 150px;
+    height: var(--header-height);
     position: absolute;
     top: 0;
     right: 0;
@@ -117,7 +117,23 @@
     scale: 1.2;
     color: #7B0828;
 }
-
+#nuovoMezzoForm .fieldSelect{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#nuovoMezzoForm .fieldSelect label{
+    color: #A1C6EA;
+    font-size: 1.2rem;
+}
+#nuovoMezzoForm .fieldSelect select{
+    padding: 8px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background: #A1C6EA;
+    color: #7B0828;
+}
 </style>
 
 <div id="blurredBg"></div>
@@ -162,7 +178,7 @@
             <label for="km">Km:</label>
             <input type="number" id="km" name="km" placeholder=" ">
         </div>
-        <div class="field">
+        <div class="fieldSelect">
             <label for="type">Tipo:</label>
             <select name="type" id="type" placeholder=" ">
                 <option value="furgone">Furgone</option>

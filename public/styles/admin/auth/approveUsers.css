@@ -1,5 +1,6 @@
 h1{
   color: #fff;
+  text-align: center;
 }
 #cards{
   display: flex;
@@ -63,4 +64,9 @@ input[type="submit"] {
 }
 .approval-list {
   margin-bottom: 20px;
+  height: calc(100vh - var(--header-height)) ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid yellow;
 }
