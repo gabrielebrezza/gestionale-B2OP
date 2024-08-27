@@ -9,12 +9,16 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    toDate: {
+        type: String,
+        required: false
+    },
     days: {
         type: Number,
         required: false
     },
-    toDate: {
-        type: String,
+    startDay: {
+        type: Number,
         required: false
     },
     customerId: {

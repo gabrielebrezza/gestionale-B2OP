@@ -379,6 +379,17 @@
 .material-symbols-outlined{
     user-select: none;
 }
+.daysPrices input{
+    max-width: 22px;
+    outline: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #333;
+    text-align: center;
+}
+.daysPrices input:not(:placeholder-shown){
+    border: none;
+}
     </style>
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -419,12 +430,68 @@
                     <li>Sab</li>
                     <li>Dom</li>
                 </ul>
+                <form id="pricesForm" action="/admin/mezzi/updateDaysPrices" method="POST">
+                    <ul class="daysPrices">
+                        <input type="hidden" name="id" value="<%= mezzo._id %>">
+                        <li><input type="text" name="price0" class="dayPrice" value="<%= mezzo.daysPrices[0] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price1" class="dayPrice" value="<%= mezzo.daysPrices[1] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price2" class="dayPrice" value="<%= mezzo.daysPrices[2] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price3" class="dayPrice" value="<%= mezzo.daysPrices[3] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price4" class="dayPrice" value="<%= mezzo.daysPrices[4] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price5" class="dayPrice" value="<%= mezzo.daysPrices[5] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price6" class="dayPrice" value="<%= mezzo.daysPrices[6] %>" required placeholder=" ">€</li>
+                    </ul>
+                </form>
                 <ul class="days">
                 </ul>
             </div>
         </div>
 
 
+        <script>
+            const pricesForm = document.getElementById('pricesForm');
+            const inputs = document.querySelectorAll('.dayPrice');
+            let initialValues = {};
+
+            inputs.forEach(input => {
+                initialValues[input.name] = input.value;
+            });
+
+            inputs.forEach(input => {
+                input.addEventListener('blur', checkAllFilled);
+            });
+        
+            function checkAllFilled() {
+                const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+                const anyChanged = Array.from(inputs).some(input => input.value !== initialValues[input.name]);
+
+                if (allFilled && anyChanged) {
+                    const formData = new FormData(pricesForm);
+                    const data = {}
+                    formData.forEach((value, key) => (data[key] = value));
+                    fetch(pricesForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Errore nell\'invio del form');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Errore durante l\'invio del form:', error);
+                    });
+                }
+            }
+        </script>
 
         
             <table id="storicoNoleggi">
@@ -577,10 +644,6 @@
                                     <% } %>
                                 </select>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>€/D + IVA:</td>
-                            <td><input type="number" name="dayPrice" min="1"  value="<%= mezzo.dayPrice %>"></td>
                         </tr>
                         <tr>
                             <td>€/KM + IVA:</td>
@@ -813,11 +876,10 @@
             const months = ['gennaio', 'febbrario', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
 
             const renderCalendar = () => {
-                let firstDateOfMonth = new Date(currYear, currMonth, 1).getDate(),
+                let firstDateOfMonth = new Date(currYear, currMonth, 0).getDay(),
                 lastDateOfMonth = new Date(currYear, currMonth +1, 0).getDate(),
                 lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
                 let liTag = '';
-                let shownDays = 0;
                 for (let i = firstDateOfMonth; i > 0; i--) {
                     let isBooked = false
                     bookings.forEach(date => {
@@ -826,7 +888,6 @@
                         if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                     });
                     liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${lastDateOfLastMonth-i+1}</li>`;
-                    shownDays++;
                 }
 
                 for (let i = 1; i <= lastDateOfMonth; i++) {
@@ -841,18 +902,20 @@
                     });
 
                     liTag += `<li class="${isToday} ${isBooked ? 'booked' : ''}">${i}</li>`;
-                    shownDays++
                 }
-                
-                for (let i = 35; i > shownDays; i--) {
+                const totalRows = Math.ceil((firstDateOfMonth + lastDateOfMonth)/7);
+                const missingDaysOfNextMonth = totalRows*7 - (firstDateOfMonth + lastDateOfMonth);
+                for (let i = 1; i <= missingDaysOfNextMonth; i++) {
                     let isBooked = false
                     bookings.forEach(date => {
                         const [fromDate, toDate] = date.split(':');
-                        const data = `${currMonth == 11 ? currYear+1 : currYear}-${currMonth == 11 ? 1 : currMonth+2 < 10 ? `0${currMonth+2}`: currMonth+2}-${35-i+1 < 10 ? `0${35-i+1}`: 35-i+1}`;
+                        const day = String(i).padStart(2, '0');
+                        const month = currMonth == 11 ? 1 : String(currMonth+2).padStart(2, '0');
+                        const data = `${currMonth == 11 ? currYear+1 : currYear}-${month}-${day}`;
                         if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                     });
 
-                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${35-i+1}</li>`;
+                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${i}</li>`;
                 }
                 currentDate.innerText = `${months[currMonth]} ${currYear}`;
                 daysTag.innerHTML = liTag;

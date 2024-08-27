@@ -16,7 +16,7 @@ body{
     --header-height: 150px;
 }
 main{
-    margin-top: var(--header-height);
+    margin-top: calc(var(--header-height) + 10px) ;
 }
 .header {
     top: 0;

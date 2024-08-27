@@ -32,10 +32,6 @@ const mezziSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    dayPrice: {
-        type: Number,
-        required: false
-    },
     kmIncluded: {
         type: Number,
         required: false
@@ -63,6 +59,12 @@ const mezziSchema = new mongoose.Schema({
     type: {
         type: String,
         required: false
+    },
+    daysPrices: {
+        type: [Number],
+        required: false,
+        minlength: 7,
+        maxlength: 7
     },
     note: {
         type: String,

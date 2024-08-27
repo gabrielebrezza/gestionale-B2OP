@@ -63,6 +63,14 @@ router.get('/admin/mezzo', authenticateJWT, async (req, res) =>{
         res.render('errorPage', {err: 'Il mezzo selezionato potrebbe essere stato eliminato o essere inesistente'});
     }
 });
+router.post('/admin/mezzi/updateDaysPrices', authenticateJWT, async (req, res) => {
+    const id = req.body.id;
+    const prices = (Object.keys(req.body)
+    .filter(key => key.startsWith('price')))
+    .map(key => req.body[key]);
+    await mezzi.findOneAndUpdate({"_id": id}, {"daysPrices": prices});
+    res.json({message: `Nuovi prezzi salvati con successo`});
+});
 router.post('/admin/mezzo/updateMezzo', authenticateJWT, async (req, res) =>{
     try {
         const id = req.body.id;
@@ -79,20 +87,21 @@ router.post('/admin/mezzi/newRent', authenticateJWT, async (req, res) =>{
         const mezzoId = req.body.id;
         const dati = req.body;
         dati.mezzoId = mezzoId;
-        const toDate = new Date(dati.toDate).getTime();
         const fromDate = new Date(dati.fromDate).getTime();
+        const toDate = new Date(dati.toDate).getTime();
         dati.days = Math.floor((toDate - fromDate) / (1000 * 60 *60 *24)) + 1;
-
+        dati.startDay = new Date(dati.fromDate).getDay() - 1;
         if(dati.cf){
             const user = new noleggiatori(dati)
             await user.save();
             dati.customerId = user._id;
         }
         if(dati.km) {
-            const { km, dayPrice, kmIncluded, kmPrice } = await mezzi.findOne({"_id": mezzoId});
+            const { km, daysPrices, kmIncluded, kmPrice } = await mezzi.findOne({"_id": mezzoId});
             await mezzi.findOneAndUpdate({"_id": mezzoId}, {"km" : dati.km});
             dati.km = dati.km - km;
-            dati.finalPrice = dati.days * dayPrice;
+            let day = dati.startDay;
+            dati.finalPrice = Array.from({ length: dati.days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
             if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
         }
         
@@ -116,14 +125,15 @@ router.post('/admin/mezzi/rentEnded', authenticateJWT, async (req, res) =>{
         }
 
         const rent = await bookings.findOne({"_id": rentId});
-        const {customerId, km, serbatoioFine, kmStarting, days} = rent;
+        const { km, serbatoioFine, kmStarting, days, startDay} = rent;
         if(!dati.km){
             dati.km = km ? km : 0;
         }else{
             await mezzi.findOneAndUpdate({"_id": idMezzo}, {"km" : dati.km});
             dati.km -= kmStarting;
-            const { dayPrice, kmIncluded, kmPrice } = await mezzi.findOne({"_id": idMezzo});
-            dati.finalPrice = days * dayPrice;
+            const { daysPrices, kmIncluded, kmPrice } = await mezzi.findOne({"_id": idMezzo});
+            let day = startDay;
+            dati.finalPrice = Array.from({ length: days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
             if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
         }
         if(!dati.serbatoioFine) dati.serbatoioFine = serbatoioFine ? serbatoioFine : 0;
