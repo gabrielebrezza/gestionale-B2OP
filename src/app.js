@@ -28,7 +28,9 @@ app.get('/mezzo', async (req, res) => {
   try {
     const id = req.query.id;
     const mezzo = await mezzi.findOne({'_id': id}, {"marca": 1, "modello": 1, "descrizione": 1, "kmIncluded": 1, "kmPrice": 1, "type": 1, "daysPrices": 1 });
-    const noleggi = await bookings.find({"mezzoId": id}, {"fromDate": 1, "toDate": 1});
+    let noleggi = await bookings.find({"mezzoId": id}, {"fromDate": 1, "toDate": 1});
+    const today = new Date();
+    noleggi = noleggi.filter(book => new Date(book.fromDate) > today || (new Date(book.fromDate) <= today &&  new Date(book.toDate) >= today));
     if (mezzo) {
         res.render('user/mezzo', { mezzo, noleggi });
     } else {

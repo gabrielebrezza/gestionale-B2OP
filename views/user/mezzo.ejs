@@ -373,51 +373,59 @@
         function listenerDay() {
             const days = document.querySelectorAll('.days *');
         
-        for (const day of days) {
-            const today = new Date();
-            if(new Date(day.dataset.day) <= today) continue;
-            day.addEventListener('click', () => {
-                if(toDate && fromDate){
-                    days.forEach(d => d.classList.remove('selected'));
-                    fromDate = '';
-                    toDate = '';
-                    fromDateElement = '';
-                    toDateElement = '';
+            for (const day of days) {
+                const today = new Date();
+                if(new Date(day.dataset.day) <= today){
+                    if(day.classList.contains('booked')){
+                        day.classList.remove('booked')
+                    }
+                    continue;
                 }
-                if(!fromDate){
+                if(day.classList.contains('booked')){
+                    continue;
+                }
+                day.addEventListener('click', () => {
+                    if(toDate && fromDate){
+                        days.forEach(d => d.classList.remove('selected'));
+                        fromDate = '';
+                        toDate = '';
+                        fromDateElement = '';
+                        toDateElement = '';
+                    }
+                    if(!fromDate){
+                        day.classList.add(`selected`)
+                        fromDate = day.dataset.day;
+                        fromDateElement = day
+                        return;
+                    }
+                    if(new Date(day.dataset.day) < new Date(fromDate)) return;
                     day.classList.add(`selected`)
-                    fromDate = day.dataset.day;
-                    fromDateElement = day
-                    return;
-                }
-                if(new Date(day.dataset.day) < new Date(fromDate)) return;
-                day.classList.add(`selected`)
-                toDate = day.dataset.day;
-                toDateElement = day;
-                const fromDateObj = new Date(fromDate);
-                const toDateObj = new Date(toDate);
+                    toDate = day.dataset.day;
+                    toDateElement = day;
+                    const fromDateObj = new Date(fromDate);
+                    const toDateObj = new Date(toDate);
 
-                let prevDay;
+                    let prevDay;
 
-                for(const d of days){
-                    
-                    const currentDay = new Date(d.dataset.day);
-                    const isInRange = currentDay >= fromDateObj && currentDay <= toDateObj;
-                    
-                    if (isInRange && d.classList.contains('booked')) {
-                        toDateElement.classList.remove('selected')
-                        toDate = prevDay;
-                        alert(`Ci spiace il mezzo non è disponibile nella data del ${d.dataset.day.split('-').reverse().join('/')} perciò il noleggio terminerà il ${toDate.split('-').reverse().join('/')}`)
-                        break;
+                    for(const d of days){
+
+                        const currentDay = new Date(d.dataset.day);
+                        const isInRange = currentDay >= fromDateObj && currentDay <= toDateObj;
+
+                        if (isInRange && d.classList.contains('booked')) {
+                            toDateElement.classList.remove('selected')
+                            toDate = prevDay;
+                            alert(`Ci spiace il mezzo non è disponibile nella data del ${d.dataset.day.split('-').reverse().join('/')} perciò il noleggio terminerà il ${toDate.split('-').reverse().join('/')}`)
+                            break;
+                        }
+                        if (isInRange) {
+                            d.classList.add('selected');
+                        }
+                        prevDay = d.dataset.day;
                     }
-                    if (isInRange) {
-                        d.classList.add('selected');
-                    }
-                    prevDay = d.dataset.day;
-                }
-                console.log(fromDate, toDate)
-            })
-        }
+                    console.log(fromDate, toDate)
+                })
+            }
         }
         
         
