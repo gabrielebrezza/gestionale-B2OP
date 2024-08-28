@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 
 const mezzi = require('./DB/mezzi.js');
+const bookings = require('./DB/bookings.js');
 const noleggiatori = require('./DB/noleggiatori.js');
 
 const app = express();
@@ -23,8 +24,24 @@ app.set('views', 'views');
 
 app.use(express.static('public'));
 
+app.get('/mezzo', async (req, res) => {
+  try {
+    const id = req.query.id;
+    const mezzo = await mezzi.findOne({'_id': id}, {"marca": 1, "modello": 1, "descrizione": 1, "kmIncluded": 1, "kmPrice": 1, "type": 1, "daysPrices": 1 });
+    const noleggi = await bookings.find({"mezzoId": id}, {"fromDate": 1, "toDate": 1});
+    if (mezzo) {
+        res.render('user/mezzo', { mezzo, noleggi });
+    } else {
+        res.status(404).render('errorPage', {err: 'Mezzo non trovato'});
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('errorPage', {err: 'Errore del server'});
+  }
+});
+
 app.use((req, res, next) => {
-  res.render('errorPage', {err: 'pagina non trovata'});
+    res.render('errorPage', {err: 'pagina non trovata'});
 });
 
 const PORT = process.env.PORT || 80;
