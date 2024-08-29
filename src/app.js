@@ -32,7 +32,7 @@ app.get('/mezzo', async (req, res) => {
     const today = new Date();
     noleggi = noleggi.filter(book => new Date(book.fromDate) > today || (new Date(book.fromDate) <= today &&  new Date(book.toDate) >= today));
     if (mezzo) {
-        res.render('user/mezzo', { mezzo, noleggi });
+        res.render('user/mezzo', { mezzo, noleggi, isLoggedIn: false });
     } else {
         res.status(404).render('errorPage', {err: 'Mezzo non trovato'});
     }

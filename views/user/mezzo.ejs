@@ -209,6 +209,59 @@
     color: #f2f2f2;
 }
 
+
+#userForm{
+    flex-direction: column;
+    max-width: 450px;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'Poppins', 'sans-serif';
+    overflow-x: hidden;
+}
+#userForm .pagesContainer{
+    width: 300%;
+    display: flex;
+    justify-content: space-between;
+    overflow-x: hidden;
+}
+#userForm .page{
+    width: 450px !important;
+    padding: 15px;
+    margin: 10px;
+    transition: transform .25s, opacity .25s;
+}
+#userForm .page .field{
+    display: flex;
+    justify-content: space-between;
+    margin-block: 10px;
+}
+#userForm .page .field > *:where(select, input){
+    max-width: 150px;
+    width: 100%;
+    padding: 5px;
+    background: none;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #333;
+}
+#userFormBtn{
+    outline: none;
+    border: none;
+    padding: 10px 20px;
+    background: #7e4cce;
+    color: #f2f2f2;
+    cursor: pointer;
+    transition: opacity .5s;
+}
+.formIconContainer span{
+    cursor: pointer;
+}
+#userForm .buttonContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
@@ -269,9 +322,175 @@
             </div>
             <p id="preventivoElement"></p>
 
+            <form id="userForm" action="/admin/mezzi/newRent" method="POST">
+                <% if (!isLoggedIn) { %>
+                    <p>Per semplificare il checkout in futuro <a href="#">Crea un Account</a> o se lo hai già <a href="#">Accedi</a></p>
+                <% } %>
+                <input type="hidden" name="id" value="<%= mezzo._id %>">
+                <input type="hidden" name="fromDate">
+                <input type="hidden" name="toDate">
+                <div class="pagesContainer">
+                    <section class="page page1">
+                        <div class="field">
+                            <label for="newUserName">Nome:</label>
+                            <input type="text" name="nome">
+                        </div>
+                        <div class="field">
+                            <label for="newUserSurname">Cognome:</label>
+                            <input type="text" name="cognome">
+                        </div>
+                        <div class="field">
+                            <label for="newUserCf">Codice Fiscale:</label>
+                            <input type="text" name="cf">
+                        </div>
+                        <div class="field">
+                            <label for="newUserCUnivoco">Codice Univoco:</label>
+                            <input type="text" name="cUnivoco">
+                        </div>
+                        <div class="field">
+                            <label for="newUserPIVA">Partita IVA:</label>
+                            <input type="text" name="pIva">
+                        </div>
+                    </section>
+                    <section class="page page2" style="display: none;">
+                        <div class="field">
+                            <label for="newUserVia">Via:</label>
+                            <input type="text" name="residenza[via]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserCivico">Civico:</label>
+                            <input type="text" name="residenza[nCivico]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserCap">CAP:</label>
+                            <input type="text" name="residenza[cap]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserComune">Comune:</label>
+                            <input type="text" name="residenza[comune]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserProvincia">Provincia:</label>
+                            <input type="text" name="residenza[provincia]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserEmail">Email:</label>
+                            <input type="text" name="contatti[email]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserTel">Tel:</label>
+                            <input type="text" name="contatti[tel]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserPec">Pec:</label>
+                            <input type="text" name="contatti[pec]">
+                        </div>
+                    </section>
+                    <section class="page page3" style="display: none;">
+                        <div class="field">
+                            <label for="newUsernPatente">Numero Patente:</label>
+                            <input type="text" name="patente[numero]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserRilascioPat">Rilascio Patente:</label>
+                            <input type="date" name="patente[rilascio]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserOfficePat">Rilasciata Da:</label>
+                            <input type="text" name="patente[daUfficio]">
+                        </div>
+                        <div class="field">
+                            <label for="newUserExpPat">Scadenza:</label>
+                            <input type="date" name="patente[scadenza]">
+                        </div>
+                    </section>
+                </div>
+                
+                <div class="buttonContainer">
+                    <button id="userFormBtn" type="submit" style="display: none;">Salva</button>
+                    <div class="formIconContainer">
+                        <span id="prevFormPage" class="material-symbols-outlined disabled">
+                            chevron_left
+                        </span>
+                        <span id="nextFormPage" class="material-symbols-outlined">
+                            chevron_right
+                        </span>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script>
+        const prevFormPage = document.getElementById('prevFormPage');
+            const nextFormPage = document.getElementById('nextFormPage');
+            const page1 = document.querySelector('.page1');
+            const page2 = document.querySelector('.page2');
+            const page3 = document.querySelector('.page3');
+            const userFormBtn = document.getElementById('userFormBtn');
+            prevFormPage.addEventListener('click', () => {
+                if(page1.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page2.style.display = 'block';
+                    page3.style.transform = 'translateX(-350%)';
+                    userFormBtn.style.opacity = 0;
+                    page3.style.opacity = 0;
+                    page2.style.transform = 'translateX(-100%)';
+                    page2.style.opacity = 1;
+                    setTimeout(() => {
+                        page2.style.transform = 'translateX(+0%)';
+                        page3.style.display = 'none';
+                        userFormBtn.style.display = 'none';
+                    }, 250);
+                    nextFormPage.classList.remove('disabled');
+                    return;
+                }
+                if(page1.style.display == 'none'){
+                    page1.style.display = 'block';
+                    page2.style.transform = 'translateX(-350%)';
+                    page2.style.opacity = 0;
+                    page1.style.transform = 'translateX(-100%)';
+                    page1.style.opacity = 1;
+                    setTimeout(() => {
+                        page1.style.transform = 'translateX(+0%)';
+                        page2.style.display = 'none';
+                    }, 250);
+                    prevFormPage.classList.add('disabled');
+                    return;
+                }
+            });
+            nextFormPage.addEventListener('click', () => {
+                if(page3.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page2.style.display = 'block';
+                    page2.style.opacity = 1;
+                    page1.style.transform = 'translateX(-50%)';
+                    page1.style.opacity = 0;
+                    page2.style.transform = 'translateX(-50%)';
+                    setTimeout(() => {
+                        page1.style.display = 'none';
+                        page2.style.transform = 'translateX(0%)';
+                    }, 250);
+                    prevFormPage.classList.remove('disabled');
+                    return;
+                }
+                if(page3.style.display == 'none') {
+                    page3.style.display = 'block';
+                    userFormBtn.style.display = 'block';
+                    userFormBtn.style.opacity = 1;
+                    page3.style.opacity = 1;
+                    page2.style.transform = 'translateX(-50%)';
+                    page2.style.opacity = 0;
+                    page3.style.transform = 'translateX(-50%)';
+                    setTimeout(() => {
+                        page2.style.display = 'none';
+                        page3.style.transform = 'translateX(0%)';
+                    }, 250);
+                    nextFormPage.classList.add('disabled');
+                    return;
+                }
+            });
+    </script>
 
     <%
         let bookedDate = [];
@@ -417,6 +636,7 @@
                         fromDateElement = '';
                         toDateElement = '';
                         document.getElementById('preventivoElement').innerText = '';
+                        document.getElementById('userForm').style.display = 'none';
                     }
                     if(!fromDate){
                         day.classList.add(`selected`)
@@ -456,11 +676,17 @@
                     
                     const finalPrice = Array.from({ length: totalDays }, () => prices[startDay++ % 7]).reduce((a, b) => a + b, 0)
                     document.getElementById('preventivoElement').innerText =`Il prezzo del noleggio partirà da ${finalPrice} €`;
+                    document.getElementById('userForm').style.display = 'flex';
+                    document.querySelector('[name="fromDate"]').value = fromDate;
+                    document.querySelector('[name="toDate"]').value = toDate;
                 })
             }
         }
         
         
     </script>
+
+
+
 </body>
 </html>
