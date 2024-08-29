@@ -232,7 +232,7 @@
                 <ul>
                     <% const weekDays = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'] %>
                     <% for (let [days, price] of Object.entries(mezzo.daysPrices)) { %>
-                        <li><%= weekDays[days] %>: €<%= price %></li>
+                        <li class="price" data-price="<%= price %>"><%= weekDays[days] %>: <s><%= mezzo.discountedDays.includes(days) ? `${price + (price * mezzo.discount)/100} €` : '' %></s> <%= price %> € </li>
                     <% } %>
                 </ul>
             </div>
@@ -267,6 +267,7 @@
                     </ul>
                 </div>
             </div>
+            <p id="preventivoElement"></p>
 
         </div>
     </div>
@@ -387,7 +388,13 @@
                 renderCalendar();
             });
         }
+
+        const priceElements = document.querySelectorAll('.price')
+        let prices = [];
+        priceElements.forEach( el => prices.push(el.dataset.price - 0));
+
         var fromDate, toDate, fromDateElement, toDateElement;
+
         function listenerDay() {
             const days = document.querySelectorAll('.days *');
         
@@ -441,7 +448,14 @@
                         }
                         prevDay = d.dataset.day;
                     }
-                    console.log(fromDate, toDate)
+                    let startDay = new Date(fromDate).getDay() - 1;
+                    startDay = startDay < 0 ? 6 : startDay;
+                    console.log(startDay)
+                    
+                    let totalDays = Math.floor((new Date(toDate) - new Date(fromDate)) / (1000 * 60 *60 *24)) + 1;
+                    
+                    const finalPrice = Array.from({ length: totalDays }, () => prices[startDay++ % 7]).reduce((a, b) => a + b, 0)
+                    document.getElementById('preventivoElement').innerText =`Il prezzo del noleggio partirà da ${finalPrice} €`;
                 })
             }
         }

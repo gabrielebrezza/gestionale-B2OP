@@ -66,6 +66,14 @@ const mezziSchema = new mongoose.Schema({
         minlength: 7,
         maxlength: 7
     },
+    discountedDays: {
+        type: String,
+        required: false
+    },
+    discount: {
+        type: Number,
+        required: false
+    },
     note: {
         type: String,
         required: false
