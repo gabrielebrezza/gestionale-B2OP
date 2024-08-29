@@ -91,6 +91,7 @@ router.post('/admin/mezzi/newRent', authenticateJWT, async (req, res) =>{
         const toDate = new Date(dati.toDate).getTime();
         dati.days = Math.floor((toDate - fromDate) / (1000 * 60 *60 *24)) + 1;
         dati.startDay = new Date(dati.fromDate).getDay() - 1;
+        dati.startDay = dati.startDay < 0 ? 6 : dati.startDay;
         if(dati.cf){
             const user = new noleggiatori(dati)
             await user.save();
