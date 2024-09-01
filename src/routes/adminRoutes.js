@@ -1,6 +1,9 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const fsp = require('fs').promises;
+const path = require('path');
+
 const { authenticateJWT } = require('../utils/authUtils');
 const router = express.Router();
 
@@ -13,6 +16,21 @@ router.use(cookieParser());
 router.use(bodyParser.json());
 
 router.use(bodyParser.urlencoded({ extended: true }));
+
+router.get('/images', authenticateJWT, async (req, res) => {
+    const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);
+    try {
+        await fsp.access(imagePath);
+        res.sendFile(imagePath);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            res.status(404).send('Immagine non trovata.');
+        } else {
+            console.log('errore server')
+            res.status(500).send('Errore del server.');
+        }
+    }
+});
 
 router.get('/admin', authenticateJWT, async (req, res) => {
     res.redirect('/admin/mezzi');

@@ -75,6 +75,14 @@ const noleggiatoriSchema = new mongoose.Schema({
             required: false
         }
     },
+    password: {
+        type: String,
+        required: false
+    },
+    otp: {
+        type: String,
+        required: false
+    },
     note: {
         type: String,
         required: false

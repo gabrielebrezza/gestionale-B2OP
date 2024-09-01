@@ -21,7 +21,7 @@
                                 <li><strong>Email:</strong> <%= admin.email %></li> 
                             </ul>
                             <div class="buttons">
-                                <form action="/admin/adminApprovation" method="post">
+                                <form action="/admin/approvation " method="post">
                                     <input type="hidden" name="id" value="<%= admin._id %>">
                                     <input type="submit" class="approve-button" name="approve" value="Approva">
                                     <input type="submit" class="disapprove-button" name="disapprove" value="Disapprova">

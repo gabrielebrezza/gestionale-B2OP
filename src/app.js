@@ -1,6 +1,9 @@
 require('dotenv').config();
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
 
 const mezzi = require('./DB/mezzi.js');
 const bookings = require('./DB/bookings.js');
@@ -16,8 +19,9 @@ app.use(express.json());
 
 app.use(adminRoute, authRoute);
 
-app.use(express.urlencoded({extended: false}));
-
+app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.json({ limit: '50mb' })); // Limite di 50 MB per JSON
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Limite di 50 MB per URL encoded
 app.set('view engine', 'ejs');
 
 app.set('views', 'views');
@@ -41,6 +45,47 @@ app.get('/mezzo', async (req, res) => {
     res.status(500).render('errorPage', {err: 'Errore del server'});
   }
 });
+
+app.post('/user/newRent', async (req, res) => {
+  try {
+    console.log(req.body)
+    const dati = req.body;
+    console.log(dati)
+    const user = new noleggiatori(dati);
+    await user.save();
+    const userId = user._id.toString();
+    res.status(200).json({ userId });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).render('errorPage', { err: 'Errore del server' });
+  }
+});
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      const dir = path.join('privateImages', file.fieldname);
+      cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const userId = req.body.userId;
+    cb(null, `${file.fieldname}_${userId}.jpg`);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/user/uploadFiles', upload.fields([{ name: 'licenseFront', maxCount: 1 }, { name: 'licenseBack', maxCount: 1 }]), async (req, res) => {
+  try {
+      res.json({ message: 'File caricati con successo' });
+  } catch (error) {
+      console.error('Errore durante l\'upload dei file:', error);
+      res.status(500).json({ error: 'Errore del server' });
+  }
+});
+
+
+
 
 app.use((req, res, next) => {
     res.render('errorPage', {err: 'pagina non trovata'});

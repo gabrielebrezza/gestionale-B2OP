@@ -15,6 +15,8 @@
             font-family: "Rubik", sans-serif;
             font-optical-sizing: auto;
             font-style: normal;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
         }
         body {
             background-color: #f4f4f4;
@@ -209,33 +211,52 @@
     color: #f2f2f2;
 }
 
-
-#userForm{
-    flex-direction: column;
+#userForm {
     max-width: 450px;
     width: 100%;
     border-radius: 10px;
     font-family: 'Poppins', 'sans-serif';
-    overflow-x: hidden;
+    overflow: hidden;
+    position: relative;
 }
-#userForm .pagesContainer{
-    width: 300%;
+
+#userForm .pagesContainer {
+    width: calc(100% * var(--pages));
+    height: max-content;
     display: flex;
-    justify-content: space-between;
-    overflow-x: hidden;
+    align-items: center;
+    overflow: hidden;
 }
-#userForm .page{
-    width: 450px !important;
+
+#userForm .page {
+    width: 100%;
+    height: 328px;
     padding: 15px;
-    margin: 10px;
-    transition: transform .25s, opacity .25s;
+    margin: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    transform: translateX(100%);
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
 }
+
+#userForm .page.active {
+    opacity: 1;
+    transform: translateX(calc(var(--page) * -100%));
+    z-index: 165;
+}
+
 #userForm .page .field{
     display: flex;
     justify-content: space-between;
-    margin-block: 10px;
 }
-#userForm .page .field > *:where(select, input){
+#userForm .page .field:has(input[type="file"]){
+    align-items: center;
+}
+#userForm .page .field:not(.termsField) > *:where(select, input:not([type="checkbox"] [type="file"])){
     max-width: 150px;
     width: 100%;
     padding: 5px;
@@ -244,18 +265,99 @@
     border: none;
     border-bottom: 1px solid #333;
 }
+#userForm .page .field:not(.termsField) > *:where(select, input:not([type="checkbox"])).show-error:invalid{
+    border-bottom: 1px solid red;
+}
+#userForm .page .field label{
+    position: relative;
+}
+#userForm .page .field label sup{
+    position: absolute;
+    left: -8px;
+    font-size: 1rem;
+    color: #7B0828;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    background-color: #7e4cce;
+    color: #f2f2f2;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.custom-file-upload label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
 #userFormBtn{
     opacity: 0;
+    pointer-events: none;
     outline: none;
     border: none;
     padding: 10px 20px;
+    border-radius: 5px;
     background: #7e4cce;
     color: #f2f2f2;
     cursor: pointer;
-    transition: opacity .5s;
+    transition: opacity .25s, transform .25s;
+}
+#userFormBtn:hover{
+    transform: scaleX(1.2) scaleY(1.1);
+}
+.formIconContainer{
+    margin-top: 10px;
+    user-select: none;
+    display: flex;
+    gap: 25px;
 }
 .formIconContainer span{
+    position: relative;
+    opacity: 1;
+    pointer-events: all;
     cursor: pointer;
+    user-select: none;
+    transition: opacity .5s ease-in-out;
+    z-index: 1;
+    color: #333;
+}
+
+.formIconContainer span::before{
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: 0;
+    transform: translateX(-50%) translateY(-50%);
+    background: rgb(164, 164, 162);
+    opacity: .5;
+}
+
+p.loginAlert{
+    margin-top: 20px;
+    font-size: .8rem;
+}
+.accountLink{
+    color: #7e4cce;
+    font-weight: 500;
+    cursor: pointer;
+}
+.formIconContainer span.disabled{
+    opacity: 0;
+    pointer-events: none;
 }
 #userForm .buttonContainer{
     display: flex;
@@ -263,6 +365,112 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+.field.termsField{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center !important;
+    gap: 5px;
+    color: #bcb9b9;
+    margin-bottom: 15px;
+}
+.field.termsField > input{
+    cursor: pointer;
+    accent-color: #7e4cce;
+    background: red;
+}
+@media (max-width: 480px){
+    .mezzo-details {
+        flex-direction: column;
+    }
+
+
+    .calendarWrapper .calendarHead{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px 0px;
+    }
+    .calendarHead .current-date{
+        font-size: 1.25rem;
+    }
+
+    .calendarMain .days li::before{
+        height: 35px;
+        width: 35px;
+    }
+    .calendarHead .calendarIcons span{
+        height: 25px;
+        width: 25px;
+        line-height: 25px;
+        font-size: 1.4rem;
+    }
+    .calendarMain{
+        padding: 10px;
+    }
+    #preventivoElement, p.loginAlert, .calendar-box > p{
+        width: 100%;
+        font-size: .5rem;
+    }
+}
+#loginModal{
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+pointer-events: none;
+transition: opacity .5s;
+}
+#loginModal.active{
+    opacity: 1;
+    pointer-events: all;
+}
+#loginModal section{
+    max-width: 400px;
+    width: 100%;
+    background: #f2f2f2;
+    overflow: hidden;
+}
+#loginModal section .formsContainer{
+    width: calc(100% * var(--pages));
+    height: max-content;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+#loginModal section .formsContainer .authForm {
+    width: 100%;
+    height: 328px;
+    transform: translateX(100%);
+    border: 2px solid red;
+    /* transform: translateX(200%); */
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 15px;
+}
+#loginForm{
+    transform: translateX(0);
+}
+#loginOtpForm{
+    /* opacity: 0; */
+    /* pointer-events: none; */
+    transition: opacity .5s;
+}
+#loginOtpForm.active{
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity .5s;
 }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -324,92 +532,119 @@
             </div>
             <p id="preventivoElement"></p>
 
-            <form id="userForm" action="/admin/mezzi/newRent" method="POST">
-                <% if (!isLoggedIn) { %>
-                    <p>Per semplificare il checkout in futuro <a href="#">Crea un Account</a> o se lo hai già <a href="#">Accedi</a></p>
-                <% } %>
+            <form id="userForm" enctype="multipart/form-data" style="display: none;">
                 <input type="hidden" name="id" value="<%= mezzo._id %>">
                 <input type="hidden" name="fromDate">
                 <input type="hidden" name="toDate">
-                <div class="pagesContainer">
-                    <section class="page page1">
+                <div class="pagesContainer" style="--pages: 4">
+                    <section class="page page1" style="--page: 0">
                         <div class="field">
-                            <label for="newUserName">Nome:</label>
-                            <input type="text" name="nome">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Nome:</label>
+                            <input type="text" name="nome" required>
                         </div>
                         <div class="field">
-                            <label for="newUserSurname">Cognome:</label>
-                            <input type="text" name="cognome">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Cognome:</label>
+                            <input type="text" name="cognome" required>
                         </div>
                         <div class="field">
-                            <label for="newUserCf">Codice Fiscale:</label>
-                            <input type="text" name="cf">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Codice Fiscale:</label>
+                            <input type="text" name="cf" required>
                         </div>
                         <div class="field">
-                            <label for="newUserCUnivoco">Codice Univoco:</label>
+                            <label>Codice Univoco:</label>
                             <input type="text" name="cUnivoco">
                         </div>
                         <div class="field">
-                            <label for="newUserPIVA">Partita IVA:</label>
+                            <label>Partita IVA:</label>
                             <input type="text" name="pIva">
                         </div>
                     </section>
-                    <section class="page page2" style="display: none;">
+                    <section class="page page2" style="--page: 1">
                         <div class="field">
-                            <label for="newUserVia">Via:</label>
-                            <input type="text" name="residenza[via]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Via:</label>
+                            <input type="text" name="residenza[via]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserCivico">Civico:</label>
-                            <input type="text" name="residenza[nCivico]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Civico:</label>
+                            <input type="text" name="residenza[nCivico]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserCap">CAP:</label>
-                            <input type="text" name="residenza[cap]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>CAP:</label>
+                            <input type="text" name="residenza[cap]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserComune">Comune:</label>
-                            <input type="text" name="residenza[comune]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Comune:</label>
+                            <input type="text" name="residenza[comune]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserProvincia">Provincia:</label>
-                            <input type="text" name="residenza[provincia]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Provincia:</label>
+                            <input type="text" name="residenza[provincia]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserEmail">Email:</label>
-                            <input type="text" name="contatti[email]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Email:</label>
+                            <input type="email" name="contatti[email]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserTel">Tel:</label>
-                            <input type="text" name="contatti[tel]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Tel:</label>
+                            <input type="tel" name="contatti[tel]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserPec">Pec:</label>
+                            <label >Pec:</label>
                             <input type="text" name="contatti[pec]">
                         </div>
                     </section>
-                    <section class="page page3" style="display: none;">
+                    <section class="page page3" style="--page: 2">
                         <div class="field">
-                            <label for="newUsernPatente">Numero Patente:</label>
-                            <input type="text" name="patente[numero]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Numero Patente:</label>
+                            <input type="text" name="patente[numero]" required>
                         </div>
                         <div class="field">
-                            <label for="newUserRilascioPat">Rilascio Patente:</label>
-                            <input type="date" name="patente[rilascio]">
-                        </div>
-                        <div class="field">
-                            <label for="newUserOfficePat">Rilasciata Da:</label>
+                            <label>Rilasciata Da:</label>
                             <input type="text" name="patente[daUfficio]">
                         </div>
                         <div class="field">
-                            <label for="newUserExpPat">Scadenza:</label>
-                            <input type="date" name="patente[scadenza]">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Rilascio Patente:</label>
+                            <input type="date" name="patente[rilascio]" required>
+                        </div>
+                        <div class="field">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Scadenza:</label>
+                            <input type="date" name="patente[scadenza]" required>
+                        </div>
+                    </section>
+                    <section class="page page4" style="--page: 3">
+                        <div class="field">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Fronte Patente:</label>
+                            <div class="custom-file-upload">
+                                <input type="file" class="licenseFile" name="licenseFront" id="licenseFront"  accept="image/jpeg, image/png" required>
+                                <label for="licenseFront">
+                                    <span class="material-symbols-outlined upload-icon">
+                                        upload_file
+                                    </span>
+                                    <span class="upload-text">Carica foto</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Retro Patente:</label>
+                            <div class="custom-file-upload">
+                                <input type="file" class="licenseFile" name="licenseBack" id="licenseBack"  accept="image/jpeg, image/png" required>
+                                <label for="licenseBack">
+                                    <span class="material-symbols-outlined upload-icon">
+                                        upload_file
+                                    </span>
+                                    <span class="upload-text">Carica foto</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field termsField">
+                            <label title="Campo Obbligatorio"><sup>*</sup>Accetto Termini e Condizioni:</label>
+                            <input type="checkbox" name="terms" required>
                         </div>
                     </section>
                 </div>
                 
                 <div class="buttonContainer">
-                    <button id="userFormBtn" type="submit" style="display: none;">Salva</button>
+                    <button id="userFormBtn" type="submit">Paga</button>
                     <div class="formIconContainer">
                         <span id="prevFormPage" class="material-symbols-outlined disabled">
                             chevron_left
@@ -419,80 +654,98 @@
                         </span>
                     </div>
                 </div>
+                <% if (!isLoggedIn) { %>
+                    <p class="loginAlert">Per semplificare il checkout in futuro <a class="accountLink" id="signup">Crea un Account</a> o se lo hai già <a class="accountLink" id="login">Accedi</a></p>
+                <% } %>
             </form>
         </div>
     </div>
-
+    <script>
+        const licenseFileInputs = document.querySelectorAll('.licenseFile');
+        for(const input of licenseFileInputs){
+            input.addEventListener('change', () => {
+                const label = document.querySelector(`label[for="${input.name}"]`);
+                label.childNodes[1].innerText = 'done_outline';
+                label.childNodes[3].innerText = 'Caricata'
+            })
+        }
+    </script>
     <script>
         const prevFormPage = document.getElementById('prevFormPage');
-            const nextFormPage = document.getElementById('nextFormPage');
-            const page1 = document.querySelector('.page1');
-            const page2 = document.querySelector('.page2');
-            const page3 = document.querySelector('.page3');
-            const userFormBtn = document.getElementById('userFormBtn');
-            prevFormPage.addEventListener('click', () => {
-                if(page1.style.display != 'none') return;
-                if(page2.style.display == 'none') {
-                    page2.style.display = 'block';
-                    page3.style.transform = 'translateX(-350%)';
-                    userFormBtn.style.opacity = 0;
-                    page3.style.opacity = 0;
-                    page2.style.transform = 'translateX(-100%)';
-                    page2.style.opacity = 1;
-                    setTimeout(() => {
-                        page2.style.transform = 'translateX(+0%)';
-                        page3.style.display = 'none';
-                        userFormBtn.style.display = 'none';
-                    }, 250);
-                    nextFormPage.classList.remove('disabled');
-                    return;
-                }
-                if(page1.style.display == 'none'){
-                    page1.style.display = 'block';
-                    page2.style.transform = 'translateX(-350%)';
-                    page2.style.opacity = 0;
-                    page1.style.transform = 'translateX(-100%)';
-                    page1.style.opacity = 1;
-                    setTimeout(() => {
-                        page1.style.transform = 'translateX(+0%)';
-                        page2.style.display = 'none';
-                    }, 250);
-                    prevFormPage.classList.add('disabled');
-                    return;
+        const nextFormPage = document.getElementById('nextFormPage');
+        const pages = document.querySelectorAll('.page');
+        const userFormBtn = document.getElementById('userFormBtn');
+        let currentPage = 0;
+    
+        function updatePageVisibility() {
+            pages.forEach((page, index) => {
+                if (index === currentPage) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
                 }
             });
-            nextFormPage.addEventListener('click', () => {
-                if(page3.style.display != 'none') return;
-                if(page2.style.display == 'none') {
-                    page2.style.display = 'block';
-                    page2.style.opacity = 1;
-                    page1.style.transform = 'translateX(-50%)';
-                    page1.style.opacity = 0;
-                    page2.style.transform = 'translateX(-50%)';
-                    setTimeout(() => {
-                        page1.style.display = 'none';
-                        page2.style.transform = 'translateX(0%)';
-                    }, 250);
-                    prevFormPage.classList.remove('disabled');
-                    return;
-                }
-                if(page3.style.display == 'none') {
-                    page3.style.display = 'block';
-                    userFormBtn.style.display = 'block';
-                    userFormBtn.style.opacity = 1;
-                    page3.style.opacity = 1;
-                    page2.style.transform = 'translateX(-50%)';
-                    page2.style.opacity = 0;
-                    page3.style.transform = 'translateX(-50%)';
-                    setTimeout(() => {
-                        page2.style.display = 'none';
-                        page3.style.transform = 'translateX(0%)';
-                    }, 250);
-                    nextFormPage.classList.add('disabled');
-                    return;
+        
+            prevFormPage.classList.toggle('disabled', currentPage === 0);
+            nextFormPage.classList.toggle('disabled', currentPage === pages.length - 1);
+        
+            if (currentPage === pages.length - 1) {
+                userFormBtn.style.opacity = 1;
+                userFormBtn.style.pointerEvents = 'all';
+            } else {
+                userFormBtn.style.opacity = 0;
+                userFormBtn.style.pointerEvents = 'none';
+            }
+        }
+    
+        prevFormPage.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                updatePageVisibility();
+            }
+        });
+    
+        nextFormPage.addEventListener('click', () => {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                updatePageVisibility();
+            }
+        });
+    
+        userFormBtn.addEventListener('click', event => {
+            let hasError = false;
+            let firstErrorPage = null;
+    
+            pages.forEach((page, index) => {
+                const inputs = page.querySelectorAll('#userForm .page .field > *:where(select, input:not([type="checkbox"]))');
+                let pageHasError = false;
+    
+                inputs.forEach(input => {
+                    if (!input.checkValidity()) {
+                        input.classList.add('show-error');
+                        pageHasError = true;
+                    } else {
+                        input.classList.remove('show-error');
+                    }
+                });
+    
+                if (pageHasError && firstErrorPage === null) {
+                    firstErrorPage = index;
+                    hasError = true;
                 }
             });
+    
+            if (hasError) {
+                event.preventDefault();
+                currentPage = firstErrorPage;
+                updatePageVisibility();
+            }
+        });
+    
+        updatePageVisibility();
     </script>
+    
+
 
     <%
         let bookedDate = [];
@@ -677,8 +930,9 @@
                     let totalDays = Math.floor((new Date(toDate) - new Date(fromDate)) / (1000 * 60 *60 *24)) + 1;
                     
                     const finalPrice = Array.from({ length: totalDays }, () => prices[startDay++ % 7]).reduce((a, b) => a + b, 0)
-                    document.getElementById('preventivoElement').innerText =`Il prezzo del noleggio partirà da ${finalPrice} €`;
-                    document.getElementById('userForm').style.display = 'flex';
+                    document.getElementById('preventivoElement').innerText =`Il prezzo del noleggio partirà da ${finalPrice} € + IVA`;
+                    document.getElementById('userForm').style.display = 'block';
+                    document.getElementById('userForm').scrollIntoView({ behavior: 'smooth' })
                     document.querySelector('[name="fromDate"]').value = fromDate;
                     document.querySelector('[name="toDate"]').value = toDate;
                 })
@@ -690,5 +944,201 @@
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userForm = document.getElementById('userForm');
+        const fileUploadForm = document.getElementById('fileUploadForm');
+
+        userForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(userForm);
+            const newFormData = {}
+            formData.forEach((value, key) => (newFormData[key] = value));
+            try {
+                const response = await fetch('/user/newRent', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(newFormData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error creating user');
+                }
+
+                const data = await response.json();
+                const userId = data.userId;
+
+                const fileData = new FormData();
+                fileData.append('userId', userId);
+                const licenseFrontFile = document.getElementById('licenseFront').files[0];
+                const licenseBackFile = document.getElementById('licenseBack').files[0];
+                if (licenseFrontFile) {
+                    fileData.append('licenseFront', licenseFrontFile);
+                }
+                if (licenseBackFile) {
+                    fileData.append('licenseBack', licenseBackFile);
+                }
+                const fileResponse = await fetch('/user/uploadFiles', {
+                    method: 'POST',
+                    body: fileData
+                });
+                if (!fileResponse.ok) {
+                    throw new Error('Error uploading files');
+                }
+                const fileDataResponse = await fileResponse.json();
+                console.log('File caricati con successo:', fileDataResponse);
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        });
+    });
+</script>
+
+
+
+
+    <article id="loginModal">
+        <section>
+            <div class="formsContainer" style="--pages: 2;">
+                <form class="authForm" id="loginForm" style="--page: 0;">
+                    <input type="email" name="email" id="emailLogin" required>
+                    <input type="password" name="password" id="passwordLogin" required>
+                    <button type="submit">
+                        Accedi
+                    </button>
+                </form>
+                <form class="authForm" id="loginOtpForm" style="--page: 1;">
+                    <input type="hidden" name="id">
+                    <input type="number" id="digit1" name="digit1" min="0" max="9" maxlength="1" required autofocus>
+                    <input type="number" id="digit2" name="digit2" min="0" max="9" maxlength="1" required>
+                    <input type="number" id="digit3" name="digit3" min="0" max="9" maxlength="1" required>
+                    <input type="number" id="digit4" name="digit4" min="0" max="9" maxlength="1" required>
+                    <input type="number" id="digit5" name="digit5" min="0" max="9" maxlength="1" required>
+                    <input type="number" id="digit6" name="digit6" min="0" max="9" maxlength="1" required>
+                </form>
+            </div>
+        </section>
+    </article>
+    <script>
+        const loginBtn = document.getElementById('login');
+        const loginModal = document.getElementById('loginModal');
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+        const loginForm = document.getElementById('loginForm');
+        const loginInputs = document.querySelectorAll('#loginForm input');
+        const loginOtpForm = document.getElementById('loginOtpForm');
+        loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                const formData = new FormData(loginForm);
+
+                const newFormData = {}
+                formData.forEach((value, key) => (newFormData[key] = value));
+                try {
+                    const response = await fetch('/user/login', {
+                        method: 'POST',
+                        headers: {
+                        "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newFormData)
+                    });
+    
+                    if (response.ok) {
+                        const dati = await response.json();
+                        const id = dati.id;
+                        loginOtpForm.querySelector('input[name="id"]').value = id;
+                        loginOtpForm.classList.add('active');
+                        for(const input of loginInputs){
+                            input.value = '';
+                        }
+                        loginOtpForm.focus();
+                    } else {
+                        const error = await response.json();
+                        if (response.status == 401) {
+                            if(error.accountExist === false){
+                                console.log('Account non esistente')
+                            }
+                            if(error.wrongCredentials){
+                                console.log('Credenziali errate')
+                            }
+                        }
+                        
+                        
+                        // for(const input of loginInputs){
+                        //     input.classList.add = 'invalidLoginField';
+                        // }
+                    }
+                } catch (error) {
+                    console.error('Error during login:', error);
+                }
+            });
+
+            const otpInputs = loginOtpForm.querySelectorAll('input[type="number"]');
+
+            const previousOTPValues = Array.from(otpInputs).map(input => input.value);
+
+            async function checkAllFilled() {
+                const allFilled = Array.from(otpInputs).every(input => input.value.length > 0);
+                const currentIndex = Array.from(otpInputs).indexOf(document.activeElement);
+            
+                
+                if (allFilled && otpInputs[currentIndex].value !== previousOTPValues[currentIndex]) {
+                    previousOTPValues[currentIndex] = otpInputs[currentIndex].value;
+                    
+                    const formData = new FormData(loginOtpForm);
+
+                    const newFormData = {}
+                    formData.forEach((value, key) => (newFormData[key] = value));
+                    console.log(newFormData)
+                    try {
+                        const response = await fetch('/user/otp', {
+                            method: 'POST',
+                            headers: {
+                            "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(newFormData)
+                        });
+                    
+                        if (response.ok) {
+                            const dati = await response.json();
+                            const { token, maxAge } = dati;
+                            document.cookie = `userToken=${token}; path=/; max-age=${maxAge}`;
+
+                            for(const input of otpInputs){
+                                input.value = '';
+                            }
+                            loginModal.classList.remove('active');
+                        } else {
+                            const error = await response.json();
+                            if (response.status == 401) {
+
+                                if(error.otpMatched === false){
+                                    console.log('codice OTP errato')
+                                }
+                            }else{
+                                console.log('errore generale');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error during login:', error);
+                    }
+                }
+            }
+
+            otpInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    checkAllFilled();
+                    const index = Array.from(otpInputs).indexOf(input);
+                    previousOTPValues[index] = input.value;
+                });
+            });
+    </script>
+
+
+<script src="/scripts/utils/auth/otp.js"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 
 const admins = require('../DB/admin');
+const noleggiatori = require('../DB/noleggiatori');
 
 const { generateToken, authenticateJWT } = require('../utils/authUtils.js');
 
@@ -137,7 +138,7 @@ router.post('/admin/verificaOTP', async (req, res) =>{
     }
 });
 
-router.post('/admin/adminApprovation', authenticateJWT, async (req, res) =>{
+router.post('/admin/approvation', authenticateJWT, async (req, res) =>{
     const dati = req.body;
     if(dati.disapprove){
         await admins.deleteOne({"_id": dati.id});
@@ -159,4 +160,68 @@ router.post('/admin/logout', authenticateJWT, async (req, res) =>{
     res.cookie('token', '', {maxAge: 1});
     res.redirect('/admin/login');
 });
+
+
+
+
+//users
+router.post('/user/login', async (req, res) => {
+    try {
+      const email = req.body.email.replace(/\s/g, "").toLowerCase();
+      const password = req.body.password;
+      const user = await noleggiatori.findOne({ "contatti.email": email }, {});
+      if(!user.password || !user){
+        return res.status(401).json({ accountExist: false });
+      }
+      if (!(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ wrongCredentials: true });
+      }
+      const randomBuffer = crypto.randomBytes(16);
+      const randomNumber = randomBuffer.readUIntBE(0, 3);
+      let otpCode = randomNumber % 1000000;
+      if(otpCode < 100000) otpCode += 100000;
+  
+      const saltRoundsOTP = await bcrypt.genSalt(Math.min(12, 234));
+      const hashedOTP = await bcrypt.hash(String(otpCode), saltRoundsOTP);
+      console.log(`Codice di verifica per ${email}: ${otpCode}`);
+      await noleggiatori.findOneAndUpdate({ "_id": user._id }, {"otp": hashedOTP});
+      // const subject = 'Login Istruttore Autoscuola';
+      // const text = `Gentile ${admin.nome} ${admin.cognome}, questo è il codice per accedere: ${otpCode}`;
+      // try {
+      //     const result = await sendEmail(email, subject, text);
+      //     console.log(result)
+      // } catch (error) {
+      //     console.error(error)
+      //     return res.render('errorPage', { err: 'Errore nell\'invio dell\'email con codice OTP' });
+      // }
+      return res.status(200).json({id: user._id});
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'errore del server'});
+    }
+  });
+
+  
+  router.post('/user/otp', async (req, res) =>{
+    const id = req.body.id;
+    const insertedOTP = Object.values(req.body).slice(-6);
+    let otpString = '';
+    for (const key in insertedOTP) {
+        otpString += insertedOTP[key];
+    }
+    const check = await noleggiatori.findOne({ "_id": id });
+    if(!check.otp || !check){
+        return res.status(401).json({ otpExist: false });
+    }
+    const isOTPMatched = await bcrypt.compare(otpString, check.otp);
+    
+    if(!isOTPMatched){
+        return res.status(401).json({ otpMatched: false });
+    }
+
+    await noleggiatori.findOneAndUpdate({ "_id": id }, {$unset: {"otp": ""}});
+    const token = await generateToken(id);
+    return res.status(200).json({token, maxAge: 1000*60*60*24*93});
+});
+
 module.exports = router;

@@ -4,4 +4,9 @@ document.querySelectorAll('input[type="number"]').forEach(function(input, index,
             inputs[index + 1].focus();
         }
     });
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Backspace' && this.value.length === 0 && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
 });
