@@ -33,4 +33,23 @@ async function authenticateJWT(req, res, next) {
     });
 }
 
-module.exports = { generateToken, authenticateJWT };
+
+
+function userAuthenticateJWT(req, res, next) {
+    const token = req.cookies.userToken;
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            req.user = null;
+            return next();
+        }
+        req.user = user;
+        next();
+    });
+}
+
+module.exports = { generateToken, authenticateJWT, userAuthenticateJWT };
