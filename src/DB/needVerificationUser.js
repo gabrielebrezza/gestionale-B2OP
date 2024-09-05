@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const noleggiatoriSchema = new mongoose.Schema({
+const customerSchema = new mongoose.Schema({
     nome: {
         type: String,
         trim: true,
@@ -102,19 +102,13 @@ const noleggiatoriSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: false,
-        default: null
-    },
-    otp: {
-        type: String,
         required: false
     },
-    note: {
+    userId: {
         type: String,
-        trim: true,
         required: false
     }
 });
-const noleggiatori = new mongoose.model('noleggiatori', noleggiatoriSchema);
+const needVerificationUser = new mongoose.model('needVerificationUser', customerSchema);
 
-module.exports = noleggiatori;
+module.exports = needVerificationUser;

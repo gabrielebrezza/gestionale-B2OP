@@ -18,13 +18,41 @@ const authRoute = require('./routes/authRoutes');
 //middlewares
 const { userAuthenticateJWT } = require('./utils/authUtils');
 
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join('privateImages', file.fieldname));
+  },
+  filename: (req, file, cb) => {
+    const newFilename = `${file.fieldname}${req.body.needVerification ? 'test' : ''}_${req.body.customerId}.jpeg`;
+    cb(null, newFilename);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Route per l'upload dei file
+app.post('/user/uploadFiles', upload.fields([
+  { name: 'licenseFront', maxCount: 1 },
+  { name: 'licenseBack', maxCount: 1 },
+  { name: 'idCardFront', maxCount: 1 },
+  { name: 'idCardBack', maxCount: 1 },
+  { name: 'sanitaryFront', maxCount: 1 },
+  { name: 'sanitaryBack', maxCount: 1 }
+]), (req, res) => {
+  try {
+    res.status(200).json({ message: 'File caricati con successo' });
+  } catch (error) {
+    console.error('Errore durante l\'upload dei file:', error);
+    res.status(500).json({ error: 'Errore del server' });
+  }
+});
 app.use(express.json());
 
 app.use(adminRoute, authRoute);
 
 app.use(express.urlencoded({extended: true}));
-app.use(bodyParser.json({ limit: '50mb' })); // Limite di 50 MB per JSON
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Limite di 50 MB per URL encoded
+
 app.set('view engine', 'ejs');
 
 app.set('views', 'views');
@@ -53,7 +81,8 @@ app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
 app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
   try {
     const dati = req.body;
-    dati.customerId = req.user.id;
+    dati.customerId = req.user ? req.user.id : null;
+    const newUser = !dati.customerId;
 
     const fromDate = new Date(dati.fromDate).getTime();
     const toDate = new Date(dati.toDate).getTime();
@@ -64,17 +93,18 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
     const { daysPrices } = await mezzi.findOne({"_id": dati.mezzoId});
     let day = dati.startDay;
     dati.finalPrice = Array.from({ length: dati.days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
-    
-    if(!req.user.id){
-      const user = new noleggiatori(dati);
-      await user.save();
+    if(newUser){
+      let user = await noleggiatori.findOne({"cf": dati.cf.toLowerCase().trim()});
+      if(!user){
+        user = new noleggiatori(dati);
+        await user.save();
+      }
       dati.customerId = user._id.toString();
     }
-
     const newBooking = new bookings(dati);
     await newBooking.save();
     
-    if(!req.user.id){
+    if(newUser){
       return res.status(200).json({ customerId: dati.customerId });
     }
     res.redirect(`/`);
@@ -83,31 +113,6 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
     res.status(500).render('errorPage', { err: 'Errore del server' });
   }
 });
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      const dir = path.join('privateImages', file.fieldname);
-      cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}_${req.body.customerId}.jpg`);
-  }
-});
-
-const upload = multer({ storage: storage });
-
-app.post('/user/uploadFiles', upload.fields([{ name: 'licenseFront', maxCount: 1 }, { name: 'licenseBack', maxCount: 1 }]), async (req, res) => {
-  try {
-      res.json({ message: 'File caricati con successo' });
-  } catch (error) {
-      console.error('Errore durante l\'upload dei file:', error);
-      res.status(500).json({ error: 'Errore del server' });
-  }
-});
-
-
-
 
 app.use((req, res, next) => {
     res.render('errorPage', {err: 'pagina non trovata'});

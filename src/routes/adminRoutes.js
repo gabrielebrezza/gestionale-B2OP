@@ -178,7 +178,7 @@ router.post('/admin/clienti/delete', authenticateJWT, async (req, res) =>{
             await noleggiatori.deleteOne({"_id": id});
             console.log(`utente ${id} eliminato definitivamente`);
         }
-        return res.redirect('/admin/mezzi');
+        return res.redirect('/admin/clienti');
     } catch (error) {
         console.error(`errore durante l'eliminazione degli utenti: ${error}`);
         return res.render('errorPage', {error: `errore durante l'eliminazione degli utenti`});
