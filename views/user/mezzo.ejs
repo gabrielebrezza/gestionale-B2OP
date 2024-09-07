@@ -233,7 +233,7 @@
     height: 360px;
     padding: 15px;
     margin: 0;
-    transition: transform 0.5s ease, opacity 0.5s ease;
+    transition: transform 0.35s ease, opacity 0.35s ease;
     opacity: 0;
     transform: translateX(100%);
     z-index: 0;
@@ -265,7 +265,7 @@
     border: none;
     border-bottom: 1px solid #333;
 }
-#userForm .page .field:not(.termsField) > *:where(select, input:not([type="checkbox"])).show-error:invalid{
+.field:not(.termsField) > *:where(select, input:not([type="checkbox"])).show-error:invalid{
     border-bottom: 1px solid red;
 }
 .field label{
@@ -534,6 +534,22 @@ filter: drop-shadow(10px 12px 0px #000);
 #signupModal section{
 max-width: 450px;
 }
+section .closeModal{
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    z-index: 2;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
+    font-weight: 900;
+    color: #878787;
+    transition: .5s ease-in-out;
+}
+.closeModal:hover{
+    color: #7e4cce;
+    transform: rotateZ(360deg);
+}
 #signupForm{
     height: 550px;
     overflow: hidden;
@@ -666,6 +682,27 @@ margin-left: 15px;
     opacity: 1;
     pointer-events: all;
 }
+input[type="checkbox"]{
+    outline: none;
+}
+
+.loading{
+    background: linear-gradient(to right, #7e4cce, #d4cddf) !important;
+    background-size: 500% 500% !important;
+    animation: rotateGradient 1.5s linear infinite;
+}
+
+@keyframes rotateGradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 50% 50%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
@@ -765,23 +802,23 @@ margin-left: 15px;
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>CAP:</label>
-                                <input type="text" name="residenza[cap]" required>
+                                <input type="text" name="residenza[cap]" autocomplete="postal-code" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Comune:</label>
-                                <input type="text" name="residenza[comune]" required>
+                                <input type="text" name="residenza[comune]" autocomplete="address-level2" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Provincia:</label>
-                                <input type="text" name="residenza[provincia]" required>
+                                <input type="text" name="residenza[provincia]" autocomplete="address-level1" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Email:</label>
-                                <input type="email" name="contatti[email]" required>
+                                <input type="email" name="contatti[email]" autocomplete="email" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Tel:</label>
-                                <input type="tel" name="contatti[tel]" required>
+                                <input type="tel" name="contatti[tel]" autocomplete="tel" required>
                             </div>
                             <div class="field">
                                 <label >Pec:</label>
@@ -808,9 +845,9 @@ margin-left: 15px;
                         </section>
                         <section class="page page4" style="--page: 3">
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Patente:</label>
+                                <label title="Campo Obbligatorio">Fronte Patente:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="licenseFront" id="licenseFrontForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="licenseFront" id="licenseFrontForm"  accept="image/jpeg, image/png">
                                     <label for="licenseFrontForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -820,9 +857,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Patente:</label>
+                                <label title="Campo Obbligatorio">Retro Patente:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="licenseBack" id="licenseBackForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="licenseBack" id="licenseBackForm"  accept="image/jpeg, image/png">
                                     <label for="licenseBackForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -832,9 +869,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Fronte Carta d'Identità:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="idCardFront" id="idCardFrontForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="idCardFront" id="idCardFrontForm"  accept="image/jpeg, image/png">
                                     <label for="idCardFrontForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -844,9 +881,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Retro Carta d'Identità:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="idCardBack" id="idCardBackForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="idCardBack" id="idCardBackForm"  accept="image/jpeg, image/png">
                                     <label for="idCardBackForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -856,9 +893,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Tessera Sanitaria:</label>
+                                <label title="Campo Obbligatorio">Fronte Tessera Sanitaria:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="sanitaryFront" id="sanitaryFrontForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="sanitaryFront" id="sanitaryFrontForm"  accept="image/jpeg, image/png">
                                     <label for="sanitaryFrontForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -868,9 +905,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Retro Tessera Sanitaria:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="sanitaryBack" id="sanitaryBackForm"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="sanitaryBack" id="sanitaryBackForm"  accept="image/jpeg, image/png">
                                     <label for="sanitaryBackForm">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -905,152 +942,206 @@ margin-left: 15px;
             </form>
         </div>
     </div>
-    <% if (!customerId) { %>
-        <script class="userFormScript">
-            const prevFormPage = document.getElementById('prevFormPage');
-            const nextFormPage = document.getElementById('nextFormPage');
-            const pages = document.querySelectorAll('.page');
-            const userFormBtn = document.getElementById('userFormBtn');
-            let currentPage = 0;
-        
-            function updatePageVisibility() {
-                pages.forEach((page, index) => {
-                    if (index === currentPage) {
-                        page.classList.add('active');
-                    } else {
-                        page.classList.remove('active');
+    <script>
+        function handleInputTabbing(page, nextPageBtn, prevPageBtn) {
+            const inputs = page.querySelectorAll('input:not([type="file"]), textarea, select, button');
+            if (inputs.length > 0) {
+                const lastInput = inputs[inputs.length - 1];
+                const firstInput = inputs[0];
+                lastInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Tab' && !event.shiftKey) {
+                        event.preventDefault();
+                        nextPageBtn.click();
                     }
                 });
-            
-                prevFormPage.classList.toggle('disabled', currentPage === 0);
-                nextFormPage.classList.toggle('disabled', currentPage === pages.length - 1);
-            
-                if (currentPage === pages.length - 1) {
-                    userFormBtn.classList.add('active');
-                } else {
-                    userFormBtn.classList.remove('active');
-                }
-            }
-        
-            prevFormPage.addEventListener('click', () => {
-                if (currentPage > 0) {
-                    currentPage--;
-                    updatePageVisibility();
-                }
-            });
-        
-            nextFormPage.addEventListener('click', () => {
-                if (currentPage < pages.length - 1) {
-                    currentPage++;
-                    updatePageVisibility();
-                }
-            });
-        
-            userFormBtn.addEventListener('click', event => {
-                let hasError = false;
-                let firstErrorPage = null;
-        
-                pages.forEach((page, index) => {
-                    const inputs = page.querySelectorAll('#userForm .page .field > *:where(select, input:not([type="checkbox"]))');
-                    let pageHasError = false;
-        
-                    inputs.forEach(input => {
-                        if (!input.checkValidity()) {
-                            input.classList.add('show-error');
-                            pageHasError = true;
-                        } else {
-                            input.classList.remove('show-error');
-                        }
-                    });
-        
-                    if (pageHasError && firstErrorPage === null) {
-                        firstErrorPage = index;
-                        hasError = true;
+                firstInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Tab' && event.shiftKey) {
+                        event.preventDefault();
+                        prevPageBtn.click();
                     }
                 });
-        
-                if (hasError) {
+            }else{
+                document.activeElement.addEventListener('keydown', function(event) {
+                if (event.key === 'Tab' && event.shiftKey) {
                     event.preventDefault();
-                    currentPage = firstErrorPage;
-                    updatePageVisibility();
+                    prevPageBtn.click();
                 }
             });
-            updatePageVisibility();
-        </script>
+            }
+        }
+        function createPageNavigation(prevButtonId, nextButtonId, pagesClass, submitButtonId) {
+    const prevButton = document.getElementById(prevButtonId);
+    const nextButton = document.getElementById(nextButtonId);
+    
+    const submitButton = document.getElementById(submitButtonId);
+    let currentPage = 0, isProcessing = false;
 
-    <script class="userFormScript">
-        document.addEventListener('DOMContentLoaded', () => {
-            const userForm = document.getElementById('userForm');
-
-            async function handleUserFormSubmit(event){
-                event.preventDefault();
-
-                const formData = new FormData(userForm);
-                const newFormData = {}
-                formData.forEach((value, key) => {
-                    const keys = key.split('[').map(k => k.replace(']', ''));
-                    keys.reduce((acc, currentKey, index) => {
-                        if (index === keys.length - 1) {
-                            acc[currentKey] = value;
-                        } else {
-                            acc[currentKey] = acc[currentKey] || {};
-                        }
-                        return acc[currentKey];
-                    }, newFormData);
-                });
-                if(!newFormData.cf){
-                    userForm.removeEventListener('submit', handleUserFormSubmit);
-                    return;
-                } 
-                try {
-                    const response = await fetch('/user/newRent', {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(newFormData)
-                    });
-                
-                    if (!response.ok) {
-                        throw new Error('Error creating user');
-                    }
-                
-                    const data = await response.json();
-                    const customerId = data.customerId;
-                
-                    const fileData = new FormData();
-                    fileData.append('customerId', customerId);
-                    const fileFields = [
-                        'licenseFrontForm',
-                        'licenseBackForm',
-                        'idCardFrontForm',
-                        'idCardBackForm',
-                        'sanitaryFrontForm',
-                        'sanitaryBackForm'
-                    ];
-                
-                    fileFields.forEach(fieldId => {
-                        const fileInput = document.getElementById(fieldId).files[0];
-                        if (fileInput) {
-                            fileData.append(fieldId.replace('Form', ''), fileInput);
-                        }
-                    });
-                    const fileResponse = await fetch('/user/uploadFiles', {
-                        method: 'POST',
-                        body: fileData
-                    });
-                    if (!fileResponse.ok) {
-                        throw new Error('Error uploading files');
-                    }
-                    const fileDataResponse = await fileResponse.json();
-                    console.log('File caricati con successo:', fileDataResponse);
-                } catch (error) {
-                    console.error('Errore:', error);
-                }
-            } 
-            userForm.addEventListener('submit', handleUserFormSubmit);
+    function updatePageVisibility() {
+        const pages = document.querySelectorAll(`.${pagesClass}`);
+        if(!pages) return;
+        pages.forEach((page, index) => {
+            if (index === currentPage) {
+                page.classList.add('active');
+                handleInputTabbing(page, nextButton, prevButton);
+            } else {
+                page.classList.remove('active');
+            }
         });
+
+        prevButton.classList.toggle('disabled', currentPage === 0);
+        nextButton.classList.toggle('disabled', currentPage === pages.length - 1);
+
+        if (currentPage === pages.length - 1 || !pages) {
+            submitButton.classList.add('active');
+        } else {
+            submitButton.classList.remove('active');
+        }
+    }
+
+    function validateUserForm() {
+        
+        let hasError = false;
+        let firstErrorPage = null;
+        const pages = document.querySelectorAll(`.${pagesClass}`);
+        if(!pages) return;
+        pages.forEach((page, index) => {
+            const inputs = page.querySelectorAll('.field > *:where(select, input:not([type="checkbox"]))');
+            let pageHasError = false;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    input.classList.add('show-error');
+                    pageHasError = true;
+                } else {
+                    input.classList.remove('show-error');
+                }
+            });
+
+            if (pageHasError && firstErrorPage === null) {
+                firstErrorPage = index;
+                hasError = true;
+            }
+        });
+        
+        if (hasError) {
+            currentPage = firstErrorPage;
+            updatePageVisibility();
+        }
+        
+        return !hasError;
+    }
+
+    prevButton.addEventListener('click', () => {
+        if (!isProcessing && currentPage > 0) {
+            isProcessing = true;
+            const pages = document.querySelectorAll(`.${pagesClass}`);
+            currentPage--;
+            updatePageVisibility();
+            setTimeout(() => {
+                const inputs = pages[currentPage].querySelectorAll('input:not([type="file"]), textarea, select');
+                if(inputs) inputs[inputs.length - 1].focus();
+                isProcessing = false;
+            }, 500);
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        const pages = document.querySelectorAll(`.${pagesClass}`);
+        if (!isProcessing && currentPage < pages.length - 1) {
+            isProcessing = true;
+            currentPage++;
+            updatePageVisibility();
+            setTimeout(() => {
+                const firstInput = pages[currentPage].querySelector('input:not([type="file"]), textarea, select');
+                if(firstInput) firstInput.focus();
+                isProcessing = false;
+            }, 500);
+        }
+    });
+
+    submitButton.addEventListener('click', (event) => {
+        if (!validateUserForm()) {
+            event.preventDefault();
+        }
+    });
+
+    updatePageVisibility();
+}
     </script>
+    <% if (!customerId) { %>
+        <script>
+            createPageNavigation('prevFormPage', 'nextFormPage', 'page', 'userFormBtn');
+            document.addEventListener('DOMContentLoaded', () => {
+                const userForm = document.getElementById('userForm');
+
+                async function handleUserFormSubmit(event){
+                    event.preventDefault();
+                    if(!document.querySelector('.pagesContainer')){
+                        userForm.submit();
+                        return;
+                    }
+                    const formData = new FormData(userForm);
+                    const newFormData = {}
+                    formData.forEach((value, key) => {
+                        const keys = key.split('[').map(k => k.replace(']', ''));
+                        keys.reduce((acc, currentKey, index) => {
+                            if (index === keys.length - 1) {
+                                acc[currentKey] = value;
+                            } else {
+                                acc[currentKey] = acc[currentKey] || {};
+                            }
+                            return acc[currentKey];
+                        }, newFormData);
+                    });
+                    try {
+                        const response = await fetch('/user/newRent', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(newFormData)
+                        });
+                    
+                        if (!response.ok) {
+                            throw new Error('Error creating user');
+                        }
+                    
+                        const data = await response.json();
+                        const customerId = data.customerId;
+                    
+                        const fileData = new FormData();
+                        fileData.append('customerId', customerId);
+                        const fileFields = [
+                            'licenseFrontForm',
+                            'licenseBackForm',
+                            'idCardFrontForm',
+                            'idCardBackForm',
+                            'sanitaryFrontForm',
+                            'sanitaryBackForm'
+                        ];
+                    
+                        fileFields.forEach(fieldId => {
+                            const fileInput = document.getElementById(fieldId).files[0];
+                            if (fileInput) {
+                                fileData.append(fieldId.replace('Form', ''), fileInput);
+                            }
+                        });
+                        const fileResponse = await fetch('/user/uploadFiles', {
+                            method: 'POST',
+                            body: fileData
+                        });
+                        if (!fileResponse.ok) {
+                            throw new Error('Error uploading files');
+                        }
+                        const fileDataResponse = await fileResponse.json();
+                        console.log('File caricati con successo:', fileDataResponse);
+                    } catch (error) {
+                        console.error('Errore:', error);
+                    }
+                } 
+                userForm.addEventListener('submit', handleUserFormSubmit);
+            });
+        </script>
     <% } %>
     
     
@@ -1256,21 +1347,24 @@ margin-left: 15px;
 <% if (!customerId) { %>
     <article class="modal" id="loginModal">
         <section>
+            <span class="material-symbols-outlined closeModal">
+                close
+            </span>
             <div class="formsContainer" style="--pages: 2;">
-                <form autocomplete="off" class="authForm" id="loginForm" style="--page: 0;">
+                <form class="authForm" id="loginForm" style="--page: 0;">
                     <h2>Accedi</h2>
                     <div class="field">
                         <span class="material-symbols-outlined">
                             mail
                         </span>
-                        <input type="email" id="emailLogin" name="email" placeholder="Email" required autocomplete="off">
+                        <input type="email" id="emailLogin" name="email" placeholder="Email" required autocomplete="email">
                     </div>
             
                     <div class="field">
                         <span class="material-symbols-outlined">
                             lock
                         </span>
-                        <input type="password" id="passwordLogin" name="password" placeholder="Password" required>
+                        <input type="password" id="passwordLogin" name="password" placeholder="Password" autocomplete="current-password" required>
                     </div>
                     <button id="submitBtn" type="submit">
                         <span class="material-symbols-outlined">
@@ -1297,6 +1391,9 @@ margin-left: 15px;
     </article>
     <article class="modal" id="signupModal">
         <section>
+            <span class="material-symbols-outlined closeModal">
+                close
+            </span>
             <div class="formsContainer" style="--pages: 2;">
                 <form autocomplete="off" class="authForm" id="signupForm" style="--page: 0;">
                     <div class="signupPagesContainer" style="--pages: 4">
@@ -1324,11 +1421,11 @@ margin-left: 15px;
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Email:</label>
-                                <input type="email" name="contatti[email]" required>
+                                <input type="email" name="contatti[email]" autocomplete="email" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Tel:</label>
-                                <input type="tel" name="contatti[tel]" required>
+                                <input type="tel" name="contatti[tel]" autocomplete="tel" required>
                             </div>
                             <div class="field">
                                 <label >Pec:</label>
@@ -1339,7 +1436,7 @@ margin-left: 15px;
                             <h2 style="font-size: 1.4rem;">Residenza</h2>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Via:</label>
-                                <input type="text" name="residenza[via]" required>
+                                <input type="text" name="residenza[via]" autocomplete="street-address" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Civico:</label>
@@ -1347,15 +1444,15 @@ margin-left: 15px;
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>CAP:</label>
-                                <input type="text" name="residenza[cap]" required>
+                                <input type="text" name="residenza[cap]" autocomplete="postal-code" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Comune:</label>
-                                <input type="text" name="residenza[comune]" required>
+                                <input type="text" name="residenza[comune]" autocomplete="address-level2" required>
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Provincia:</label>
-                                <input type="text" name="residenza[provincia]" required>
+                                <input type="text" name="residenza[provincia]" autocomplete="address-level1" required>
                             </div>
                         </section>
                         <section class="signupPage" style="--page: 2">
@@ -1378,7 +1475,7 @@ margin-left: 15px;
                             </div>
                             <div class="field">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Crea una Password:</label>
-                                <input type="password" name="password" required>
+                                <input type="password" name="password" autocomplete="new-password" required>
                             </div>
                             <div class="field termsField">
                                 <label title="Campo Obbligatorio"><sup>*</sup>Accetto Termini e Condizioni:</label>
@@ -1388,9 +1485,9 @@ margin-left: 15px;
                         <section class="signupPage" style="--page: 3">
                             <h2>Documenti</h2>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Patente:</label>
+                                <label title="Campo Obbligatorio">Fronte Patente:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="licenseFront" id="licenseFrontSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="licenseFront" id="licenseFrontSignup"  accept="image/jpeg, image/png">
                                     <label for="licenseFrontSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1400,9 +1497,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Patente:</label>
+                                <label title="Campo Obbligatorio">Retro Patente:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="licenseBack" id="licenseBackSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="licenseBack" id="licenseBackSignup"  accept="image/jpeg, image/png">
                                     <label for="licenseBackSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1412,9 +1509,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Fronte Carta d'Identità:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="idCardFront" id="idCardFrontSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="idCardFront" id="idCardFrontSignup"  accept="image/jpeg, image/png">
                                     <label for="idCardFrontSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1424,9 +1521,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Retro Carta d'Identità:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="idCardBack" id="idCardBackSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="idCardBack" id="idCardBackSignup"  accept="image/jpeg, image/png">
                                     <label for="idCardBackSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1436,9 +1533,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Fronte Tessera Sanitaria:</label>
+                                <label title="Campo Obbligatorio">Fronte Tessera Sanitaria:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="sanitaryFront" id="sanitaryFrontSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="sanitaryFront" id="sanitaryFrontSignup"  accept="image/jpeg, image/png">
                                     <label for="sanitaryFrontSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1448,9 +1545,9 @@ margin-left: 15px;
                                 </div>
                             </div>
                             <div class="field">
-                                <label title="Campo Obbligatorio"><sup>*</sup>Retro Carta d'Identità:</label>
+                                <label title="Campo Obbligatorio">Retro Tessera Sanitaria:</label>
                                 <div class="custom-file-upload">
-                                    <input type="file" class="file" name="sanitaryBack" id="sanitaryBackSignup"  accept="image/jpeg, image/png" required>
+                                    <input type="file" class="file" name="sanitaryBack" id="sanitaryBackSignup"  accept="image/jpeg, image/png">
                                     <label for="sanitaryBackSignup">
                                         <span class="material-symbols-outlined upload-icon">
                                             upload_file
@@ -1506,259 +1603,81 @@ margin-left: 15px;
         
         const loginInputs = document.querySelectorAll('#loginForm input');
         loginForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-    
-                const formData = new FormData(loginForm);
+            event.preventDefault();
 
-                const newFormData = {}
-                formData.forEach((value, key) => (newFormData[key] = value));
-                try {
-                    const response = await fetch('/user/login', {
-                        method: 'POST',
-                        headers: {
-                        "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(newFormData)
-                    });
-    
-                    if (response.ok) {
-                        const dati = await response.json();
-                        const id = dati.id;
-                        const loginOtpForm = document.getElementById('loginOtpForm');
-                        loginOtpForm.querySelector('input[name="id"]').value = id;
-                        loginOtpForm.classList.add('active');
-                        loginForm.classList.remove('active');
-                        for(const input of loginInputs){
-                            input.value = '';
-                        }
-                        loginOtpForm.querySelector('[name="digit1"]').focus();
-                    } else {
-                        const error = await response.json();
-                        if (response.status == 401) {
-                            if(error.accountExist === false){
-                                console.log('Account non esistente')
-                            }
-                            if(error.wrongCredentials){
-                                console.log('Credenziali errate')
-                            }
-                        }
-                        
-                        
-                        // for(const input of loginInputs){
-                        //     input.classList.add = 'invalidLoginField';
-                        // }
-                    }
-                } catch (error) {
-                    console.error('Error during login:', error);
-                }
-            });
-    </script>
-
-    <script>
-        const signupBtn = document.getElementById('signup');
-        const signupModal = document.getElementById('signupModal');
-        const signupForm = document.getElementById('signupForm');
-        signupBtn.addEventListener('click', () => {
-            signupModal.classList.add('active');
-            signupForm.classList.add('active');
-        });
-    </script>
-    <script>
-        const prevSignupPage = document.getElementById('prevSignupPage');
-        const nextSignupPage = document.getElementById('nextSignupPage');
-        const signupPages = document.querySelectorAll('.signupPage');
-        const signupSubmit = document.getElementById('signupSubmit');
-        // const userFormBtn = document.getElementById('userFormBtn');
-        let currentSignupPage = 0;
-    
-        function updatesignupPageVisibility() {
-            signupPages.forEach((page, index) => {
-                if (index === currentSignupPage) {
-                    page.classList.add('active');
-                } else {
-                    page.classList.remove('active');
-                }
-            });
-        
-            prevSignupPage.classList.toggle('disabled', currentSignupPage === 0);
-            nextSignupPage.classList.toggle('disabled', currentSignupPage === signupPages.length - 1);
-        
-            if (currentSignupPage === signupPages.length - 1) {
-                signupSubmit.classList.add('active');
-            } else {
-                signupSubmit.classList.remove('active');
-            }
-        }
-    
-        prevSignupPage.addEventListener('click', () => {
-            if (currentSignupPage > 0) {
-                currentSignupPage--;
-                updatesignupPageVisibility();
-            }
-        });
-    
-        nextSignupPage.addEventListener('click', () => {
-            if (currentSignupPage < signupPages.length - 1) {
-                currentSignupPage++;
-                updatesignupPageVisibility();
-            }
-        });
-    
-        // userFormBtn.addEventListener('click', event => {
-        //     let hasError = false;
-        //     let firstErrorPage = null;
-    
-        //     pages.forEach((page, index) => {
-        //         const inputs = page.querySelectorAll('#userForm .page .field > *:where(select, input:not([type="checkbox"]))');
-        //         let pageHasError = false;
-    
-        //         inputs.forEach(input => {
-        //             if (!input.checkValidity()) {
-        //                 input.classList.add('show-error');
-        //                 pageHasError = true;
-        //             } else {
-        //                 input.classList.remove('show-error');
-        //             }
-        //         });
-    
-        //         if (pageHasError && firstErrorPage === null) {
-        //             firstErrorPage = index;
-        //             hasError = true;
-        //         }
-        //     });
-    
-        //     if (hasError) {
-        //         event.preventDefault();
-        //         currentPage = firstErrorPage;
-        //         updatePageVisibility();
-        //     }
-        // });
-        updatesignupPageVisibility()
-    </script>
-
-
-<script>
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const signupForm = document.getElementById('signupForm');
-    const signupOtpForm = document.getElementById('signupOtpForm');
-    
-    signupForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(signupForm);
-        const newFormData = {};
-
-        formData.forEach((value, key) => {
-            const keys = key.split('[').map(k => k.replace(']', ''));
-            keys.reduce((acc, currentKey, index) => {
-                if (index === keys.length - 1) {
-                    acc[currentKey] = value;
-                } else {
-                    acc[currentKey] = acc[currentKey] || {};
-                }
-                return acc[currentKey];
-            }, newFormData);
-        });
-
-        try {
-            const response = await fetch('/user/signup', {
-                method: 'POST',
-                headers: {
+            const formData = new FormData(loginForm);
+            const newFormData = {}
+            formData.forEach((value, key) => (newFormData[key] = value));
+            try {
+                const response = await fetch('/user/login', {
+                    method: 'POST',
+                    headers: {
                     "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newFormData)
-            });
+                    },
+                    body: JSON.stringify(newFormData)
+                });
 
-            if (!response.ok) {
-                throw new Error('Error registering user');
-            }
-
-            const data = await response.json();
-            // const userId = data.userId;
-            console.log(data)
-
-            if(data.exist){
-                return console.log(`Esiste già un'account con questa email`);
-            }
-
-
-            const fileData = new FormData();
-
-            const fileFields = [
-                'licenseFrontSignup',
-                'licenseBackSignup',
-                'idCardFrontSignup',
-                'idCardBackSignup',
-                'sanitaryFrontSignup',
-                'sanitaryBackSignup'
-            ];
-            fileData.append('customerId', data.id);
-            if(data.needVerification){
-                fileData.append('needVerification', 'yes');
-            }
-            fileFields.forEach(fieldId => {
-                const fileInput = document.getElementById(fieldId).files[0];
-                if (fileInput) {
-                    fileData.append(fieldId.replace('Signup', ''), fileInput);
+                if (response.ok) {
+                    const dati = await response.json();
+                    const id = dati.id;
+                    const loginOtpForm = document.getElementById('loginOtpForm');
+                    loginOtpForm.querySelector('input[name="id"]').value = id;
+                    loginOtpForm.classList.add('active');
+                    loginForm.classList.remove('active');
+                    for(const input of loginInputs){
+                        input.value = '';
+                    }
+                    loginOtpForm.querySelector('[name="digit1"]').focus();
+                } else {
+                    const error = await response.json();
+                    if (response.status == 401) {
+                        if(error.accountExist === false){
+                            console.log('Account non esistente')
+                        }
+                        if(error.wrongCredentials){
+                            console.log('Credenziali errate')
+                        }
+                    }
                 }
-            });
-            const fileResponse = await fetch('/user/uploadFiles', {
-                method: 'POST',
-                body: fileData
-            });
-
-            if (!fileResponse.ok) {
-                throw new Error('Error uploading files');
+            } catch (error) {
+                console.error('Error during login:', error);
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            createPageNavigation('prevSignupPage', 'nextSignupPage', 'signupPage', 'signupSubmit');
+            const signupBtn = document.getElementById('signup');
+            const signupModal = document.getElementById('signupModal');
+            const signupForm = document.getElementById('signupForm');
+            const signupOtpForm = document.getElementById('signupOtpForm');
+            const signupSubmitBtn = document.getElementById('signupSubmit');
+            
+            signupBtn.addEventListener('click', () => {
+                signupModal.classList.add('active');
+                signupForm.classList.add('active');
+            });
 
-            const fileDataResponse = await fileResponse.json();
-            console.log('Files uploaded successfully:', fileDataResponse);
-
-            // Move to OTP form after successful registration
-            signupOtpForm.querySelector('input[name="id"]').value = data.id;
-            signupOtpForm.classList.add('active');
-            signupForm.classList.remove('active');
-
-        } catch (error) {
-            console.error('Error during registration:', error);
-        }
-    });
-});
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const signupOtpForm = document.getElementById('signupOtpForm');
-    const loginOtpForm = document.getElementById('loginOtpForm');
-
-    function setupOtpForm(otpForm, verifyEndpoint, successCallback) {
-        const otpInputs = otpForm.querySelectorAll('input[type="number"]');
-        const previousOTPValues = Array.from(otpInputs).map(input => input.value);
-
-        async function checkAllFilled() {
-            const allFilled = Array.from(otpInputs).every(input => input.value.length > 0);
-            let currentIndex = Array.from(otpInputs).indexOf(document.activeElement);
-            // currentIndex = otpForm.classList[0] == 'loginOtpForm' ? (currentIndex < 0 ? 5 : currentIndex - 1) : currentIndex
-            if (otpForm.classList[0] === 'loginOtpForm') {
-                if (currentIndex < 0) {
-                    currentIndex = otpInputs.length - 1;
-                } else if (currentIndex > 0) {
-                    currentIndex -= 1;
-                }
-            }
-
-            if (allFilled && otpInputs[currentIndex].value !== previousOTPValues[currentIndex]) {
-                previousOTPValues[currentIndex] = otpInputs[currentIndex].value;
-
-                const formData = new FormData(otpForm);
+            signupForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                signupSubmitBtn.classList.add('loading');
+                const formData = new FormData(signupForm);
                 const newFormData = {};
-                formData.forEach((value, key) => (newFormData[key] = value));
+
+                formData.forEach((value, key) => {
+                    const keys = key.split('[').map(k => k.replace(']', ''));
+                    keys.reduce((acc, currentKey, index) => {
+                        if (index === keys.length - 1) {
+                            acc[currentKey] = value;
+                        } else {
+                            acc[currentKey] = acc[currentKey] || {};
+                        }
+                        return acc[currentKey];
+                    }, newFormData);
+                });
 
                 try {
-                    const response = await fetch(verifyEndpoint, {
+                    const response = await fetch('/user/signup', {
                         method: 'POST',
                         headers: {
                             "Content-Type": "application/json",
@@ -1766,84 +1685,170 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify(newFormData)
                     });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        const { token, maxAge } = data;
-                        document.cookie = `userToken=${token}; path=/; max-age=${maxAge}`;
-
-                        otpInputs.forEach(input => {
-                            input.value = '';
-                        });
-                        successCallback();
-                    } else {
-                        const error = await response.json();
-                        if (response.status === 401) {
-                            if (error.otpMatched === false) {
-                                console.log('Invalid OTP code');
-                            }
-                        } else {
-                            console.log('General error');
-                        }
+                    if (!response.ok) {
+                        throw new Error('Error registering user');
                     }
-                } catch (error) {
-                    console.error('Error during OTP verification:', error);
-                }
-            }
-        }
 
-        otpInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                checkAllFilled();
-                const index = Array.from(otpInputs).indexOf(input);
-                previousOTPValues[index] = input.value;
+                    const data = await response.json();
+                    // const userId = data.userId;
+                    console.log(data)
+
+                    if(data.exist){
+                        return console.log(`Esiste già un'account con questa email`);
+                    }
+
+
+                    const fileData = new FormData();
+
+                    const fileFields = [
+                        'licenseFrontSignup',
+                        'licenseBackSignup',
+                        'idCardFrontSignup',
+                        'idCardBackSignup',
+                        'sanitaryFrontSignup',
+                        'sanitaryBackSignup'
+                    ];
+                    fileData.append('customerId', data.id);
+                    if(data.needVerification){
+                        fileData.append('needVerification', 'yes');
+                    }
+                    fileFields.forEach(fieldId => {
+                        const fileInput = document.getElementById(fieldId).files[0];
+                        if (fileInput) {
+                            fileData.append(fieldId.replace('Signup', ''), fileInput);
+                        }
+                    });
+                    const fileResponse = await fetch('/user/uploadFiles', {
+                        method: 'POST',
+                        body: fileData
+                    });
+
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+
+                    const fileDataResponse = await fileResponse.json();
+                    console.log('Files uploaded successfully:', fileDataResponse);
+
+                    // Move to OTP form after successful registration
+                    signupOtpForm.querySelector('input[name="id"]').value = data.id;
+                    signupOtpForm.classList.add('active');
+                    signupForm.classList.remove('active');
+
+                } catch (error) {
+                    console.error('Error during registration:', error);
+                }
             });
         });
-    }
+    </script>
 
-    setupOtpForm(signupOtpForm, '/user/otp', () => {
-        signupOtpForm.classList.remove('active');
-        signupForm.closest('.modal').classList.remove('active');
-        setTimeout(() => {
-            document.querySelectorAll('.modal').forEach(modal => modal.remove());
-        }, 500);
-
-        document.getElementById('userForm').action = '/user/newRent';
-        document.getElementById('userForm').post = 'POST'
-        document.getElementById('userFormBtn').classList.add('active');
-        document.querySelector('.formIconContainer').remove();
-        document.querySelector('.pagesContainer').remove();
-        document.querySelector('.loginAlert').remove();
-    });
-
-    setupOtpForm(loginOtpForm, '/user/otp', () => {
-        loginModal.classList.remove('active');
-        setTimeout(() => {
-            document.querySelectorAll('.modal').forEach(modal => modal.remove());
-        }, 500);
-        document.getElementById('userForm').action = '/user/newRent';
-        document.getElementById('userForm').post = 'POST';
-        document.getElementById('userFormBtn').classList.add('active');
-        document.querySelector('.pagesContainer').remove();
-        document.querySelector('.formIconContainer').remove();
-        document.querySelector('.loginAlert').remove();
-    });
-});
-</script>
-
-
-
-
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupOtpForm = document.getElementById('signupOtpForm');
+            const loginOtpForm = document.getElementById('loginOtpForm');
+            
+            function setupOtpForm(otpForm, verifyEndpoint) {
+                const otpInputs = otpForm.querySelectorAll('input[type="number"]');
+                const previousOTPValues = Array.from(otpInputs).map(input => input.value);
+            
+                async function checkAllFilled() {
+                    const allFilled = Array.from(otpInputs).every(input => input.value.length > 0);
+                    let currentIndex = Array.from(otpInputs).indexOf(document.activeElement);
+                    // currentIndex = otpForm.classList[0] == 'loginOtpForm' ? (currentIndex < 0 ? 5 : currentIndex - 1) : currentIndex
+                    if (otpForm.classList[0] === 'loginOtpForm') {
+                        if (currentIndex < 0) {
+                            currentIndex = otpInputs.length - 1;
+                        } else if (currentIndex > 0) {
+                            currentIndex -= 1;
+                        }
+                    }
+                
+                    if (allFilled && otpInputs[currentIndex].value !== previousOTPValues[currentIndex]) {
+                        previousOTPValues[currentIndex] = otpInputs[currentIndex].value;
+                    
+                        const formData = new FormData(otpForm);
+                        const newFormData = {};
+                        formData.forEach((value, key) => (newFormData[key] = value));
+                    
+                        try {
+                            const response = await fetch(verifyEndpoint, {
+                                method: 'POST',
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(newFormData)
+                            });
+                        
+                            if (response.ok) {
+                                const data = await response.json();
+                                const { token, maxAge } = data;
+                                document.cookie = `userToken=${token}; path=/; max-age=${maxAge}`;
+                            
+                                otpInputs.forEach(input => {
+                                    input.value = '';
+                                });
+                                otpForm.classList.remove('active');
+                                otpForm.closest('.modal').classList.remove('active');
+                                setTimeout(() => {
+                                    document.querySelectorAll('.modal').forEach(modal => modal.remove());
+                                }, 500);
+                            
+                                document.getElementById('userForm').action = '/user/newRent';
+                                document.getElementById('userForm').method = 'POST';
+                                document.getElementById('userForm').enctype = '';
+                                document.getElementById('userFormBtn').classList.add('active');
+                                document.querySelector('.formIconContainer').remove();
+                                document.querySelector('.pagesContainer').remove();
+                                document.querySelector('.loginAlert').remove();
+                            } else {
+                                const error = await response.json();
+                                if (response.status === 401) {
+                                    if (error.otpMatched === false) {
+                                        console.log('Invalid OTP code');
+                                    }
+                                } else {
+                                    console.log('General error');
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error during OTP verification:', error);
+                        }
+                    }
+                }
+            
+                otpInputs.forEach(input => {
+                    input.addEventListener('input', () => {
+                        checkAllFilled();
+                        const index = Array.from(otpInputs).indexOf(input);
+                        previousOTPValues[index] = input.value;
+                    });
+                });
+            }
+        
+            setupOtpForm(signupOtpForm, '/user/otp');
+            setupOtpForm(loginOtpForm, '/user/otp');
+        });
+    </script>
     <script src="/scripts/utils/auth/otp.js"></script>
-<% } %>
-<script>
-    const fileInputs = document.querySelectorAll('.file');
-    for(const input of fileInputs){
-        input.addEventListener('change', () => {
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            label.childNodes[1].innerText = 'done_outline';
-            label.childNodes[3].innerText = 'Caricata'
+    <script>
+        const fileInputs = document.querySelectorAll('.file');
+        for(const input of fileInputs){
+            input.addEventListener('change', () => {
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                label.childNodes[1].innerText = 'done_outline';
+                label.childNodes[3].innerText = 'Caricata'
+            })
+        }
+    </script>
+    <script>
+        document.querySelectorAll('.closeModal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('section').querySelector('form.active').classList.remove('active');
+                btn.closest('.modal').classList.remove('active');
+            });
         })
-    }
-</script>
+    </script>
+<% } %>
+
 </body>
 </html>

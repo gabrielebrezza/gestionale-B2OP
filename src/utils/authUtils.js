@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken'); 
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 const admins = require('../DB/admin');
 
 async function generateToken(id) {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '21d' });
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '31d' });
 }
 
 async function authenticateJWT(req, res, next) {
-    const token = req.cookies.token;
+    const token = req.cookies.adminToken;
     if (!token) {
         return res.redirect('/admin/login');
     }
@@ -52,4 +54,13 @@ function userAuthenticateJWT(req, res, next) {
     });
 }
 
-module.exports = { generateToken, authenticateJWT, userAuthenticateJWT };
+async function generateOTP() {
+    const otpCode = (crypto.randomBytes(3).readUIntBE(0, 3) % 1000000).toString().padStart(6, '0'); // OTP a 6 cifre
+
+    const saltRounds = 10;
+    const hashedOTP = await bcrypt.hash(otpCode, saltRounds);
+
+    return {otpCode, hashedOTP};
+}
+
+module.exports = { generateToken, authenticateJWT, userAuthenticateJWT, generateOTP };

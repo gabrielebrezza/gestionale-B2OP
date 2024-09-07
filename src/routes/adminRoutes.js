@@ -18,15 +18,15 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.get('/images', authenticateJWT, async (req, res) => {
-    const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);
     try {
+        const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);
         await fsp.access(imagePath);
         res.sendFile(imagePath);
     } catch (err) {
         if (err.code === 'ENOENT') {
             res.status(404).send('Immagine non trovata.');
         } else {
-            console.log('errore server')
+            console.log('Errore del Server')
             res.status(500).send('Errore del server.');
         }
     }
@@ -69,7 +69,6 @@ router.post('/admin/mezzi/delete', authenticateJWT, async (req, res) =>{
         return res.render('errorPage', {error: `errore durante l'eliminazione dei mezzi`});
     }
 });
-
 router.get('/admin/mezzo', authenticateJWT, async (req, res) =>{
     try{
         const id = req.query.id;

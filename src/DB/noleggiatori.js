@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const noleggiatoriSchema = new mongoose.Schema({
+const customerSchema = new mongoose.Schema({
     nome: {
         type: String,
         trim: true,
@@ -106,8 +106,15 @@ const noleggiatoriSchema = new mongoose.Schema({
         default: null
     },
     otp: {
-        type: String,
-        required: false
+        code: {
+            type: String,
+            required: false
+        },
+        createdAt: { 
+            type: Date,
+            default: Date.now,
+            required: false
+        }
     },
     note: {
         type: String,
@@ -115,6 +122,13 @@ const noleggiatoriSchema = new mongoose.Schema({
         required: false
     }
 });
-const noleggiatori = new mongoose.model('noleggiatori', noleggiatoriSchema);
+
+customerSchema.methods.isOtpExpired = function() {
+    const otpExpirationTime = 6 * 60 * 1000;
+    const currentTime = Date.now();
+    return (currentTime - this.otp.createdAt.getTime()) > otpExpirationTime;
+};
+
+const noleggiatori = new mongoose.model('noleggiatori', customerSchema);
 
 module.exports = noleggiatori;
