@@ -705,9 +705,11 @@ input[type="checkbox"]{
 }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
+    <%- include('components/header.ejs') %>
+    <main>
     <div class="container">
         <div class="mezzo-header">
             <h1><%= mezzo.marca %> <%= mezzo.modello %></h1>
@@ -937,7 +939,7 @@ input[type="checkbox"]{
                     <% } %>
                 </div>
                 <% if (!customerId) { %>
-                    <p class="loginAlert">Per semplificare il checkout in futuro <a class="accountLink" id="signup">Crea un Account</a> o se lo hai già <a class="accountLink" id="login">Accedi</a></p>
+                    <p class="loginAlert">Per semplificare il checkout in futuro <a class="accountLink" id="signup">Crea un Account</a> o se lo hai già <a class="accountLink loginLink">Accedi</a></p>
                 <% } %>
             </form>
         </div>
@@ -1302,8 +1304,18 @@ input[type="checkbox"]{
                         fromDateElement = day
                         return;
                     }
-                    if(new Date(day.dataset.day) < new Date(fromDate)) return;
                     day.classList.add(`selected`)
+                    if(new Date(day.dataset.day) < new Date(fromDate)){
+                        fromDate = day.dataset.day;
+                        toDate = '';
+                        fromDateElement.classList.remove('selected')
+                        fromDateElement = day;
+                        toDateElement = '';
+
+                        preventivoElement.innerText = '';
+                        return;
+                    }
+                    
                     toDate = day.dataset.day;
                     toDateElement = day;
                     const fromDateObj = new Date(fromDate);
@@ -1591,15 +1603,18 @@ input[type="checkbox"]{
         </section>
     </article>
     <script>
-        const loginBtn = document.getElementById('login');
+        const loginBtns = document.querySelectorAll('.loginLink');
         const loginModal = document.getElementById('loginModal');
         const loginForm = document.getElementById('loginForm');
         const emailLoginInput = document.getElementById('emailLogin');
-        loginBtn.addEventListener('click', () => {
-            loginModal.classList.add('active');
-            loginForm.classList.add('active');
-            emailLoginInput.focus();
-        });
+        for(const btn of loginBtns){
+            btn.addEventListener('click', () => {
+                loginModal.classList.add('active');
+                loginForm.classList.add('active');
+                emailLoginInput.focus();
+            });
+        }
+
         
         const loginInputs = document.querySelectorAll('#loginForm input');
         loginForm.addEventListener('submit', async (event) => {
@@ -1849,6 +1864,6 @@ input[type="checkbox"]{
         })
     </script>
 <% } %>
-
+    </main>
 </body>
 </html>

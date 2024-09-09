@@ -1,0 +1,133 @@
+<link rel="stylesheet" href="/styles/user/components/header.css">
+<script src="scripts/admin/components/header.js"></script>
+<header class="header">
+    <div class="logo">
+        <img src="/img/logo.png" alt="">
+    </div>
+    <div class="openMenu">
+        <span id="toggleMenuBtn" class="material-symbols-rounded">
+            menu
+        </span>
+    </div>
+    
+</header>
+<nav id="navBar">
+    <ul>
+        <li>
+            <a href="/">
+                <span class="material-symbols-rounded">
+                    home
+                </span>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="/admin/mezzi">
+                <span class="material-symbols-rounded">
+                    local_shipping
+                </span>
+                Mezzi
+            </a>
+        </li>
+        <% if (customerId) { %>
+            <li>
+                <a href="/user/data">
+                    <span class="material-symbols-rounded">
+                        person
+                    </span>
+                    Profilo
+                </a>
+            </li>
+            <li id="logOutList">
+                <form action="/user/logout" method="POST">
+                    <button class="logoutBtn" type="submit">
+                        <span class="material-symbols-outlined">
+                            logout
+                        </span>
+                        <span>LOGOUT</span>
+                    </button>
+                </form>
+            </li>
+        <% }else{ %>
+            <li id="loginHeaderLink">
+                <a class="loginLink">
+                    <span class="material-symbols-rounded">
+                        login
+                    </span>
+                    Accedi
+                </a>
+            </li>
+        <% } %>
+    </ul>
+</nav>
+
+<script>
+    document.querySelectorAll('details').forEach(details => {
+        details.addEventListener('toggle', event => {
+            if (details.open) {
+                document.querySelectorAll('details').forEach(otherDetails => {
+                    if (otherDetails !== details) {
+                        otherDetails.removeAttribute('open');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    #loaderContainer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        background: #04080F;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transition: opacity .5s ease;
+    }
+    #loaderContainer img{
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
+        animation: loader 2s infinite;
+    }
+    @keyframes loader {
+        0%{
+            transform: rotateX(45deg) rotateY(0deg) rotateZ(90deg);
+        }
+        25%{
+            transform: rotateX(0deg) rotateY(45deg);
+        }
+        50%{
+            transform: rotateX(45deg) rotateY(0deg);
+        }
+        75%{
+            transform: rotateX(0deg) rotateY(-45deg) rotateZ(-90deg);
+        }
+        100%{
+            transform: rotateX(-45deg) rotateY(0deg) rotateZ(90deg);
+        }
+    }
+</style>
+
+<div id="loaderContainer">
+    <img id="loader" src="/img/logo.png" alt="loader">
+</div>
+
+<script>
+    const loaderContainer = document.getElementById('loaderContainer');
+    const loader = document.getElementById('loader');
+    window.addEventListener('load', () =>{
+        setTimeout(() => {
+            loaderContainer.style.opacity = 0;
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                loaderContainer.style.display = 'none';
+                loader.style.animation = 'none';
+            }, 500);
+        }, 500);
+    });
+</script>

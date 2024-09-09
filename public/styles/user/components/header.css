@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+:root{
+    --header-height: 150px;
+}
+main{
+    margin-top: calc(var(--header-height) + 10px) ;
+}
+.header {
+    top: 0;
+    position: fixed;
+    width: 100%;
+    height: var(--header-height);
+    background: linear-gradient(to bottom,#fff, #f4f4f4);
+    filter: drop-shadow(-15px -15px 15px #333);
+    color: #333;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    z-index: 2;
+}
+.header .logo img{
+    max-width: 150px;
+    width: 100%;
+    cursor: pointer;
+}
+#toggleMenuBtn {
+    font-size: 3.5rem;
+    cursor: pointer;
+    transition: 0.5s;
+    user-select: none;
+    z-index: 3;
+}
+#navBar {
+    position: fixed;
+    padding-top: var(--header-height);
+    top: 0;
+    right: 0;
+    background: #f4f4f4;
+    height: 100vh;
+    width: 0;
+    transition: 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    z-index: 1 !important;
+    overflow-x: hidden;
+}
+
+#navBar ul {
+    position: relative;
+    width: 100%;
+    display: none;
+    transition: 0.5s;
+    opacity: 0;
+}
+#navBar ul li {
+    width: 100%;
+    padding: 25px 10px;
+    list-style: none;
+    transition: 1s;
+}
+#navBar ul li a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+#navBar ul li a,
+.logoutBtn {
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    font-weight: 750;
+    text-transform: capitalize;
+    margin-block: 25px;
+    transition: .5s;
+}
+#navBar ul li:has( > a):hover {
+    transform: translateX(10px);
+}
+#navBar ul li:not(#logOutList) {
+    filter: drop-shadow(5px 5px 15px #486eb9);
+}
+#navBar ul li:not(#logOutList):hover {
+    background: #486eb9;
+    transform: scale(.96);
+}
+#navBar ul li:hover :where(a) {
+    color: #fff;
+}
+
+#navBar ul li:where(#logOutList, #loginHeaderLink) {
+    width: 300px;
+    border-bottom: none;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+#navBar ul li#logOutList:hover form button span{
+    color: #7B0828;
+}
+#navBar ul li#logOutList:hover form button{
+    transform: scale(1.3);
+}
+.logoutBtn {
+    height: 0;
+    background: #0000;
+    border: none;
+    outline: none;
+    padding-block: 2px;
+    font-weight: 1000;
+    color: #333 !important;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+@media (max-height: 870px) {
+    :root{
+        --header-height: 75px;
+    }
+    #toggleMenuBtn {
+        font-size: 3rem !important;
+    }
+    #navBar {
+        padding-top: var(--header-height);
+    }
+    #navBar ul li {
+        padding: 15px 10px;
+    }
+    @media (max-height: 596px) {
+        #navBar ul li {
+            font-size: 0.8rem;
+        }
+        #navBar ul li {
+            padding: 7px 10px;
+        }
+        @media (max-height: 409px) {
+            #navBar ul li {
+                padding: 3px 10px;
+            }
+        }
+    }
+}
+@media (max-width: 550px) {
+    #navBar {
+        align-items: center;
+        justify-content: center;
+    }
+    #navBar ul li:where(#logOutList, #loginHeaderLink) {
+        width: 100%;
+    }
+    #navBar ul li {
+        text-align: center;
+    }
+    #navBar ul li:not(#logOutList){
+        background: none;
+        filter: drop-shadow(10px 5px 2px #486eb936);
+
+    }
+    #navBar ul li:not(#logOutList):hover {
+        background: none;
+        filter: drop-shadow(10px 5px 0px #486eb972);
+    }
+    #navBar ul li:hover :where(a) {
+        color: #000;
+    }
+}

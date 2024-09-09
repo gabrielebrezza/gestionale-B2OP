@@ -236,7 +236,7 @@ router.post('/user/signup', async (req, res) => {
     }
 });
 
-  router.post('/user/otp', async (req, res) =>{
+router.post('/user/otp', async (req, res) =>{
     const id = req.body.id;
     const otp = Object.values(req.body).slice(-6).join('');
     const user = await noleggiatori.findOne({ "_id": id });
@@ -268,6 +268,10 @@ router.post('/user/signup', async (req, res) => {
     const token = await generateToken(id);
     
     return res.status(200).json({token, maxAge: 1000*60*60*24*93});
+});
+router.post('/user/logout', async (req, res) =>{
+    res.cookie('userToken', '', {maxAge: 1});
+    res.redirect(req.headers.referer || '/');
 });
 
 module.exports = router;
