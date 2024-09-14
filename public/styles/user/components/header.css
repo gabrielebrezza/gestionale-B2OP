@@ -14,6 +14,9 @@
 main{
     margin-top: calc(var(--header-height) + 10px) ;
 }
+.material-symbols-rounded{
+    user-select: none;
+}
 .header {
     top: 0;
     position: fixed;
@@ -56,6 +59,7 @@ main{
     flex-direction: column;
     z-index: 1 !important;
     overflow-x: hidden;
+    filter: drop-shadow(-10px 0px 20px #00000012);
 }
 
 #navBar ul {
@@ -70,8 +74,21 @@ main{
     padding: 25px 10px;
     list-style: none;
     transition: 1s;
+    user-select: none;
+}
+#navBar ul li.active{
+    transform: translateX(10px);
+    filter: drop-shadow(5px 5px 15px #486eb9);
+    background: #486eb9;
+    transform: scale(.96);
+    filter: grayscale(.45) !important;
+    & a{
+        color: #fff;
+        cursor: default;
+    }
 }
 #navBar ul li a{
+    -webkit-user-drag: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,10 +184,13 @@ main{
     #navBar ul li {
         text-align: center;
     }
+    #navBar ul li.active a{
+        color: #486eb9;
+        opacity: .5;
+    }
     #navBar ul li:not(#logOutList){
         background: none;
         filter: drop-shadow(10px 5px 2px #486eb936);
-
     }
     #navBar ul li:not(#logOutList):hover {
         background: none;

@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
+const fsp = require('fs').promises;
 
 const mezzi = require('./DB/mezzi.js');
 const bookings = require('./DB/bookings.js');
@@ -17,6 +18,7 @@ const authRoute = require('./routes/authRoutes');
 
 //middlewares
 const { userAuthenticateJWT } = require('./utils/authUtils');
+
 
 
 const storage = multer.diskStorage({
@@ -59,6 +61,40 @@ app.set('views', 'views');
 
 app.use(express.static('public'));
 
+app.get('/user/images', userAuthenticateJWT, async (req, res) => {
+  try {
+      if(!req.user) return res.status(401).send('NON AUTORIZZATO');
+      const id = req.user.id;
+      
+      const imagePath = path.resolve(__dirname, '../privateImages', req.query.dir, `${req.query.dir}_${id}.jpeg`);
+      await fsp.access(imagePath);
+      res.sendFile(imagePath);
+  } catch (err) {
+      if (err.code === 'ENOENT') {
+          res.status(404).send('Immagine non trovata.');
+      } else {
+          console.log('Errore del Server: ', err)
+          res.status(500).send('Errore del server.');
+      }
+  }
+});
+
+app.post('/user/images/delete', userAuthenticateJWT, async (req, res) => {
+  try {
+      if(!req.user) return res.status(401).send('NON AUTORIZZATO');
+      const id = req.user.id;
+      const imagePath = path.resolve(__dirname, '../privateImages', req.body.dir, `${req.body.dir}_${id}.jpeg`);
+      await fsp.unlink(imagePath);
+      res.status(200).send('Immagine Eliminata con Successo.');
+  } catch (err) {
+      if (err.code === 'ENOENT') {
+          res.status(404).send('Immagine non trovata.');
+      } else {
+          console.log('Errore del Server: ', err)
+          res.status(500).send('Errore del server.');
+      }
+  }
+});
 app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
   try {
     const id = req.query.id;
@@ -111,6 +147,31 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).render('errorPage', { err: 'Errore del server' });
+  }
+});
+
+
+
+app.get('/user/data', userAuthenticateJWT, async (req, res) => {
+  try {
+    if(!req.user) return res.redirect('/');
+    const customerId = req.user.id;
+    const data = await noleggiatori.findOne({"_id": customerId});
+    res.render('user/dataPage', {customerId, data})
+  } catch (error) {
+    console.error(error)
+  }
+});
+
+app.post('/user/data/update', userAuthenticateJWT, async (req, res) =>{
+  try {
+      const id = req.user.id;
+      const dati = req.body;
+      await noleggiatori.findOneAndUpdate({"_id": id}, dati);
+      res.redirect(`/user/data`);
+  } catch (err) {
+      console.error(`Si è verificato un'errore nell'aggiornamento del profilo cliente: ${err}`);
+      res.render('errorPage', {err: `Errore nell'aggiornamento del profilo`});
   }
 });
 

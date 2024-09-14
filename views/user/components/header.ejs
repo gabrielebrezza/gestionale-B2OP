@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="/styles/user/components/header.css">
-<script src="scripts/admin/components/header.js"></script>
+<script src="/scripts/users/components/header.js"></script>
 <header class="header">
     <div class="logo">
         <img src="/img/logo.png" alt="">
@@ -41,7 +41,7 @@
             <li id="logOutList">
                 <form action="/user/logout" method="POST">
                     <button class="logoutBtn" type="submit">
-                        <span class="material-symbols-outlined">
+                        <span class="material-symbols-rounded">
                             logout
                         </span>
                         <span>LOGOUT</span>
@@ -62,17 +62,26 @@
 </nav>
 
 <script>
-    document.querySelectorAll('details').forEach(details => {
-        details.addEventListener('toggle', event => {
-            if (details.open) {
-                document.querySelectorAll('details').forEach(otherDetails => {
-                    if (otherDetails !== details) {
-                        otherDetails.removeAttribute('open');
-                    }
-                });
-            }
-        });
-    });
+    // document.querySelectorAll('details').forEach(details => {
+    //     details.addEventListener('toggle', event => {
+    //         if (details.open) {
+    //             document.querySelectorAll('details').forEach(otherDetails => {
+    //                 if (otherDetails !== details) {
+    //                     otherDetails.removeAttribute('open');
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
+    const links = document.querySelectorAll('#navBar ul li a');
+    const pagePath = window.location.pathname;
+    for (const link of links) {
+        if(pagePath == link.pathname){
+            link.removeAttribute('href');
+            link.parentElement.classList.add('active')
+        }
+    }
 </script>
 
 <style>

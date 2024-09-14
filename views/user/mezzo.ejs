@@ -1815,6 +1815,7 @@ input[type="checkbox"]{
                                 document.querySelector('.formIconContainer').remove();
                                 document.querySelector('.pagesContainer').remove();
                                 document.querySelector('.loginAlert').remove();
+                                updateNavbar();
                             } else {
                                 const error = await response.json();
                                 if (response.status === 401) {
@@ -1845,6 +1846,54 @@ input[type="checkbox"]{
         });
     </script>
     <script src="/scripts/utils/auth/otp.js"></script>
+    <script>
+        function updateNavbar(){
+            document.getElementById('loginHeaderLink').remove();
+            const liElement2 = document.createElement('li');
+
+            const anchorElement = document.createElement('a');
+            anchorElement.href = '/user/data';
+            
+            const iconSpan2 = document.createElement('span');
+            iconSpan2.className = 'material-symbols-rounded';
+            iconSpan2.textContent = 'person';
+            
+            const textNode = document.createTextNode('Profilo');
+            
+            anchorElement.appendChild(iconSpan2);
+            anchorElement.appendChild(textNode);
+            
+            liElement2.appendChild(anchorElement);
+            
+            document.querySelector('#navBar ul').appendChild(liElement2);
+            const liElement = document.createElement('li');
+            liElement.id = 'logOutList';
+                    
+            const formElement = document.createElement('form');
+            formElement.action = '/user/logout';
+            formElement.method = 'POST';
+
+            const buttonElement = document.createElement('button');
+            buttonElement.className = 'logoutBtn';
+            buttonElement.type = 'submit';
+
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'material-symbols-rounded';
+            iconSpan.textContent = 'logout';
+        
+            const textSpan = document.createElement('span');
+            textSpan.textContent = 'LOGOUT';
+            
+            buttonElement.appendChild(iconSpan);
+            buttonElement.appendChild(textSpan);
+            
+            formElement.appendChild(buttonElement);
+            
+            liElement.appendChild(formElement);
+            
+            document.querySelector('#navBar ul').appendChild(liElement);
+        }
+    </script>
     <script>
         const fileInputs = document.querySelectorAll('.file');
         for(const input of fileInputs){
