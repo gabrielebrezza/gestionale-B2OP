@@ -620,7 +620,7 @@
                         </tr>
                         <tr>
                             <td>Descrizione:</td>
-                            <td><input type="text" name="descrizione" value="<%= mezzo.descrizione %>"></td>
+                            <td><textarea rows="8" name="descrizione"><%= mezzo.descrizione %></textarea>
                         </tr>
                         <tr>
                             <td>Anno:</td>
@@ -679,6 +679,203 @@
                     </tfoot>
                 </table>
             </form>
+            <style>
+                .slider-container {
+                    display: flex;
+                    align-items: center;
+                    margin-block: 15px;
+                    background: #f9f9f9;
+                    border-radius: 15px;
+                    padding: 25px;
+                    max-width: 750px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .slider {
+                    position: relative;
+                    width: 100%;
+                    max-width: 550px;
+                    overflow: hidden;
+        
+                }
+                .slides {
+                    display: flex;
+                    align-items: center;
+                    transition: transform 0.5s ease;
+                }
+                .slide {
+                    position: relative;
+                    min-width: 100%;
+                    border-radius: 15px;
+                    cursor: pointer;
+                }
+                .slide img {
+                    width: 100%;
+                    border-radius: 15px;
+                }
+                .slide .delete-icon {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background-color: rgba(255, 255, 255, 0.7);
+                    border-radius: 50%;
+                    padding: 5px;
+                    cursor: pointer;
+                    transition: .25s ease-in-out;
+                }
+                .slide .delete-icon:hover  {
+                    color: #f9f9f9;
+                    background-color: #cb628098;
+                }
+                button.prevImageSlider, button.nextImageSlider {
+                    background: none;
+                    border: none;
+                    outline: none;
+                    border-radius: 50%;
+                    color: #333;
+                    cursor: pointer;
+                }
+                .form-slide {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                    border-radius: 15px;
+                    cursor: default;
+                }
+                .form-slide input[type="file"] {
+                    display: none;
+                }
+                .form-slide label span{
+                    cursor: pointer;
+                    font-size: 2rem;
+                    color: #f9f9f9;
+                }
+                .form-slide {
+                    background: #7B0828;
+                    height: 350px;
+                }
+            </style>
+            
+            <script>
+                let currentSliderIndex = 0;
+            
+                function showSlide(index) {
+                    const slides = document.querySelector('.slides');
+                    const totalSlides = document.querySelectorAll('.slide').length;
+            
+                    if (index >= totalSlides) {
+                        currentSliderIndex = 0;
+                    } else if (index < 0) {
+                        currentSliderIndex = totalSlides - 1;
+                    } else {
+                        currentSliderIndex = index;
+                    }
+            
+                    const offset = -currentSliderIndex * 100; // Spostamento in percentuale
+                    slides.style.transform = `translateX(${offset}%)`;
+                }
+            
+                function nextSlide() {
+                    showSlide(currentSliderIndex + 1);
+                }
+            
+                function prevSlide() {
+                    showSlide(currentSliderIndex - 1);
+                }
+            
+                function addImageToSlider(imageUrl, imageN) {
+                    const slidesContainer = document.querySelector('.slides');
+                    const newSlide = document.createElement('div');
+                    newSlide.classList.add('slide');
+                    
+                    newSlide.innerHTML = `
+                        <img src="${imageUrl}" onclick="openModal(this)">
+                        <span class="material-symbols-rounded delete-icon" data-image_number="${imageN}" onclick="deleteImage(this)">delete</span>
+                    `;
+                    slidesContainer.insertBefore(newSlide, slidesContainer.lastElementChild);
+                }
+            
+                async function deleteImage(deleteIcon) {
+                    const slide = deleteIcon.closest('.slide');
+                    const imageN = deleteIcon.dataset.image_number;
+                    const mezzoId = document.querySelector('.slides').dataset.mezzo_id;
+        
+                    const response = await fetch(`/admin/deleteImage/${mezzoId}/${imageN}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error('Error deleting files');
+                    }
+                    slide.remove();
+        
+                    const slides = document.querySelectorAll('.delete-icon');
+                    slides.forEach((slide, index) => {
+                        slide.dataset.image_number = index + 1;
+                    });
+        
+                    showSlide(currentSliderIndex);
+                }
+            
+                async function uploadImage(formData) {
+                    const fileResponse = await fetch('/admin/mezzo/addImage', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+                    const data = await fileResponse.json();
+                    addImageToSlider(data.imageUrl, data.fileNumber);
+                    document.querySelector('#uploadForm input[type="file"]').value = '';
+                }
+            
+                document.addEventListener('DOMContentLoaded', () => {
+                    showSlide(currentSliderIndex);
+            
+                    const uploadImageBtn = document.querySelector('#uploadForm input[type="file"]');
+                    uploadImageBtn.addEventListener('change', () => {
+                        const formData = new FormData(uploadForm);
+                        uploadImage(formData);
+                    });
+                });
+            </script>
+        
+            <div class="slider-container">
+                <button class="prevImageSlider" onclick="prevSlide()">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </button>
+                <div class="slider">
+                    <div class="slides" data-mezzo_id="<%= mezzo._id %>">
+                        <% for( let i = 1; i <= totalImages; i++ ) { %>
+                            <div class="slide">
+                                <img src="/img\mezzi/<%= `${mezzo._id}/${i}.jpg` %>" onclick="openModal(this)">
+                                <span class="material-symbols-rounded delete-icon" data-image_number="<%= i %>" onclick="deleteImage(this)">delete</span>
+                            </div>
+                        <% } %>
+                        
+            
+                        <!-- Form per aggiungere immagini come ultima slide -->
+                        <div class="slide form-slide">
+                            <form id="uploadForm" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="<%= mezzo._id %>">
+                                <label for="imageInput">
+                                    <span class="material-symbols-rounded">
+                                        add_photo_alternate
+                                    </span>
+                                </label>
+                                <input type="file" name="image" id="imageInput" type="image" required>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button class="nextImageSlider" onclick="nextSlide()">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </button>
+            </div>
     </section>
     
         <script>
@@ -1098,9 +1295,6 @@
             });
             
         </script>
-    <% } %>
-
-
-
+    <% } %>    
 </body>
 </html>

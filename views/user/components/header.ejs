@@ -22,7 +22,7 @@
             </a>
         </li>
         <li>
-            <a href="/admin/mezzi">
+            <a href="/mezzi">
                 <span class="material-symbols-rounded">
                     local_shipping
                 </span>
@@ -101,7 +101,7 @@
     }
     #loaderContainer img{
         transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
-        animation: loader 2s infinite;
+        animation: loader 1.5s infinite;
     }
     @keyframes loader {
         0%{
@@ -132,11 +132,11 @@
     window.addEventListener('load', () =>{
         setTimeout(() => {
             loaderContainer.style.opacity = 0;
+            loaderContainer.style.pointerEvents = 'none';
             document.body.style.overflow = 'auto';
             setTimeout(() => {
-                loaderContainer.style.display = 'none';
-                loader.style.animation = 'none';
-            }, 500);
-        }, 500);
+                loaderContainer.remove();
+            }, 1000);
+        }, 0);
     });
 </script>

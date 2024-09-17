@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parco Mezzi - CarMunfrà</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Rubik", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 25px;
+            padding-bottom: 50px;
+        }
+        .mezzoRow{
+            position: relative;
+            max-width: 1000px;
+            width: 100%;
+            height: max-content;
+            background: #e6e3e3;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+        .mezzoRow img{
+            max-width: 500px;
+            width: 100%;
+            object-fit: contain;
+        }
+        .mezzoDescription{
+            margin-top: 25px;
+        }
+        .mezzoDescription::first-letter{
+            text-transform: uppercase;
+        }
+        .prices{
+            margin-top: 15px;
+        }
+        .prices h3{
+            display: flex;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+        .prices h3 details{
+            position: relative;
+            transition: .25s;
+        }
+        .prices h3 details summary{
+            list-style: none;
+            cursor: pointer;
+            transition: .5s;
+        }
+        .prices h3 details summary span{
+            font-weight: 500;
+        }
+        .prices h3 details summary:hover{
+            color: #7e4cce;
+        }
+
+        .prices h3 details .info-message{
+            position: absolute;
+            top: calc((1.2rem / 2) + 8px);
+            left: 18px;
+            width: 200px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: calc(1rem + 7px);
+            background: #e6e3e3;
+            border-radius: 13px;
+            border-top-left-radius: 0;
+            border: 2px solid #333;
+            padding: 10px;
+            filter: drop-shadow(15px 15px 10px #00000054);
+            user-select: text;
+        }
+        .prices ul{
+            list-style: none;
+            text-transform: capitalize;
+        }
+        .viewBtn{
+            position: absolute;
+            right: 25px;
+            bottom: 25px;
+            padding: 10px 20px;
+            background: #7e4cce;
+            color: #f4f4f4;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: .5s;
+            border: 2px solid #7e4cce;
+        }
+        .viewBtn:hover{
+            background: #f4f4f4;
+            color: #7e4cce;
+        }
+        @media (max-width: 900px) {
+            .mezzoRow{
+                max-width: 600px;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        @media (max-width: 430px) {
+            .mezzoRowRightSide h2{
+                text-align: center;
+            }
+            .btnContainer{
+                margin-top: 25px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .viewBtn{
+                position: relative;
+                bottom: 0;
+                right: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <main>
+        <% const days = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica']; %>
+        <% for(const mezzo of veicoli) { %>
+            <article class="mezzoRow" data-type="<%= mezzo.type %>">
+                <img src="/img/mezzi/<%= mezzo._id %>/2.jpg" alt="<%= mezzo.marca %> <%= mezzo.modello %>">
+                <section class="mezzoRowRightSide">
+                    <h2><%= mezzo.marca %> <%= mezzo.modello %></h2>
+                    <p class="mezzoDescription"><%= mezzo.descrizione %></p>
+                    <div class="prices">
+                        <h3>
+                            <details>
+                                <summary>
+                                    <span class="material-symbols-outlined">
+                                        info
+                                    </span>
+                                </summary>
+                                <div class="info-message">
+                                    <p>Il prezzo può variare in base al numero di km oltre a quelli inclusi (<%= mezzo.kmIncluded %> km) di <%= mezzo.kmPrice.toFixed(2) %>€/km</p>
+                                </div>
+                            </details>
+                            Prezzi
+                        </h3>
+                        <ul>
+                            <% mezzo.daysPrices.forEach((dayPrice, index) => { %>
+                                <li><%= `${days[index]}: ${dayPrice}€` %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <div class="btnContainer">
+                        <a href="/mezzo?id=<%= mezzo._id %>" class="viewBtn">Prenota ora!</a>
+                    </div>
+                </section>
+            </article>
+        <% } %>
+        
+    </main>
+
+</body>
+</html>

@@ -18,7 +18,7 @@ const authRoute = require('./routes/authRoutes');
 
 //middlewares
 const { userAuthenticateJWT } = require('./utils/authUtils');
-
+const { getNextFileNumber } = require('./utils/fileUtils.js');
 
 
 const storage = multer.diskStorage({
@@ -95,6 +95,27 @@ app.post('/user/images/delete', userAuthenticateJWT, async (req, res) => {
       }
   }
 });
+
+app.get('/mezzi', userAuthenticateJWT, async (req, res) => {
+  try {
+    const customerId = req.user ? req.user.id : false;
+    let veicoli = await mezzi.find({}, {"marca": 1, "modello": 1, "descrizione": 1, "type": 1, "daysPrices": 1, "kmIncluded": 1, "kmPrice": 1, "discount": 1, "discountedDays": 1});
+    let noleggi = await bookings.find({}, {"fromDate": 1, "toDate": 1});
+    
+    const today = new Date();
+    noleggi = noleggi.filter(book => new Date(book.fromDate) > today || (new Date(book.fromDate) <= today &&  new Date(book.toDate) >= today));
+
+    for(const veicolo of veicoli){
+      const folderPath = path.join('public', 'img', 'mezzi', veicolo._id.toString());
+      veicoli.totalImages = await getNextFileNumber(folderPath) - 1;
+    }
+    res.render('user/mezzi', {customerId, veicoli, noleggi});
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('errorPage', {err: 'Errore del server'});
+  }
+});
+
 app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
   try {
     const id = req.query.id;
@@ -103,8 +124,11 @@ app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
     let noleggi = await bookings.find({"mezzoId": id}, {"fromDate": 1, "toDate": 1});
     const today = new Date();
     noleggi = noleggi.filter(book => new Date(book.fromDate) > today || (new Date(book.fromDate) <= today &&  new Date(book.toDate) >= today));
+    
     if (mezzo) {
-        res.render('user/mezzo', { mezzo, noleggi, customerId });
+      const folderPath = path.join('public', 'img', 'mezzi', id);
+      const totalImages = await getNextFileNumber(folderPath) - 1;
+        res.render('user/mezzo', { mezzo, noleggi, customerId, totalImages });
     } else {
         res.status(404).render('errorPage', {err: 'Mezzo non trovato'});
     }
@@ -167,6 +191,7 @@ app.post('/user/data/update', userAuthenticateJWT, async (req, res) =>{
   try {
       const id = req.user.id;
       const dati = req.body;
+      if(await noleggiatori.findOne({"_id": { $ne: id }, "contatti.email": dati.contatti.email})) return res.render('errorPage', { err: 'Esiste già un\'account con questa email'});
       await noleggiatori.findOneAndUpdate({"_id": id}, dati);
       res.redirect(`/user/data`);
   } catch (err) {

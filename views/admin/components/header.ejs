@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/styles/admin/components/header.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 <script src="/scripts/admin/components/header.js"></script>
 <header class="header">
     <div class="openMenu">
@@ -98,11 +99,11 @@
     window.addEventListener('load', () =>{
         setTimeout(() => {
             loaderContainer.style.opacity = 0;
+            loaderContainer.style.pointerEvents = 'none';
             document.body.style.overflow = 'auto';
             setTimeout(() => {
-                loaderContainer.style.display = 'none';
-                loader.style.animation = 'none';
-            }, 500);
-        }, 500);
+                loaderContainer.remove();
+            }, 1000);
+        }, 0);
     });
 </script>

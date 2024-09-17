@@ -2,9 +2,11 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fsp = require('fs').promises;
+const multer = require('multer');
 const path = require('path');
 
 const { authenticateJWT } = require('../utils/authUtils');
+const { getNextFileNumber, resetImageNumbering } = require('../utils/fileUtils.js');
 const router = express.Router();
 
 const mezzi = require('./../DB/mezzi.js');
@@ -16,6 +18,67 @@ router.use(cookieParser());
 router.use(bodyParser.json());
 
 router.use(bodyParser.urlencoded({ extended: true }));
+
+
+  const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        const mezzoId = req.body.id;
+        const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+  
+      try {
+        // Se la cartella non esiste, creala
+        await fsp.mkdir(folderPath, { recursive: true });
+        cb(null, folderPath);
+      } catch (error) {
+        console.error('Errore nella creazione della cartella:', error);
+        cb(error);
+      }
+    },
+    filename: async (req, file, cb) => {
+      const mezzoId = req.body.id;
+      const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+  
+      try {
+        const nextFileNumber = await getNextFileNumber(folderPath);
+        const newFilename = `${nextFileNumber}.jpg`;
+        cb(null, newFilename);
+      } catch (error) {
+        console.error('Errore nella generazione del nome file:', error);
+        cb(error);
+      }
+    }
+  });
+  
+  const upload = multer({ storage: storage });
+
+  router.post('/admin/mezzo/addImage', upload.single('image'), async (req, res) => {
+    try {
+        const folderPath = path.join('public', 'img', 'mezzi', req.body.id);
+        const fileNumber = await getNextFileNumber(folderPath) - 1;
+        const imageUrl = `/img/mezzi/${req.body.id}/${fileNumber}.jpg`;
+      res.status(200).json({ message: 'File caricato con successo', imageUrl, fileNumber });
+    } catch (error) {
+      console.error('Errore durante l\'upload del file:', error);
+      res.status(500).json({ error: 'Errore del server' });
+    }
+  });
+
+router.delete('/admin/deleteImage/:mezzoId/:imageN', async (req, res) => {
+    try {
+        const mezzoId = req.params.mezzoId;
+        const imageNumber = req.params.imageN;
+        const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+        const imagePath = path.join(folderPath, `${imageNumber}.jpg`);
+
+        await fsp.unlink(imagePath);
+
+        await resetImageNumbering(folderPath);
+      res.status(200).json({ message: 'File caricato con successo'});
+    } catch (error) {
+      console.error('Errore durante l\'upload del file:', error);
+      res.status(500).json({ error: 'Errore del server' });
+    }
+});
 
 router.get('/ciao', async (req, res) => await bookings.deleteMany())
 
@@ -77,7 +140,9 @@ router.get('/admin/mezzo', authenticateJWT, async (req, res) =>{
         const mezzo = await mezzi.findOne({"_id": id});
         const noleggi = await bookings.find({"mezzoId": id}, {});
         const clienti = await noleggiatori.find({}, {"_id": 1, "nome": 1, "cognome": 1});
-        res.render('admin/mezzo', {mezzo, noleggi, clienti});
+        const folderPath = path.join('public', 'img', 'mezzi', id);
+        const totalImages = await getNextFileNumber(folderPath) - 1;
+        res.render('admin/mezzo', {mezzo, noleggi, clienti, totalImages});
     } catch (err) {
         res.render('errorPage', {err: 'Il mezzo selezionato potrebbe essere stato eliminato o essere inesistente'});
     }
