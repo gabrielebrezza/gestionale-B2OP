@@ -47,10 +47,10 @@ main{
 #navBar {
     position: fixed;
     padding-top: var(--header-height);
-    top: 0;
+    bottom: 0;
     right: 0;
     background: #f4f4f4;
-    height: 100vh;
+    height: 100dvh;
     width: 0;
     transition: 0.5s;
     display: flex;

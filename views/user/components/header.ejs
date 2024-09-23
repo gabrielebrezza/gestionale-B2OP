@@ -62,17 +62,6 @@
 </nav>
 
 <script>
-    // document.querySelectorAll('details').forEach(details => {
-    //     details.addEventListener('toggle', event => {
-    //         if (details.open) {
-    //             document.querySelectorAll('details').forEach(otherDetails => {
-    //                 if (otherDetails !== details) {
-    //                     otherDetails.removeAttribute('open');
-    //                 }
-    //             });
-    //         }
-    //     });
-    // });
 
     const links = document.querySelectorAll('#navBar ul li a');
     const pagePath = window.location.pathname;
@@ -91,17 +80,17 @@
         left: 0;
         width: 100dvw;
         height: 100dvh;
-        background: #04080F;
+        background: #f4f4f4;
         z-index: 100;
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 1;
-        transition: opacity .5s ease;
+        transition: opacity .25s ease;
     }
     #loaderContainer img{
         transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
-        animation: loader 1.5s infinite;
+        animation: loader 1s infinite;
     }
     @keyframes loader {
         0%{
@@ -136,7 +125,8 @@
             document.body.style.overflow = 'auto';
             setTimeout(() => {
                 loaderContainer.remove();
-            }, 1000);
+                window.scrollTo(0, 0);
+            }, 250);
         }, 0);
     });
 </script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= mezzo.modello %> - CarMunfrà</title>
+    <title><%= mezzo.marca.toUpperCase() %> - CarMunfrà</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
     <style>
@@ -38,6 +38,7 @@
         .mezzo-header h1 {
             margin: 0;
             font-size: 2.5em;
+            text-transform: uppercase;
         }
         .mezzo-details {
             display: flex;
@@ -160,9 +161,7 @@ button.prevImageSlider, button.nextImageSlider {
 .image-modal.close:hover, .image-modal.close:focus {
   color: #bbb;
 }
-
         .mezzo-pricing {
-            /* flex: 1; */
             min-width: 275px;
             background: #f9f9f9;
             padding: 20px;
@@ -196,7 +195,8 @@ button.prevImageSlider, button.nextImageSlider {
         .calendar-box {
             margin-top: 30px;
             padding: 20px;
-            background: #eef;
+            /* #eef */
+            background: #e6e3e3;
             border-radius: 8px;
             text-align: center;
             display: flex;
@@ -943,7 +943,7 @@ window.onclick = function(event) {
                 <ul>
                     <% const weekDays = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'] %>
                     <% for (let [days, price] of Object.entries(mezzo.daysPrices)) { %>
-                        <li class="price" data-price="<%= price %>"><%= weekDays[days] %>: <s><%= mezzo.discountedDays.includes(days) ? `${price + (price * mezzo.discount)/100} €` : '' %></s> <%= price %> € </li>
+                        <li class="price" data-price="<%= price %>"><%= weekDays[days] %>: <s><%= mezzo.discountedDays.includes(days) ? `${((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 + (price === ((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 ? 5 : 0)} €` : '' %></s> <%= price %> € </li>
                     <% } %>
                 </ul>
             </div>
@@ -2129,5 +2129,6 @@ window.onclick = function(event) {
     </script>
 <% } %>
     </main>
+    <%- include('components/footer.ejs') %>
 </body>
 </html>

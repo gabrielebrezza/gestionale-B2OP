@@ -61,6 +61,10 @@ app.set('views', 'views');
 
 app.use(express.static('public'));
 
+app.get('/', async (req, res) => {
+  res.redirect('/mezzi')
+})
+
 app.get('/user/images', userAuthenticateJWT, async (req, res) => {
   try {
       if(!req.user) return res.status(401).send('NON AUTORIZZATO');
@@ -100,15 +104,22 @@ app.get('/mezzi', userAuthenticateJWT, async (req, res) => {
   try {
     const customerId = req.user ? req.user.id : false;
     let veicoli = await mezzi.find({}, {"marca": 1, "modello": 1, "descrizione": 1, "type": 1, "daysPrices": 1, "kmIncluded": 1, "kmPrice": 1, "discount": 1, "discountedDays": 1});
-    let noleggi = await bookings.find({}, {"fromDate": 1, "toDate": 1});
+    let noleggi = await bookings.find({}, {"fromDate": 1, "toDate": 1, "mezzoId": 1});
     
     const today = new Date();
     noleggi = noleggi.filter(book => new Date(book.fromDate) > today || (new Date(book.fromDate) <= today &&  new Date(book.toDate) >= today));
 
-    for(const veicolo of veicoli){
-      const folderPath = path.join('public', 'img', 'mezzi', veicolo._id.toString());
-      veicoli.totalImages = await getNextFileNumber(folderPath) - 1;
-    }
+    veicoli = veicoli.map(veicolo => {
+      const filteredBookings = noleggi.filter(book => book.mezzoId == veicolo._id.toString())
+      .map(book => ({
+        fromDate: book.fromDate,
+        toDate: book.toDate
+      }));
+      return {
+          ...veicolo._doc,
+          bookings: filteredBookings
+      };
+  });
     res.render('user/mezzi', {customerId, veicoli, noleggi});
   } catch (error) {
     console.error(error);
