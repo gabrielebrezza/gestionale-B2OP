@@ -1,8 +1,9 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/styles/user/components/header.css">
 <script src="/scripts/users/components/header.js"></script>
 <header class="header">
     <div class="logo">
-        <img src="/img/logo.png" alt="">
+        <a href="/"><img src="/img/logo.png" alt="carmunfrà"></a>
     </div>
     <div class="openMenu">
         <span id="toggleMenuBtn" class="material-symbols-rounded">
@@ -49,14 +50,24 @@
                 </form>
             </li>
         <% }else{ %>
-            <li id="loginHeaderLink">
-                <a class="loginLink">
-                    <span class="material-symbols-rounded">
-                        login
-                    </span>
-                    Accedi
-                </a>
-            </li>
+            <div class="headerBottomLink">
+                <li id="loginHeaderLink">
+                    <a class="loginLink">
+                        <span class="material-symbols-rounded">
+                            login
+                        </span>
+                        Accedi
+                    </a>
+                </li>
+                <li id="signupHeaderLink">
+                    <a class="signup">
+                        <span class="material-symbols-rounded">
+                            login
+                        </span>
+                        Registrati
+                    </a>
+                </li>
+            </div>
         <% } %>
     </ul>
 </nav>
@@ -130,3 +141,8 @@
         }, 0);
     });
 </script>
+
+
+<% if (!customerId) { %>
+    <%- include('loginSignupForm.ejs') %>
+<% } %>

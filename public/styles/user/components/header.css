@@ -30,7 +30,7 @@ main{
     align-items: center;
     justify-content: space-between;
     margin-bottom: 50px;
-    z-index: 2;
+    z-index: 3;
 }
 .header .logo img{
     max-width: 150px;
@@ -118,13 +118,24 @@ main{
     color: #fff;
 }
 
-#navBar ul li:where(#logOutList, #loginHeaderLink) {
+#navBar ul li:where(#logOutList, #loginHeaderLink, #signupHeaderLink) {
     width: 300px;
-    border-bottom: none;
+    padding: 5px;
+    margin: 0;
     position: fixed;
     bottom: 0;
     display: flex;
     justify-content: center;
+}
+.headerBottomLink{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+.headerBottomLink #loginHeaderLink, .headerBottomLink #signupHeaderLink{
+    position: relative;
 }
 #navBar ul li#logOutList:hover form button span{
     color: #7B0828;
@@ -178,9 +189,14 @@ main{
         align-items: center;
         justify-content: center;
     }
-    #navBar ul li:where(#logOutList, #loginHeaderLink) {
+    .headerBottomLink{
+        position: relative;
         width: 100%;
     }
+    #navBar ul li:where(#logOutList, #loginHeaderLink, #signupHeaderLink) {
+        width: 100%;
+    }
+
     #navBar ul li {
         text-align: center;
     }

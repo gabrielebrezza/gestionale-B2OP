@@ -4,8 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Parco Mezzi - CarMunfrà</title>
+    <meta name="description" content="Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale. Scopri il nostro parco mezzi!">
+<meta name="robots" content="follow, index">
+<link rel="canonical" href="https://www.carmunfra.it/mezzi">
+<meta name="keywords" content="noleggio furgoni, noleggio automobili, noleggio veicoli, trasporto merci, trasporto persone, Monferrato, Casale Monferrato">
+
+<meta property="og:title" content="Parco Mezzi - CarMunfrà">
+<meta property="og:description" content="Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale.">
+<meta property="og:url" content="https://www.carmunfra.it/mezzi">
+<% const imgIndex = Math.floor(Math.random() * veicoli.length); %>
+<meta property="og:image" content="/img/mezzi/<%= veicoli[imgIndex]._id %>/2.jpg">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "AutoRental",
+    "name": "CarMunfrà",
+    "url": "https://www.carmunfra.it",
+    "logo": "https://www.carmunfra.it/wp-content/uploads/2023/02/cropped-logo.png",
+    "description": "Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale.",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Casale Monferrato",
+        "addressRegion": "Piemonte",
+        "addressCountry": "IT"
+    },
+    "openingHours": "Mo-Su 09:00-17:00",
+    "telephone": "+39 0142 540773",
+    "image": "https://www.carmunfra.it/img/mezzi/<%= veicoli[imgIndex]._id %>/2.jpg",
+    "sameAs": [
+        "https://www.instagram.com/carmunfra",
+        "https://www.facebook.com/carmunfra"
+    ]
+}
+</script>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
         @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
@@ -206,6 +241,7 @@
             max-width: 500px;
             width: 100%;
             object-fit: cover;
+            object-position: left center;
             border-radius: 10px;
         }
         .fade-in {
