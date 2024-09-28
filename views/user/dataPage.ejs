@@ -5,26 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profilo</title>
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     <style>
-/* Reset di base */
+        .dark #loaderContainer {
+            background: #1e1e1e;
+        }
+    </style>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Stili generali */
 body {
-    font-family: 'Arial', sans-serif;
-    background: #f4f4f4;
-    color: #333;
+    font-family: "Rubik", sans-serif;
+    background: var(--pageBg);
+    color: var(--textColor);
 }
 
 .container {
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
-    background: #fff;
+    background: var(--elementsBg);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -32,14 +47,14 @@ body {
 
 .profile-header {
     text-align: center;
-    text-transform: capitalize;
+    text-transform: uppercase;
     margin-bottom: 20px;
 }
 
 .profile-subtitle{
     width: fit-content;
     border-radius: 3px;
-    border-bottom: 3px solid #7e4cce;
+    border-bottom: 3px solid var(--accentColor);
 }
 
 .profile-action{
@@ -49,7 +64,7 @@ body {
 }
 
 span.btn-edit {
-    color: #7e4cce;
+    color: var(--accentColor);
     text-decoration: none;
     cursor: pointer;
     transition: .25s ease-in-out;
@@ -69,22 +84,32 @@ span.btn-edit {
 .profile-fieldset ul li strong{
     opacity: .7;
 }
-.profile-fieldset ul li input {
+.profile-fieldset ul li input{
     background: none;
     border: none;
-    border-bottom: 2px solid #7e4cce;
+    border-bottom: 2px solid var(--accentColor);
     text-transform: capitalize;
     font-size: 1rem;
-    color: #333;
+    color: var(--textColor);
     max-width: 250px;
     width: 100%;
     margin: 5px 0;
     outline: none;
 }
+.profile-fieldset ul li p{
+    font-size: 1rem;
+    max-width: 250px;
+    width: 100%;
+    margin: 5px 0;
+    text-align: right;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
 
 .profile-input:disabled {
     border: none;
-    color: #333;
+    color: var(--textColor);
     text-align: right;
     -moz-appearance: textfield;
 }
@@ -95,13 +120,13 @@ input[type="date"]:disabled::-webkit-calendar-picker-indicator {
 
 .profile-fieldset ul li input:not(:disabled){
     border: none;
-    border-bottom: 1px solid #7e4cce;
+    border-bottom: 1px solid var(--accentColor);
     outline: none;
     text-align: center;
 }
 
 hr{
-    border: 1px dashed #7e4cce;
+    border: 1px dashed var(--accentColor);
     margin-block: 20px;
 }
 
@@ -119,8 +144,8 @@ hr{
     outline: none;
     cursor: pointer;
     border-radius: 5px;
-    background: #7e4cce;
-    color: #f4f4f4;
+    background: var(--accentColor);
+    color: var(--defaultWhite);
     padding: 10px 20px;
     transition: .25s ease-in-out;
 }
@@ -136,14 +161,14 @@ hr{
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
-            margin-top: 25px;
+            margin-block: 50px;
         }
         .imageBox{
             padding: 20px;
             border-radius: 5px;
             max-width: 300px;
             width: 100%;
-            background: #fff;
+            background: var(--elementsBg);
             text-align: center;
         }
 
@@ -154,6 +179,9 @@ hr{
             object-fit: contain;
             margin-top: 25px;
         }
+        body.dark .default{
+            filter: invert(1);
+        }
         .imageBox .actionsBtns{
             display: flex;
             justify-content: space-evenly;
@@ -162,10 +190,10 @@ hr{
             cursor: pointer;
         }
         .imageBox .actionsBtns span.deleteImgBtn{
-            color: red;
+            color: var(--danger);
         }
         .imageBox .actionsBtns span.uploadImgBtn{
-            color: #7e4cce;
+            color: var(--accentColor);
         }
 @media (max-width: 600px) {
     .container {
@@ -207,28 +235,32 @@ hr{
                         <ul>
                             <li><strong>Nome:</strong> <input type="text" name="nome" value="<%= data.nome %>" id="detail-nome" class="profile-input" disabled  required></li>
                             <li><strong>Cognome:</strong> <input type="text" name="cognome" value="<%= data.cognome %>" id="detail-cognome" class="profile-input" disabled  required></li>
-                            <li><strong>Codice Fiscale:</strong> <input style="text-transform: uppercase;" type="text" name="cf" value="<%= data.cf %>" id="cf" class="profile-input" disabled  required></li>
+                            <li><strong>Codice Fiscale:</strong> <input style="text-transform: uppercase;" type="text" name="cf" value="<%= data.cf %>" id="cf" class="profile-input" disabled  <%= data.cf ? 'required' : '' %>></li>
+                            <li><strong>Partita IVA:</strong> <input style="text-transform: uppercase;" type="text" name="pIva" value="<%= data.pIva %>" class="profile-input" disabled <%= data.pIva ? 'required' : '' %>></li>
+                            <li><strong>Codice Univoco:</strong> <input style="text-transform: uppercase;" type="text" name="cUnivoco" value="<%= data.cUnivoco %>" class="profile-input" disabled <%= data.cUnivoco ? 'required' : '' %>></li>
                             <li><strong>Telefono:</strong> <input type="text" name="contatti[tel]" value="<%= data.contatti.tel %>" id="telefono" class="profile-input" disabled  required></li>
-                            <li><strong>Email:</strong> <input style="text-transform: lowercase;" type="email" name="contatti[email]" value="<%= data.contatti.email %>" id="email" class="profile-input" disabled required></li>
+                            <li title="Per questioni di sicurezza l'email non può essere modificata dopo aver creato l'account"><strong>Email:</strong> <p style="opacity: .5;"><%= data.contatti.email %></p></li>
+                            <li><strong>PEC:</strong> <input type="text" name="contatti[pec]" value="<%= data.contatti.pec %>" class="profile-input" disabled <%= data.contatti.pec ? 'required' : '' %>></li>
                         </ul>
                     </div>
                     <hr>
                     <div class="profile-fieldset">
                         <h3 class="profile-subtitle">Residenza</h3>
                         <ul>
-                            <li><strong>Via:</strong> <input type="text" name="residenza[via]" value="<%= data.residenza.via %>" id="via" class="profile-input" disabled  required></li>
-                            <li><strong>Civico:</strong> <input type="text" name="residenza[nCivico]" value="<%= data.residenza.nCivico %>" id="ncivico" class="profile-input" disabled  required></li>
-                            <li><strong>CAP:</strong> <input type="text" name="residenza[cap]" value="<%= data.residenza.cap %>" id="cap" class="profile-input" disabled  required></li>
-                            <li><strong>Comune:</strong> <input type="text" name="residenza[comune]" value="<%= data.residenza.comune %>" id="comune" class="profile-input" disabled  required></li>
-                            <li><strong>Provincia:</strong> <input type="text" name="residenza[provincia]" value="<%= data.residenza.provincia %>" id="provincia" class="profile-input" disabled  required>
+                            <li><strong>Via:</strong> <input type="text" name="residenza[via]" value="<%= data.residenza.via %>" id="via" class="profile-input" disabled required></li>
+                            <li><strong>Civico:</strong> <input type="text" name="residenza[nCivico]" value="<%= data.residenza.nCivico %>" id="ncivico" class="profile-input" disabled required></li>
+                            <li><strong>CAP:</strong> <input type="text" name="residenza[cap]" value="<%= data.residenza.cap %>" id="cap" class="profile-input" disabled required></li>
+                            <li><strong>Comune:</strong> <input type="text" name="residenza[comune]" value="<%= data.residenza.comune %>" id="comune" class="profile-input" disabled required></li>
+                            <li><strong>Provincia:</strong> <input type="text" name="residenza[provincia]" value="<%= data.residenza.provincia %>" id="provincia" class="profile-input" disabled required>
                     </div>
                     <hr>
                     <div class="profile-fieldset">
                         <h3 class="profile-subtitle">Patente di Guida</h3>
                         <ul>
-                            <li><strong>Numero Patente:</strong> <input type="text" name="patente[numero]" value="<%= data.patente.numero %>" id="patente-numero" class="profile-input" disabled  required></li>
-                            <li><strong>Rilascio:</strong> <input type="date" name="patente[rilascio]" value="<%= data.patente.rilascio %>" id="patente-rilascio" class="profile-input" disabled  required></li>
-                            <li><strong>Scadenza:</strong> <input type="date" name="patente[scadenza]" value="<%= data.patente.scadenza %>" id="patente-scadenza" class="profile-input" disabled  required></li>
+                            <li><strong>Numero Patente:</strong> <input type="text" name="patente[numero]" value="<%= data.patente.numero %>" id="patente-numero" class="profile-input" disabled required></li>
+                            <li><strong>Rilasciata Da:</strong> <input type="text" name="patente[daUfficio]" value="<%= data.patente.daUfficio %>" id="patente-rilasciatoDa" class="profile-input" disabled <%= data.patente.daUfficio ? 'required' : '' %>></li>
+                            <li><strong>Rilascio:</strong> <input type="date" name="patente[rilascio]" value="<%= data.patente.rilascio %>" id="patente-rilascio" class="profile-input" disabled required></li>
+                            <li><strong>Scadenza:</strong> <input type="date" name="patente[scadenza]" value="<%= data.patente.scadenza %>" id="patente-scadenza" class="profile-input" disabled required></li>
                         </ul>
                     </div>
                     <div class="submit-container">
@@ -272,7 +304,7 @@ hr{
         <% directories.forEach((dir, i) => { %>
             <div class="imageBox">
                 <h3><%= titles[i] %></h3>
-                <img src="<%= `/user/images?dir=${dir}` %>" alt="<%= dir %>" onerror="this.src = `/img/default/document.png`">
+                <img src="<%= `/user/images?dir=${dir}` %>" alt="<%= dir %>" onerror="this.src = `/img/default/document.png`; this.classList.add('default');">
                 <div class="actionsBtns">
                     <form id="<%= `delete_${dir}_form` %>">
                         <input type="hidden" name="dir" value="<%= dir %>">
@@ -332,5 +364,6 @@ hr{
             }
         </script>
     </section>
+    <%- include('components/footer.ejs') %>
 </body>
 </html>

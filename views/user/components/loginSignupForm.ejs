@@ -24,8 +24,8 @@ filter: drop-shadow(10px 12px 0px #000);
 .modal section{
     max-width: 350px;
     width: 100%;
-    background: #f2f2f2;
-    border: 1px solid #7e4cce;
+    background: var(--elementsBg);
+    border: 1px solid var(--accentColor);
     border-radius: 10px;
     position: relative;
     overflow: hidden;
@@ -75,22 +75,24 @@ filter: drop-shadow(10px 12px 0px #000);
     outline: none;
     border-radius: 0;
     background: #0000 !important;
-    border-bottom: 2px solid #7e4cce;
-    color: #333;
+    border-bottom: 2px solid var(--accentColor);
     font-size: 1rem;
+}
+.modal input{
+    color: var(--textColor);
 }
 .modal .field input::placeholder{
     width: 100%;
     transform: translateX(30px) translateY(2px);
     transition: .5s;
-    color: #555;
+    color: var(--placeHolders);
     opacity: .8;
 }
 .modal .field:has(input:focus input:-webkit-autofill) input::placeholder{
     transform: translateX(0) translateY(2px);
 }
 .modal .field span{
-    color: #555;
+    color: var(--placeHolders);
     position: absolute;
     font-size: 1.5rem;
     padding: 10px;
@@ -103,11 +105,11 @@ filter: drop-shadow(10px 12px 0px #000);
     max-width: 200px;
     width: 100%;
     padding: 12px;
-    background: #7e4cce;
+    background: var(--accentColor);
     border: none;
     outline: none;
     border-radius: 5px;
-    color: #f2f2f2;
+    color: var(--defaultWhite);
     cursor: pointer;
     transition: background-color 0.3s;
     text-transform: uppercase;
@@ -117,7 +119,8 @@ filter: drop-shadow(10px 12px 0px #000);
     gap: 5px;
 }
 .modal button[type="submit"]:hover {
-    background: #8b60d7;
+    background: var(--accentColor);
+    opacity: .8;
 }
 .modal button[type="submit"] span{
     transition: .5s;
@@ -137,11 +140,11 @@ section .closeModal{
     user-select: none;
     -webkit-user-drag: none;
     font-weight: 900;
-    color: #878787;
+    color: var(--placeHolders);
     transition: .5s ease-in-out;
 }
 .closeModal:hover{
-    color: #7e4cce;
+    color: var(--accentColor);
     transform: rotateZ(360deg);
 }
 #signupForm{
@@ -208,7 +211,7 @@ section .closeModal{
     text-align: center;
     background: none;
     outline: none;
-    border: 3px solid #7e4cce;
+    border: 3px solid var(--accentColor);
     border-radius: 5px;
 }
 input[type="number"]::-webkit-outer-spin-button,
@@ -225,7 +228,7 @@ input[type="number"] {
 .custom-file-upload {
     display: inline-block;
     position: relative;
-    background-color: #7e4cce;
+    background-color: var(--accentColor);
     border-radius: 5px;
     display: flex;
     font-family: 'Poppins', sans-serif;
@@ -258,6 +261,25 @@ margin-left: 15px;
 .custom-file-upload label span.upload-text{
     font-size: 1rem;
 }
+
+@media (max-width: 440px){
+    .custom-file-upload label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .custom-file-upload .upload-text {
+        font-size: 0 !important; /* Riduce il testo originale a invisibile */
+        line-height: 0 !important; /* Rimuove lo spazio verticale */
+    }
+    .custom-file-upload .upload-text::before {
+        content: 'Carica';
+        margin-top: 5px;
+        font-size: initial; /* Imposta la dimensione del testo visibile */
+        display: inline-block;
+    }
+}
+
 #signupForm .formIconContainer{
     display: flex;
     justify-content: center;
@@ -282,7 +304,7 @@ margin-left: 15px;
     user-select: none;
     transition: opacity .5s ease-in-out;
     z-index: 1;
-    color: #333;
+    color: var(--accentColor) !important;
 }
 
 .formIconContainer .prevNextIcons::before{
@@ -342,7 +364,7 @@ input[type="checkbox"]{
     font-size: .8rem;
 }
 .accountLink{
-    color: #7e4cce;
+    color: var(--accentColor);
     font-weight: 500;
     cursor: pointer;
 }
@@ -366,7 +388,7 @@ input[type="checkbox"]{
     align-items: center;
 }
 .field:not(.termsField) > *:where(select, input:not([type="checkbox"])).show-error:invalid{
-    border-bottom: 1px solid red;
+    border-bottom: 1px solid var(--danger);
 }
 .field label{
     position: relative;
@@ -375,16 +397,16 @@ input[type="checkbox"]{
     position: absolute;
     left: -8px;
     font-size: 1rem;
-    color: #7B0828;
+    color: var(--danger);
 }
 .invalid{
-    border-bottom: 2px solid rgba(255, 0, 0, 0.54) !important;
+    border-bottom: 2px solid var(--danger) !important;
 }
 input[type="number"].invalid{
-    border: 2px solid rgba(255, 0, 0, 0.54) !important;
+    border: 2px solid var(--danger) !important;
 }
 .errorLog{
-    color: rgba(255, 0, 0, 0.54);
+    color: var(--danger);
     padding: 5px;
 }
 </style>
@@ -1018,11 +1040,11 @@ input[type="number"].invalid{
         });
         }
     }
-    function createPageNavigation(prevButtonId, nextButtonId, pagesClass, submitButtonId) {
+    function createPageNavigation(prevButtonId, nextButtonId, pagesClass, submitButtonId, submitType = null) {
 const prevButton = document.getElementById(prevButtonId);
 const nextButton = document.getElementById(nextButtonId);
 
-const submitButton = document.getElementById(submitButtonId);
+const submitButton = submitType == 'class' ? document.querySelectorAll(submitButtonId) : document.getElementById(submitButtonId);
 let currentPage = 0, isProcessing = false;
 
 function updatePageVisibility() {
@@ -1041,9 +1063,21 @@ function updatePageVisibility() {
     nextButton.classList.toggle('disabled', currentPage === pages.length - 1);
 
     if (currentPage === pages.length - 1 || !pages) {
-        submitButton.classList.add('active');
+        if(submitType == 'class'){
+            for (const btn of submitButton) {
+                btn.classList.add('active');
+            }
+        }else{
+            submitButton.classList.add('active');
+        }
     } else {
-        submitButton.classList.remove('active');
+        if(submitType == 'class'){
+            for (const btn of submitButton) {
+                btn.classList.remove('active');
+            }
+        }else{
+            submitButton.classList.remove('active');
+        }
     }
 }
 
@@ -1107,12 +1141,21 @@ nextButton.addEventListener('click', () => {
         }, 500);
     }
 });
-
-submitButton.addEventListener('click', (event) => {
+if(submitType == 'class'){
+    for (const btn of submitButton) {
+        btn.addEventListener('click', (event) => {
+            if (!validateUserForm()) {
+                event.preventDefault();
+        }
+});
+    }
+}else{
+    submitButton.addEventListener('click', (event) => {
     if (!validateUserForm()) {
         event.preventDefault();
     }
 });
+}
 
 updatePageVisibility();
 }

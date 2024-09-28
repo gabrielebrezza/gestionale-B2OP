@@ -6,6 +6,21 @@
     <title><%= mezzo.marca.toUpperCase() %> - CarMunfrà</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <style>
+        .dark #loaderContainer {
+            background: #1e1e1e;
+        }
+    </style>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
         @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
@@ -19,17 +34,17 @@
             -webkit-tap-highlight-color: transparent;
             scroll-behavior: smooth;
         }
-        body {
-            background-color: #f4f4f4;
-            color: #333;
+        body{
+            background: var(--pageBg);
+            color: var(--textColor);
         }
         .container {
             max-width: 900px;
             margin: 50px auto;
             padding: 20px;
-            background: white;
+            background: var(--elementsBg);
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            filter: drop-shadow(5px 5px 5px #0000006c);
         }
         .mezzo-header {
             margin-bottom: 20px;
@@ -37,7 +52,7 @@
         }
         .mezzo-header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: clamp(1.8rem, 2vw, 2.5rem);
             text-transform: uppercase;
         }
         .mezzo-details {
@@ -57,10 +72,14 @@
             margin-left: 24px;
         }
         .mezzo-info p {
-            font-size: 1.1em;
+            font-size: clamp(.9rem, 2vw, 1.1rem);
             line-height: 1.6em;
         }
+        .mezzo-info p::first-letter{
+            text-transform: uppercase;
+        }
         .mezzo-info h2 {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
             text-align: left;
         }
 .slider-container{
@@ -69,7 +88,7 @@
     align-items: center;
     justify-content: center;
     margin-block: 15px;
-    background: #f9f9f9;
+    background: var(--pageBg);
     padding: 20px;
     border-radius: 15px;
 }
@@ -100,12 +119,11 @@
     cursor: pointer;
 }
 button.prevImageSlider, button.nextImageSlider {
-  /* background-color: #7e4cce78; */
   background: none;
   border: none;
   outline: none;
   border-radius: 50%;
-  color: #333;
+  color: var(--textColor);
   cursor: pointer;
 }
 
@@ -134,7 +152,7 @@ button.prevImageSlider, button.nextImageSlider {
 .image-modal-container {
     max-height: 90vh;
     max-width: 80vw;
-    position: relative; /* Relative positioning for close button positioning */
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -163,40 +181,42 @@ button.prevImageSlider, button.nextImageSlider {
 }
         .mezzo-pricing {
             min-width: 275px;
-            background: #f9f9f9;
+            background: var(--pageBg);
             padding: 20px;
             border-radius: 8px;
         }
         .mezzo-pricing h3 {
             margin-top: 0;
-            font-size: 1.5em;
-            color: #555;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--accentColor);
+            margin: 8px 0;
         }
         .mezzo-pricing ul {
             list-style: none;
         }
-        .mezzo-pricing p {
-            font-size: 1.2em;
+        .mezzo-pricing p, .mezzo-pricing li {
+            font-size: clamp(.9rem, 2vw, 1.2rem);
         }
 
 @media (max-width: 790px) {
     .mezzo-info{
         max-width: 100%;
-        /* display: flex; */
-        /* flex-direction: column;
-        align-items: center;
-        justify-content: center; */
     }
     .mezzo-pricing{
         width: 100%;
+    }
+}
+@media (max-width: 280px) {
+    .mezzo-pricing {
+        min-width: 100%;
+        padding: 5px;
     }
 }
 
         .calendar-box {
             margin-top: 30px;
             padding: 20px;
-            /* #eef */
-            background: #e6e3e3;
+            background: var(--pageBg);
             border-radius: 8px;
             text-align: center;
             display: flex;
@@ -205,8 +225,8 @@ button.prevImageSlider, button.nextImageSlider {
             flex-direction: column;
         }
         .calendar-box p {
-            font-size: 1.2em;
-            color: #333;
+            font-size: clamp(.9rem, 2vw, 1.2rem);
+            color: var(--textColor);
         }
 
 
@@ -224,7 +244,7 @@ button.prevImageSlider, button.nextImageSlider {
 }
 .calendarHead .current-date{
     text-transform: capitalize;
-    font-size: 1.45rem;
+    font-size: clamp(1rem, 1vw, 1.45rem);
     font-weight: 500;
 }
 .calendarHead .calendarIcons span{
@@ -241,7 +261,7 @@ button.prevImageSlider, button.nextImageSlider {
     transition: .4s ease-in-out;
 }
 .calendarHead .calendarIcons span:hover{
-    background: #7e4cce;
+    background: var(--accentColor);
     color: #cccbcb;
 }
 .calendarHead .calendarIcons span:first-child:hover{
@@ -289,7 +309,7 @@ button.prevImageSlider, button.nextImageSlider {
     user-select: none;
 }
 .days li.active{
-    color: #fff;
+    color: var(--defaultWhite);
 }
 .calendarMain .days li::before{
     position: absolute;
@@ -305,10 +325,11 @@ button.prevImageSlider, button.nextImageSlider {
 }
 
 .days li:hover::before{
-    background: #af95db;
+    background: var(--accentColor);
+    opacity: .75;
 }
 .days li:hover{
-    color: #f2f2f2;
+    color: var(--defaultWhite);
 }
 .days li.active::before{
     background: rgb(26, 204, 26);
@@ -318,21 +339,21 @@ button.prevImageSlider, button.nextImageSlider {
     pointer-events: none;
 }
 .days li.booked::before{
-    background: #7B0828;
+    background: var(--danger);
 }
 .days li.booked.inactive::before{
-    background: #7B0828;
+    background: var(--danger);
     opacity: .6;
 }
 .days li.booked:not(.inactive){
-    color: #f2f2f2;
+    color: var(--defaultWhite);
 }
 
 .days li.selected::before{
-    background: #7e4cce;
+    background: var(--accentColor);
 }
 .days li.selected{
-    color: #f2f2f2;
+    color: var(--defaultWhite);
 }
 
 #userForm {
@@ -354,7 +375,7 @@ button.prevImageSlider, button.nextImageSlider {
 
 #userForm .page {
     width: 100%;
-    height: 360px;
+    height: auto;
     padding: 15px;
     margin: 0;
     transition: transform 0.35s ease, opacity 0.35s ease;
@@ -385,46 +406,65 @@ button.prevImageSlider, button.nextImageSlider {
     background: none;
     outline: none;
     border: none;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--accentColor);
+    color: var(--textColor);
 }
 
-
+.paymentMethodContainer{
+    width: calc(100% + 75px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+.paymentMethodContainer:has(.active){
+    padding: 25px;
+    padding-top: 35px;
+    gap: 20px;
+}
 .userFormBtn{
     opacity: 0;
+    max-width: 215px;
+    width: 100%;
     pointer-events: none;
     outline: none;
     border: none;
-    padding: 10px 20px;
+    max-height: 0;
     border-radius: 5px;
-    /* margin-block: 25px; */
-    background: #7e4cce;
-    color: #f2f2f2;
+    background: var(--accentColor);
+    color: var(--defaultWhite);
     cursor: pointer;
-    transition: opacity .25s, transform .25s;
+    transition: .25s;
     display: flex;
     align-items: center;
+    justify-content: space-around;
+    font-size: 1rem;
+}
+.userFormBtn.active{
+    max-height: 100px;
+    padding: 10px 20px;
     gap: 5px;
+    opacity: 1 !important;
+    pointer-events: all !important;
 }
 .userFormBtn i{
     font-size: 24px;
 }
 .userFormBtn img{
-    width: 36px;
+    width: 24px;
     filter: brightness(0) invert(1);
 }
-.userFormBtn:first-child{
+.userFormBtn:first-of-type{
     background: #0070BA;
 }
-.userFormBtn:last-child{
+.userFormBtn:nth-child(2){
     background: #FF3D00;
-}
-.userFormBtn.active{
-    opacity: 1 !important;
-    pointer-events: all !important;
 }
 
 .userFormBtn:hover{
-    transform: scaleX(1.2) scaleY(1.1);
+    padding: 10px 0;
 }
 .formIconContainer{
     margin-block: 10px;
@@ -435,37 +475,12 @@ button.prevImageSlider, button.nextImageSlider {
     z-index: 2;
 }
 
-.formIconContainer .prevNextIcons{
-    position: relative;
-    opacity: 1;
-    pointer-events: all;
-    cursor: pointer;
-    user-select: none;
-    transition: opacity .5s ease-in-out;
-    z-index: 1;
-    color: #333;
-}
-
-.formIconContainer .prevNextIcons::before{
-    position: absolute;
-    content: '';
-    border-radius: 50%;
-    height: 40px;
-    width: 40px;
-    top: 50%;
-    left: 50%;
-    z-index: 0;
-    transform: translateX(-50%) translateY(-50%);
-    background: rgb(164, 164, 162);
-    opacity: .5;
-}
-
 p.loginAlert{
     margin-top: 20px;
     font-size: .8rem;
 }
 .accountLink{
-    color: #7e4cce;
+    color: var(--accentColor);
     font-weight: 500;
     cursor: pointer;
 }
@@ -482,9 +497,7 @@ p.loginAlert{
 }
 .field.termsField{
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    margin-top: auto;
     display: flex;
     justify-content: center !important;
     gap: 5px;
@@ -492,7 +505,7 @@ p.loginAlert{
 }
 .field.termsField > input{
     cursor: pointer;
-    accent-color: #7e4cce;
+    accent-color: var(--accentColor);
 }
 @media (max-width: 480px){
     .mezzo-details {
@@ -533,15 +546,9 @@ p.loginAlert{
     max-width: 450px;
 }
 
-
-
-.custom-file-upload input[type="file"] {
-    display: none;
-}
 #userForm .custom-file-upload {
     padding: 10px 20px;
 }
-
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -654,9 +661,9 @@ window.onclick = function(event) {
                 <h3>Prezzi e Dettagli</h3>
                 <p>Chilometri inclusi: <%= mezzo.kmIncluded %> km</p>
                 <p>Costo per chilometro extra: <%= mezzo.kmPrice.toFixed(2) %> €</p>
-                <h4>Tariffe giornaliere:</h4>
+                <h3>Tariffe giornaliere:</h3>
                 <ul>
-                    <% const weekDays = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'] %>
+                    <% const weekDays = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'] %>
                     <% for (let [days, price] of Object.entries(mezzo.daysPrices)) { %>
                         <li class="price" data-price="<%= price %>"><%= weekDays[days] %>: <s><%= mezzo.discountedDays.includes(days) ? `${((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 + (price === ((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 ? 5 : 0)} €` : '' %></s> <%= price %> € </li>
                     <% } %>
@@ -857,19 +864,24 @@ window.onclick = function(event) {
                 <% } %>
                 <div class="buttonContainer">
                     <% loggedIn = customerId ? 'active' : ''; %>
+                    <div class="paymentMethodContainer">
                         <button class="userFormBtn <%= loggedIn %>" type="submit" name="paypal">
                             <i class="fa fa-paypal"></i>
                             Paga con Paypal
                         </button>
-                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="stripe">
-                            <i class="fa fa-credit-card"></i>
-                            Paga con carta
-                        </button>
                         <button class="userFormBtn <%= loggedIn %>" type="submit" name="satispay">
                             <img src="/img/default/satispay-logo.png" alt="Satispay Logo">
-                            Paga con satispay
+                            Paga con Satispay
                         </button>
-                    <!-- <button <%= `${customerId ? 'class=active' : ''}` %> id="userFormBtn" type="submit">Paga</button> -->
+                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="stripe">
+                            <i class="fa fa-credit-card"></i>
+                            Paga con Carta
+                        </button>
+                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="cash">
+                            <i class="fa fa-money"></i>
+                            Paga in Contanti
+                        </button>
+                    </div>
                     <% if (!customerId) { %>
                         <div class="formIconContainer">
                             <span id="prevFormPage" class="material-symbols-outlined disabled prevNextIcons">
@@ -891,7 +903,7 @@ window.onclick = function(event) {
 
     <% if (!customerId) { %>
         <script>
-            createPageNavigation('prevFormPage', 'nextFormPage', 'page', 'userFormBtn');
+            createPageNavigation('prevFormPage', 'nextFormPage', 'page', '.userFormBtn', 'class');
             document.addEventListener('DOMContentLoaded', () => {
                 const userForm = document.getElementById('userForm');
 
@@ -971,7 +983,7 @@ window.onclick = function(event) {
     <%
         let bookedDate = [];
         for(const data of noleggi){
-            bookedDate.push(`${data.fromDate}:${data.toDate}`) 
+            bookedDate.push(`${data.fromDate}-${data.toDate}`) 
         }
     %>
     <div id="bookings" style="display:none;"><%=bookedDate%></div>
@@ -1003,7 +1015,7 @@ window.onclick = function(event) {
                 const data = `${year}-${month}-${day}`;
                 let isExpired = today >= new Date(data) ? 'expired': '';
                 bookings.forEach(date => {
-                    const [fromDate, toDate] = date.split(':');
+                    const [fromDate, toDate] = date.split('-');
                     if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                 });
                 let isInRange, isToDate, isFromDate;
@@ -1025,7 +1037,7 @@ window.onclick = function(event) {
                 const data = `${year}-${month}-${day}`;
                 let isExpired = today >= new Date(data) ? 'expired': '';
                 bookings.forEach(date => {
-                    const [fromDate, toDate] = date.split(':');
+                    const [fromDate, toDate] = date.split('-');
                     if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                 });
                 let isInRange, isToDate, isFromDate;
@@ -1046,7 +1058,7 @@ window.onclick = function(event) {
                 const year = currMonth == 11 ? currYear+1 : currYear;
                 const data = `${year}-${month}-${day}`;
                 bookings.forEach(date => {
-                    const [fromDate, toDate] = date.split(':');
+                    const [fromDate, toDate] = date.split('-');
                     if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                 });
                 let isInRange, isToDate, isFromDate;

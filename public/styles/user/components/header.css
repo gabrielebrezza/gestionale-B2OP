@@ -22,9 +22,7 @@ main{
     position: fixed;
     width: 100%;
     height: var(--header-height);
-    background: linear-gradient(to bottom,#fff, #f4f4f4);
-    filter: drop-shadow(-15px -15px 15px #333);
-    color: #333;
+    color: var(--textColor);
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -49,7 +47,7 @@ main{
     padding-top: var(--header-height);
     bottom: 0;
     right: 0;
-    background: #f4f4f4;
+    background: var(--elementsBg);
     height: 100dvh;
     width: 0;
     transition: 0.5s;
@@ -59,7 +57,7 @@ main{
     flex-direction: column;
     z-index: 1 !important;
     overflow-x: hidden;
-    filter: drop-shadow(-10px 0px 20px #00000012);
+    filter: drop-shadow(-20px 0px 10px #00000033);
 }
 
 #navBar ul {
@@ -78,12 +76,12 @@ main{
 }
 #navBar ul li.active{
     transform: translateX(10px);
-    filter: drop-shadow(5px 5px 15px #486eb9);
-    background: #486eb9;
+    filter: drop-shadow(5px 5px 15px var(--accentColor));
+    background: var(--accentColor);
     transform: scale(.96);
     filter: grayscale(.45) !important;
     & a{
-        color: #fff;
+        color: var(--defaultWhite);
         cursor: default;
     }
 }
@@ -98,7 +96,7 @@ main{
 .logoutBtn {
     cursor: pointer;
     text-decoration: none;
-    color: #333;
+    color: var(--textColor);
     font-weight: 750;
     text-transform: capitalize;
     margin-block: 25px;
@@ -108,22 +106,20 @@ main{
     transform: translateX(10px);
 }
 #navBar ul li:not(#logOutList) {
-    filter: drop-shadow(5px 5px 15px #486eb9);
+    filter: drop-shadow(5px 5px 15px var(--accentColor));
 }
 #navBar ul li:not(#logOutList):hover {
-    background: #486eb9;
+    background: var(--accentColor);
     transform: scale(.96);
 }
 #navBar ul li:hover :where(a) {
-    color: #fff;
+    color: var(--defaultWhite);
 }
 
 #navBar ul li:where(#logOutList, #loginHeaderLink, #signupHeaderLink) {
     width: 300px;
     padding: 5px;
     margin: 0;
-    position: fixed;
-    bottom: 0;
     display: flex;
     justify-content: center;
 }
@@ -134,11 +130,23 @@ main{
     display: flex;
     flex-direction: column;
 }
+.themeMode{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.themeMode span{
+    cursor: pointer;
+    transition: .5s;
+}
+.themeMode:hover span{
+    color: var(--defaultWhite);
+}
 .headerBottomLink #loginHeaderLink, .headerBottomLink #signupHeaderLink{
     position: relative;
 }
 #navBar ul li#logOutList:hover form button span{
-    color: #7B0828;
+    color: var(--danger);
 }
 #navBar ul li#logOutList:hover form button{
     transform: scale(1.3);
@@ -150,12 +158,17 @@ main{
     outline: none;
     padding-block: 2px;
     font-weight: 1000;
-    color: #333 !important;
+    color: var(--textColor) !important;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
 
+}
+@media (max-width: 1400px){
+    .header{
+        background: var(--elementsBg);
+    }
 }
 @media (max-height: 870px) {
     :root{
@@ -201,18 +214,19 @@ main{
         text-align: center;
     }
     #navBar ul li.active a{
-        color: #486eb9;
+        color: var(--accentColor);
         opacity: .5;
     }
     #navBar ul li:not(#logOutList){
         background: none;
-        filter: drop-shadow(10px 5px 2px #486eb936);
     }
     #navBar ul li:not(#logOutList):hover {
         background: none;
-        filter: drop-shadow(10px 5px 0px #486eb972);
     }
     #navBar ul li:hover :where(a) {
-        color: #000;
+        color: var(--accentColor);
+    }
+    .themeMode:hover span{
+        color: var(--accentColor);
     }
 }

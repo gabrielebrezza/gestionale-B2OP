@@ -2,7 +2,7 @@ footer{
     position: relative;
     margin-top: auto;
     width: 100%;
-    background: #e6e3e3;
+    background: var(--elementsBg);
     padding: 50px;
     display: flex;
     justify-content: center;
@@ -20,6 +20,8 @@ footer img{
     max-width: 200px;
     object-fit: contain;
     width: 100%;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
 }
 footer .social-icons{
     display: flex;
@@ -33,11 +35,11 @@ footer .social-icons a{
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #333;
+    color: var(--textColor);
     transition: .25s;
 }
 footer .social-icons a:hover{
-    color: #7e4cce;
+    color: var(--accentColor);
 }
 footer .social-icons a span{
     font-size: 1.5rem;
@@ -48,10 +50,10 @@ footer .copyright{
 }
 @media (max-width: 500px) {
     footer{
-    padding-inline: 25px;
+        padding-inline: 25px;
     }
     footer img{
-    max-width: 100px;
+        max-width: 100px;
     }
     footer .footer-row{
         font-size: .9rem;

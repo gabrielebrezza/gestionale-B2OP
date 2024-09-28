@@ -550,8 +550,8 @@
                                             </span>
                                         <% } %>
                                     </td>
-                                    <td><%= noleggio.fromDate.split('-').reverse().join('/') %></td>
-                                    <td><%= noleggio.toDate.split('-').reverse().join('/') %></td>
+                                    <td><%= noleggio.fromDate %></td>
+                                    <td><%= noleggio.toDate %></td>
                                     <td>
                                         <a class="customerLink" href="/admin/cliente?id=<%= encodeURIComponent(noleggio.customerId) %>">
                                             <% const noleggiatore = clienti.find( cliente => cliente._id == noleggio.customerId) %>

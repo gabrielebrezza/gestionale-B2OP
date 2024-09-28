@@ -6,11 +6,11 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
     fromDate: {
-        type: String,
+        type: Date,
         required: false
     },
     toDate: {
-        type: String,
+        type: Date,
         required: false
     },
     days: {
@@ -40,8 +40,36 @@ const bookingSchema = new mongoose.Schema({
     finalPrice: {
         type: Number,
         required: false
+    },
+    payment: {
+        state: {
+            type: String,
+            required: false
+        },
+        id: {
+            type: String,
+            required: false
+        },
+        expiration: {
+            type: Date,
+            required: false
+        },
+        method: {
+            type: String,
+            required: false
+        },
+        url:{
+            type: String,
+            required: false
+        }
     }
 });
+
+bookingSchema.methods.isPaymentExpired = function() {
+    const currentTime = Date.now();
+    return currentTime > this.payment.expiration;
+};
+
 const bookings = new mongoose.model('booking', bookingSchema);
 
 module.exports = bookings;

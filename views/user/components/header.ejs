@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/styles/user/components/header.css">
 <script src="/scripts/users/components/header.js"></script>
+<script src="/scripts/users/components/theme.js"></script>
+
+
 <header class="header">
     <div class="logo">
         <a href="/"><img src="/img/logo.png" alt="carmunfrà"></a>
@@ -10,7 +13,6 @@
             menu
         </span>
     </div>
-    
 </header>
 <nav id="navBar">
     <ul>
@@ -39,18 +41,26 @@
                     Profilo
                 </a>
             </li>
-            <li id="logOutList">
-                <form action="/user/logout" method="POST">
-                    <button class="logoutBtn" type="submit">
-                        <span class="material-symbols-rounded">
-                            logout
-                        </span>
-                        <span>LOGOUT</span>
-                    </button>
-                </form>
-            </li>
+            <div class="headerBottomLink">
+                <li class="themeMode">
+                    <span class="material-symbols-rounded" onclick="toggleChangeTheme()"></span>
+                </li>
+                <li id="logOutList">
+                    <form action="/user/logout" method="POST">
+                        <button class="logoutBtn" type="submit">
+                            <span class="material-symbols-rounded">
+                                logout
+                            </span>
+                            <span>LOGOUT</span>
+                        </button>
+                    </form>
+                </li>
+            </div>
         <% }else{ %>
             <div class="headerBottomLink">
+                <li class="themeMode">
+                    <span class="material-symbols-rounded" onclick="toggleChangeTheme()"></span>
+                </li>
                 <li id="loginHeaderLink">
                     <a class="loginLink">
                         <span class="material-symbols-rounded">
@@ -91,7 +101,7 @@
         left: 0;
         width: 100dvw;
         height: 100dvh;
-        background: #f4f4f4;
+        background: var(--pageBg);
         z-index: 100;
         display: flex;
         align-items: center;
@@ -146,3 +156,5 @@
 <% if (!customerId) { %>
     <%- include('loginSignupForm.ejs') %>
 <% } %>
+
+
