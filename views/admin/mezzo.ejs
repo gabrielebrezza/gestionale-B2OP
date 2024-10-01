@@ -402,7 +402,7 @@
         <%
             let bookedDate = [];
             for(const data of noleggi){
-                bookedDate.push(`${data.fromDate}:${data.toDate}`) 
+                bookedDate.push(`${data.fromDate}-${data.toDate}`) 
             }
         %>
         <div id="bookings" style="display:none;"><%=bookedDate%></div>
@@ -550,8 +550,8 @@
                                             </span>
                                         <% } %>
                                     </td>
-                                    <td><%= noleggio.fromDate %></td>
-                                    <td><%= noleggio.toDate %></td>
+                                    <td><%= noleggio.fromDate.toLocaleDateString() %></td>
+                                    <td><%= noleggio.toDate.toLocaleDateString() %></td>
                                     <td>
                                         <a class="customerLink" href="/admin/cliente?id=<%= encodeURIComponent(noleggio.customerId) %>">
                                             <% const noleggiatore = clienti.find( cliente => cliente._id == noleggio.customerId) %>
@@ -1080,7 +1080,8 @@
                 for (let i = firstDateOfMonth; i > 0; i--) {
                     let isBooked = false
                     bookings.forEach(date => {
-                        const [fromDate, toDate] = date.split(':');
+                        const [fromDate, toDate] = date.split('-');
+                        console.log(fromDate, toDate)
                         const data = `${currMonth == 0 ? currYear-1 : currYear}-${currMonth == 0 ? 12 : currMonth < 10 ? `0${currMonth}`: currMonth}-${lastDateOfLastMonth-i+1 < 10 ? `0${lastDateOfLastMonth-i+1}`: lastDateOfLastMonth-i+1}`;
                         if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                     });
@@ -1093,7 +1094,7 @@
 
                     let isBooked = false
                     bookings.forEach(date => {
-                        const [fromDate, toDate] = date.split(':');
+                        const [fromDate, toDate] = date.split('-');
                         const data = `${currYear}-${currMonth+1 < 10 ? `0${currMonth+1}`: currMonth+1}-${i < 10 ? `0${i}`: i}`;
                         if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
                     });
@@ -1105,7 +1106,7 @@
                 for (let i = 1; i <= missingDaysOfNextMonth; i++) {
                     let isBooked = false
                     bookings.forEach(date => {
-                        const [fromDate, toDate] = date.split(':');
+                        const [fromDate, toDate] = date.split('-');
                         const day = String(i).padStart(2, '0');
                         const month = currMonth == 11 ? 1 : String(currMonth+2).padStart(2, '0');
                         const data = `${currMonth == 11 ? currYear+1 : currYear}-${month}-${day}`;

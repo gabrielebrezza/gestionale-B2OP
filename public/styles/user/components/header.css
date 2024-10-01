@@ -29,11 +29,13 @@ main{
     justify-content: space-between;
     margin-bottom: 50px;
     z-index: 3;
+    pointer-events: none;
 }
 .header .logo img{
     max-width: 150px;
     width: 100%;
     cursor: pointer;
+    pointer-events: all;
 }
 #toggleMenuBtn {
     font-size: 3.5rem;
@@ -41,6 +43,7 @@ main{
     transition: 0.5s;
     user-select: none;
     z-index: 3;
+    pointer-events: all;
 }
 #navBar {
     position: fixed;

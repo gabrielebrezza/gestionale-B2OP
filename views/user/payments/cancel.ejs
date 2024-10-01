@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Completato - CarMunfrà</title>
+    <title>Pagamento Cancellato - CarMunfrà</title>
     <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
 
     <link rel="stylesheet" href="/styles/theme.css">
@@ -14,6 +14,10 @@
                 document.documentElement.classList.add('dark');
             }
         })();
+
+        setTimeout(function() {
+            location.replace('/');
+        }, 25000);
     </script>
     <style>
         .dark #loaderContainer {
@@ -69,8 +73,8 @@
     <%- include('../components/header.ejs') %>
     <main>
         <section>
-            <h2>Perfetto!</h2>
-            <p>Il noleggio del mezzo <%= booking.mezzo %> per <%= booking.fromDate.getTime() == booking.toDate.getTime() ? ` il giorno ${booking.toDate.toLocaleDateString()}` : `le date dal ${booking.fromDate.toLocaleDateString()} al ${booking.toDate.toLocaleDateString()}` %>  è avvenuto con successo, Ti aspettiamo presso la nostra sede per il ritiro!</p>
+            <h2>Peccato!</h2>
+            <p>Ci spiace che tu abbia deciso di non noleggiare con noi.</p>
             <div class="linkContainer"><a href="/">Torna alla Home</a></div>
         </section>
     </main>

@@ -19,7 +19,7 @@ const authRoute = require('./routes/authRoutes');
 //middlewares
 const { userAuthenticateJWT } = require('./utils/authUtils');
 const { getNextFileNumber } = require('./utils/fileUtils.js');
-const { createPaypal, retrivePayPal, createStripe } = require('./utils/paymentUtils.js');
+const { createPaypal, retrivePayPal, createStripe, checkPaymentCompleted } = require('./utils/paymentUtils.js');
 const { sendEmail } = require('./utils/emailUtils.js');
 
 const storage = multer.diskStorage({
@@ -111,14 +111,15 @@ app.set('views', 'views');
 
 app.use(express.static('public'));
 
-app.get('/cancel', async (req, res) =>{
+app.get('/cancel', userAuthenticateJWT, async (req, res) =>{
   const { method, session_id, bookingId } = req.query;
   if(method == 'stripe'){
-    await bookings.deleteOne({"_id": bookingId, "payment.id": session_id});
+    await bookings.deleteOne({"_id": bookingId, "payment.id": session_id, "payment.state": "pending"});
   }else{
-    await bookings.deleteOne({"_id": bookingId});
+    await bookings.deleteOne({"_id": bookingId, "payment.state": "pending"});
   }
-  res.render('errorPage', {err: 'Ci spiace che tu abbia deciso di non noleggiare da noi..'});
+  const customerId = req.user.id;
+  res.render('user/payments/cancel', {customerId});
 })
 
 app.get('/', async (req, res) => {
@@ -212,7 +213,6 @@ app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
 app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
   try {
     const dati = req.body;
-
     dati.customerId = req.user ? req.user.id : null;
     const newUser = !dati.customerId;
 
@@ -245,19 +245,21 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
       "payment.state": { $in: ['pending', 'completed'] }
     });
 
-    console.log(conflictingBooking)
     if (conflictingBooking) {
       if (conflictingBooking.payment.state === 'pending') {
-        console.log('pending')
         return res.status(409).render('errorPage', { err: 'Qualcun altro sta già pagando.' });
       }
       if (conflictingBooking.payment.state === 'completed') {
-        console.log('completed')
         return res.status(409).render('errorPage', { err: 'Il mezzo è già stato prenotato.' });;
       }
     }
 
-
+    const expiration = new Date();
+    expiration.setMinutes(expiration.getMinutes() + 15);
+    dati.payment = {
+      state: 'pending',
+      expiration: expiration
+    };
     dati.days = Math.floor((toDate - fromDate) / (1000 * 60 *60 *24)) + 1;
     dati.startDay = new Date(dati.fromDate).getDay() - 1;
     dati.startDay = dati.startDay < 0 ? 6 : dati.startDay;
@@ -275,19 +277,43 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
     }
     const newBooking = new bookings(dati);
     await newBooking.save();
-    
+    checkPaymentCompleted(newBooking._id);
+    if(newUser){
+      let paymentMethod;
+      if(dati.paypal == '') paymentMethod = 'paypal'; 
+      if(dati.stripe == '') paymentMethod = 'stripe'; 
+      if(dati.satispay == '') paymentMethod = 'satispay'; 
+      return res.status(200).json({ customerId: dati.customerId, paymentMethod: paymentMethod, bookingId: newBooking._id });
+    }
+
     if(dati.paypal == ''){
       return res.redirect(await createPaypal(dati.finalPrice, newBooking._id));
     }
-    if(dati.satispay == ''){}
     if(dati.stripe == ''){
       return res.redirect(await createStripe(dati.finalPrice, newBooking._id));
     }
-    if(dati.cash == ''){}
-    if(newUser){
-      return res.status(200).json({ customerId: dati.customerId });
-    }
+    // if(dati.satispay == ''){}
+    // if(dati.cash == ''){}
     res.redirect(`/`);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).render('errorPage', { err: 'Errore del server' });
+  }
+});
+
+app.post('/user/startPayment', userAuthenticateJWT, async (req, res) => {
+  try {
+    const { paymentMethod, bookingId } = req.body;
+    const { finalPrice } = await bookings.findOne({"_id": bookingId, "payment.id": { $exists: false }, "payment.method": { $exists: false }});
+    if(!finalPrice) return res.status(404).json({err: 'Prenotazione non trovata'});
+    if(paymentMethod == 'paypal'){
+      const paymentUrl = await createPaypal(finalPrice, bookingId);
+      return res.status(200).json({paymentUrl});
+    }
+    if(paymentMethod == 'stripe'){
+      const paymentUrl = createStripe(finalPrice, bookingId);
+      return res.status(200).json({paymentUrl});
+    }
   } catch (error) {
     console.error('Error:', error);
     res.status(500).render('errorPage', { err: 'Errore del server' });

@@ -926,6 +926,7 @@ window.onclick = function(event) {
                             return acc[currentKey];
                         }, newFormData);
                     });
+                    newFormData[event.submitter.name] = '';
                     try {
                         const response = await fetch('/user/newRent', {
                             method: 'POST',
@@ -941,7 +942,7 @@ window.onclick = function(event) {
                     
                         const data = await response.json();
                         const customerId = data.customerId;
-                    
+                        console.log(data);
                         const fileData = new FormData();
                         fileData.append('customerId', customerId);
                         const fileFields = [
@@ -968,6 +969,20 @@ window.onclick = function(event) {
                         }
                         const fileDataResponse = await fileResponse.json();
                         console.log('File caricati con successo:', fileDataResponse);
+                        const startPaymentResponse = await fetch('/user/startPayment', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({paymentMethod: data.paymentMethod, bookingId: data.bookingId, customerId: data.customerId})
+                        });
+                        if (!startPaymentResponse.ok) {
+                            alert('Si è verificato un\'errore. Riprova per favore. Ci scusiamo per il disagio');
+                            window.location.reload();
+                            throw new Error('Error starting payment');
+                        }
+                        const startPaymentDataResponse = await startPaymentResponse.json();
+                        window.location.href = startPaymentDataResponse.paymentUrl;
                     } catch (error) {
                         console.error('Errore:', error);
                     }

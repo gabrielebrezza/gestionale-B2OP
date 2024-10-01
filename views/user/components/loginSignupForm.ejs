@@ -262,23 +262,23 @@ margin-left: 15px;
     font-size: 1rem;
 }
 
-@media (max-width: 440px){
+/* @media (max-width: 440px){
     .custom-file-upload label {
         display: flex;
         align-items: center;
         gap: 5px;
     }
     .custom-file-upload .upload-text {
-        font-size: 0 !important; /* Riduce il testo originale a invisibile */
-        line-height: 0 !important; /* Rimuove lo spazio verticale */
+        font-size: 0 !important;
+        line-height: 0 !important;
     }
     .custom-file-upload .upload-text::before {
         content: 'Carica';
         margin-top: 5px;
-        font-size: initial; /* Imposta la dimensione del testo visibile */
+        font-size: initial;
         display: inline-block;
     }
-}
+} */
 
 #signupForm .formIconContainer{
     display: flex;
@@ -905,7 +905,10 @@ input[type="number"].invalid{
                                     document.getElementById('userForm').action = '/user/newRent';
                                     document.getElementById('userForm').method = 'POST';
                                     document.getElementById('userForm').enctype = '';
-                                    document.getElementById('userFormBtn').classList.add('active');
+                                    const paymentBtns = document.querySelectorAll('.userFormBtn');
+                                    for (const btn of paymentBtns) {
+                                        btn.classList.add('active');
+                                    }
                                     document.querySelector('.formIconContainer').remove();
                                     document.querySelector('.pagesContainer').remove();
                                     document.querySelector('.loginAlert').remove();
@@ -947,7 +950,9 @@ input[type="number"].invalid{
     <script src="/scripts/utils/auth/otp.js"></script>
     <script>
         function updateNavbar(){
-            document.querySelector('.headerBottomLink').remove();
+            
+            document.getElementById('loginHeaderLink').remove();
+            document.getElementById('signupHeaderLink').remove();
             const liElement2 = document.createElement('li');
 
             const anchorElement = document.createElement('a');
@@ -990,14 +995,14 @@ input[type="number"].invalid{
             
             liElement.appendChild(formElement);
             
-            document.querySelector('#navBar ul').appendChild(liElement);
+            document.querySelector('.headerBottomLink').appendChild(liElement);
         }
     </script>
     <script>
-        const fileInputs = document.querySelectorAll('.file');
+        const fileInputs = document.querySelectorAll('.custom-file-upload input');
         for(const input of fileInputs){
             input.addEventListener('change', () => {
-                const label = document.querySelector(`label[for="${input.id}"]`);
+                const label = input.closest('label');
                 label.childNodes[1].innerText = 'done_outline';
                 label.childNodes[3].innerText = 'Caricata'
             })
