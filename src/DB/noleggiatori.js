@@ -116,6 +116,10 @@ const customerSchema = new mongoose.Schema({
             required: false
         }
     },
+    lastVisit: {
+        type: Date,
+        required: false
+    },
     note: {
         type: String,
         trim: true,

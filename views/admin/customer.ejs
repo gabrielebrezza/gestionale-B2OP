@@ -272,6 +272,10 @@
                         <td><input type="date" name="patente[scadenza]" value="<%= customer.patente.scadenza %>"></td>
                     </tr>
                     <tr>
+                        <td>Ultimo Accesso</td>
+                        <td><%= customer.lastVisit ? customer.lastVisit.toLocaleString() : 'N/A' %></td>
+                    </tr>
+                    <tr>
                         <td>Note</td>
                         <td><textarea name="note"><%= customer.note %></textarea></td>
                     </tr>

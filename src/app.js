@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const fsp = require('fs').promises;
+const bcrypt = require('bcrypt');
 
 const mezzi = require('./DB/mezzi.js');
 const bookings = require('./DB/bookings.js');
 const noleggiatori = require('./DB/noleggiatori.js');
-
+const codes = require('./DB/codes.js');
 const app = express();
 
 //routes
@@ -267,6 +268,38 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
     const { daysPrices } = await mezzi.findOne({"_id": dati.mezzoId});
     let day = dati.startDay;
     dati.finalPrice = Array.from({ length: dati.days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
+    
+    if(dati.code){
+      let userCodes;
+      if (dati.customerId){
+        userCodes = await codes.find({
+          "customerId": dati.customerId
+        });
+      }else{
+        userCodes = await codes.find({
+          "email": dati.contatti.email.toLowerCase().trim(),
+          "cf": dati.cf.toLowerCase().trim()
+        });
+      }
+
+      let codeChecked = false, discount = null;
+      for (const code of userCodes) {
+        const isMatch = await bcrypt.compare(dati.code, code.code);
+        if (isMatch) {
+          codeChecked = true;
+          discount = code.discount;
+          break;
+        }
+      }
+      if (!codeChecked) return res.render('errorPage', { err: 'Codice non valido'});
+      if (discount == 100){
+        dati.payment.state = 'completed';
+        dati.payment.method = 'codice';
+      }else{
+        dati.finalPrice = dati.finalPrice - (dati.finalPrice * (discount/100));
+      }
+    }
+
     if(newUser){
       let user = await noleggiatori.findOne({"cf": dati.cf.toLowerCase().trim()});
       if(!user){
@@ -293,14 +326,13 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
       return res.redirect(await createStripe(dati.finalPrice, newBooking._id));
     }
     // if(dati.satispay == ''){}
-    // if(dati.cash == ''){}
+
     res.redirect(`/`);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).render('errorPage', { err: 'Errore del server' });
   }
 });
-
 app.post('/user/startPayment', userAuthenticateJWT, async (req, res) => {
   try {
     const { paymentMethod, bookingId } = req.body;

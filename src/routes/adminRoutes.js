@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fsp = require('fs').promises;
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const path = require('path');
 
 const { authenticateJWT } = require('../utils/authUtils');
@@ -12,6 +13,9 @@ const router = express.Router();
 const mezzi = require('./../DB/mezzi.js');
 const bookings = require('./../DB/bookings.js');
 const noleggiatori = require('./../DB/noleggiatori.js');
+const { fork } = require('child_process');
+const codes = require('../DB/codes.js');
+const { sendEmail } = require('../utils/emailUtils.js');
 
 router.use(cookieParser());
 
@@ -94,6 +98,48 @@ router.get('/images', authenticateJWT, async (req, res) => {
             console.log('Errore del Server')
             res.status(500).send('Errore del server.');
         }
+    }
+});
+
+async function createCode(length, email, discount){
+    const char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    let code = '';
+    for (let i = 0; i < length; i++) {
+        code += char[Math.floor(Math.random(0, char.length) * char.length)];
+    }
+
+    const subject = 'Codice Sconto CarMunfrà';
+    const text = `Ecco il tuo codice sconto per poter noleggiare al ${discount}% di sconto sul nostro sito www.carmunfra.it \n${code}`;
+    try {
+        const result = await sendEmail(email, subject, text);
+        console.log(result)
+    } catch (error) {
+        console.error(error)
+        return res.render('errorPage', { error: 'Errore nell\'invio dell\'email con codice OTP' });
+    }
+
+    return await bcrypt.hash(code, 10);
+}
+
+router.post('/admin/code/create', async (req, res) => {
+    try {
+        const customerId = req.body.customerId;
+        const dati = req.body;
+        const { discount } = dati;
+        if (!customerId) {
+            const hashedCode = await createCode(dati.email.length, dati.email, discount);
+            const newCode = new codes({ "discount": discount, "email": dati.email, "cf": dati.cf, "code": hashedCode });
+            await newCode.save();
+        } else {
+            const user = await noleggiatori.findOne({ "_id": customerId });
+            const hashedCode = await createCode((Math.random() * (25 - 8 + 1)) + 8, user.contatti.email, discount);
+            const newCode = new codes({ "discount": discount, "customerId": customerId, "code": hashedCode });
+            await newCode.save();
+        }
+        res.status(200);
+    } catch (error) {
+        console.log('Errore durante la creazione del codice: ', error);
+        res.status(500);
     }
 });
 

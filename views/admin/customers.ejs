@@ -112,5 +112,19 @@
             if (!confirmSubmission) event.preventDefault();
         });
     </script>
+
+
+    <form action="/admin/code/create" method="post">
+        <input type="number" name="discount">
+        <select name="customerId">
+            <% for(const customer of clienti){ %> 
+                <option value="<%= customer._id %>"><%= `${customer.cognome} ${customer.nome}` %></option>
+            <% } %>
+        </select>
+        <input type="text" name="email">
+        <input type="text" name="cf">
+        <button type="submit">Salva</button>
+    </form>
+
 </body>
 </html>

@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 const admins = require('../DB/admin');
-
+const noleggiatori = require('../DB/noleggiatori');
 async function generateToken(id) {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '31d' });
 }
@@ -44,12 +44,13 @@ function userAuthenticateJWT(req, res, next) {
         return next();
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
         if (err) {
             req.user = null;
             return next();
         }
         req.user = user;
+        await noleggiatori.findOneAndUpdate({ "_id": user.id }, { "lastVisit": new Date() });
         next();
     });
 }

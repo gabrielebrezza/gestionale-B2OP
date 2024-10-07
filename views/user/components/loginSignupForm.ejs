@@ -1147,13 +1147,15 @@ nextButton.addEventListener('click', () => {
     }
 });
 if(submitType == 'class'){
-    for (const btn of submitButton) {
-        btn.addEventListener('click', (event) => {
-            if (!validateUserForm()) {
-                event.preventDefault();
+    submitButton.forEach((btn, index) => {
+        if (index !== 0) { // Salta il primo pulsante
+            btn.addEventListener('click', (event) => {
+                if (!validateUserForm()) {
+                    event.preventDefault();
+                }
+            });
         }
-});
-    }
+    });
 }else{
     submitButton.addEventListener('click', (event) => {
     if (!validateUserForm()) {

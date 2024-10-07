@@ -426,17 +426,28 @@ button.prevImageSlider, button.nextImageSlider {
 }
 .userFormBtn{
     opacity: 0;
+    pointer-events: none;
+    max-height: 0;
+    transition: .25s;
+}
+.discountContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.discountContainer label{
+    opacity: .75;
+    font-size: clamp(.9rem, 2vw, 1rem);
+}
+button.userFormBtn{
     max-width: 215px;
     width: 100%;
-    pointer-events: none;
     outline: none;
     border: none;
-    max-height: 0;
     border-radius: 5px;
     background: var(--accentColor);
     color: var(--defaultWhite);
     cursor: pointer;
-    transition: .25s;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -449,21 +460,21 @@ button.prevImageSlider, button.nextImageSlider {
     opacity: 1 !important;
     pointer-events: all !important;
 }
-.userFormBtn i{
+button.userFormBtn i{
     font-size: 24px;
 }
-.userFormBtn img{
+button.userFormBtn img{
     width: 24px;
     filter: brightness(0) invert(1);
 }
-.userFormBtn:first-of-type{
+button.userFormBtn:nth-child(2){
     background: #0070BA;
 }
-.userFormBtn:nth-child(2){
+button.userFormBtn:nth-child(3){
     background: #FF3D00;
 }
 
-.userFormBtn:hover{
+button.userFormBtn:hover{
     padding: 10px 0;
 }
 .formIconContainer{
@@ -865,6 +876,10 @@ window.onclick = function(event) {
                 <div class="buttonContainer">
                     <% loggedIn = customerId ? 'active' : ''; %>
                     <div class="paymentMethodContainer">
+                        <div class="userFormBtn discountContainer <%= loggedIn %>">
+                            <label for="discountCode">Hai un codice Sconto?</label>
+                            <input style="background: none; outline: none; border: none; border-bottom: 2px solid var(--accentColor); color: var(--textColor);" type="text" name="code" id="discountCode">
+                        </div>
                         <button class="userFormBtn <%= loggedIn %>" type="submit" name="paypal">
                             <i class="fa fa-paypal"></i>
                             Paga con Paypal
@@ -876,10 +891,6 @@ window.onclick = function(event) {
                         <button class="userFormBtn <%= loggedIn %>" type="submit" name="stripe">
                             <i class="fa fa-credit-card"></i>
                             Paga con Carta
-                        </button>
-                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="cash">
-                            <i class="fa fa-money"></i>
-                            Paga in Contanti
                         </button>
                     </div>
                     <% if (!customerId) { %>
