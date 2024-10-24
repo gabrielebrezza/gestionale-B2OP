@@ -107,7 +107,6 @@ router.get('/admin/images', authenticateJWT, async (req, res) => {
 router.post('/admin/images/delete', authenticateJWT, async (req, res) => {
     try {
         const imagePath = path.resolve(__dirname, '../../privateImages', req.body.dir);
-        console.log(imagePath)
         await fsp.unlink(imagePath);
         res.status(200).send('Immagine Eliminata con Successo.');
     } catch (err) {
