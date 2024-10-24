@@ -7,30 +7,7 @@
     <title>Admin - Mezzo</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-        .documentSection{
-            margin-top: 150px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .printForm{
-            margin: 10px;
-            max-width: 200px;
-            width: 100%;
-            color: #f1f1f1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.5rem;
-        }
-        .printForm button{
-            cursor: pointer;
-            background: #0000;
-            outline: none;
-            border: none;
-            color: #f1f1f1;
-        }
+        
         #updateUserForm{
             display: flex;
             align-items: center;
@@ -162,7 +139,27 @@
         button.deleteButton:hover {
             background: rgb(119, 64, 64);
         }
-
+        #storicoNoleggi {
+            max-height: 500px;
+            overflow-y: auto;
+            display: block;
+        }
+        #storicoNoleggi::-webkit-scrollbar{
+            background: none;
+            width: 8px;
+        }
+        #storicoNoleggi::-webkit-scrollbar-thumb{
+            background: #5681a9;
+            border-radius: 5px;
+        }
+        #storicoNoleggi thead {
+            top: 0;
+            position: sticky;
+            width: 100%;
+        }
+        #storicoNoleggi thead th{
+            border-radius: 0;
+        }
         #newRentBtnTd{
             text-align: center;
         }
@@ -505,7 +502,7 @@
                     <th>Prezzo Finale</th>
                 </thead>
                 
-                <tbody>
+                <tbody class="storicoNoleggiRows">
                     <form id="newRentForm" action="/admin/mezzi/newRent" method="POST">
                         <tr>
                             <td id="newRentBtnTd" colspan="7">

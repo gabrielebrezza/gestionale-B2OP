@@ -32,9 +32,17 @@
                 Mezzi
             </a>
         </li>
+        <li>
+            <a href="/about-us">
+                <span class="material-symbols-rounded">
+                    corporate_fare
+                </span>
+                Noi
+            </a>
+        </li>
         <% if (customerId) { %>
             <li>
-                <a href="/user/data">
+                <a href="/profile">
                     <span class="material-symbols-rounded">
                         person
                     </span>
@@ -146,7 +154,7 @@
             document.body.style.overflow = 'auto';
             setTimeout(() => {
                 loaderContainer.remove();
-                window.scrollTo(0, 0);
+                // window.scrollTo(0, 0);
             }, 250);
         }, 0);
     });
@@ -154,7 +162,84 @@
 
 
 <% if (!customerId) { %>
+    <style>
+        .signupAlert{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            max-width: 350px;
+            width: 100%;
+            padding: 25px;
+            filter: drop-shadow(5px 5px 8px #00000068);
+            background: var(--elementsBg);
+            border-radius: 15px;
+            z-index: 5;
+            max-height: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: max-height .3s, opacity .5s;
+        }
+        .signupAlert.active{
+            max-height: 100%;
+            pointer-events: all;
+            opacity: 1;
+        }
+        .signupAlert .closeSignupAlert{
+            font-weight: 700;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .signupAlert h3{
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .signupAlert p{
+            margin-top: 25px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .signupAlertBtn{
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.3rem;
+            color: var(--accentColor);
+            cursor: pointer;
+        }
+    </style>
+    <div class="signupAlert">
+        <h3>sconti!</h3>
+        <span class="material-symbols-outlined closeSignupAlert" style="cursor: pointer;">
+            close
+        </span>
+        <p>Iscriviti ora per avere uno sconto del 30% sul tuo primo acquisto!</p>
+        <div class="signupAlertBtn">
+            <a class="signup">Iscriviti</a>
+        </div>
+    </div>
+    
+    <script>
+        const closeSignupAlert = document.querySelector('.closeSignupAlert');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const signupAlert = document.querySelector('.signupAlert');
+                if(signupAlert){
+                    signupAlert.classList.add('active');
+                    closeSignupAlert.addEventListener('click', () => {
+                        signupAlert.classList.remove('active');
+                        localStorage.setItem('showsignupalert', false);
+                    });
+                }
+            }, 5000);
+            if(localStorage.getItem('showsignupalert') === 'false'){
+                document.querySelector('.signupAlert').remove();
+            }
+        });
+    </script>
     <%- include('loginSignupForm.ejs') %>
 <% } %>
-
 

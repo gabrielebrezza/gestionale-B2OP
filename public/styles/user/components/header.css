@@ -7,12 +7,13 @@
     font-family: "Rubik", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
+    scroll-behavior: smooth;
 }
 :root{
     --header-height: 150px;
 }
 main{
-    margin-top: calc(var(--header-height) + 10px) ;
+    margin-top: calc(var(--header-height) + 10px);
 }
 .material-symbols-rounded{
     user-select: none;
@@ -72,7 +73,7 @@ main{
 }
 #navBar ul li {
     width: 100%;
-    padding: 25px 10px;
+    padding: 10px 10px;
     list-style: none;
     transition: 1s;
     user-select: none;
@@ -184,7 +185,7 @@ main{
         padding-top: var(--header-height);
     }
     #navBar ul li {
-        padding: 15px 10px;
+        padding: 5px 10px;
     }
     @media (max-height: 596px) {
         #navBar ul li {

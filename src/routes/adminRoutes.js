@@ -8,14 +8,17 @@ const path = require('path');
 
 const { authenticateJWT } = require('../utils/authUtils');
 const { getNextFileNumber, resetImageNumbering } = require('../utils/fileUtils.js');
+const { sendEmail } = require('../utils/emailUtils.js');
+const { setCode } = require('../utils/discountUtils.js');
 const router = express.Router();
 
 const mezzi = require('./../DB/mezzi.js');
 const bookings = require('./../DB/bookings.js');
 const noleggiatori = require('./../DB/noleggiatori.js');
+const messages = require('./../DB/message.js');
 const { fork } = require('child_process');
 const codes = require('../DB/codes.js');
-const { sendEmail } = require('../utils/emailUtils.js');
+
 
 router.use(cookieParser());
 
@@ -86,7 +89,7 @@ router.delete('/admin/deleteImage/:mezzoId/:imageN', async (req, res) => {
 
 router.get('/ciao', async (req, res) => await bookings.deleteMany())
 
-router.get('/images', authenticateJWT, async (req, res) => {
+router.get('/admin/images', authenticateJWT, async (req, res) => {
     try {
         const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);
         await fsp.access(imagePath);
@@ -101,40 +104,53 @@ router.get('/images', authenticateJWT, async (req, res) => {
     }
 });
 
-async function createCode(length, email, discount){
-    const char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    let code = '';
-    for (let i = 0; i < length; i++) {
-        code += char[Math.floor(Math.random(0, char.length) * char.length)];
-    }
-
-    const subject = 'Codice Sconto CarMunfrà';
-    const text = `Ecco il tuo codice sconto per poter noleggiare al ${discount}% di sconto sul nostro sito www.carmunfra.it \n${code}`;
+router.post('/admin/images/delete', authenticateJWT, async (req, res) => {
     try {
-        const result = await sendEmail(email, subject, text);
-        console.log(result)
-    } catch (error) {
-        console.error(error)
-        return res.render('errorPage', { error: 'Errore nell\'invio dell\'email con codice OTP' });
+        const imagePath = path.resolve(__dirname, '../../privateImages', req.body.dir);
+        console.log(imagePath)
+        await fsp.unlink(imagePath);
+        res.status(200).send('Immagine Eliminata con Successo.');
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            res.status(404).send('Immagine non trovata.');
+        } else {
+            console.log('Errore del Server: ', err)
+            res.status(500).send('Errore del server.');
+        }
     }
+});
 
-    return await bcrypt.hash(code, 10);
-}
+
+// async function createCode(length, email, discount){
+//     const char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+//     let code = '';
+//     for (let i = 0; i < length; i++) {
+//         code += char[Math.floor(Math.random(0, char.length) * char.length)];
+//     }
+
+//     const subject = 'Codice Sconto CarMunfrà';
+//     const text = `Ecco il tuo codice sconto per poter noleggiare al ${discount}% di sconto sul nostro sito www.carmunfra.it \n${code}`;
+//     try {
+//         const result = await sendEmail(email, subject, text);
+//         console.log(result)
+//     } catch (error) {
+//         console.error(error)
+//         return res.render('errorPage', { error: 'Errore nell\'invio dell\'email con codice OTP' });
+//     }
+
+//     return await bcrypt.hash(code, 10);
+// }
 
 router.post('/admin/code/create', async (req, res) => {
     try {
         const customerId = req.body.customerId;
         const dati = req.body;
         const { discount } = dati;
+        
         if (!customerId) {
-            const hashedCode = await createCode(dati.email.length, dati.email, discount);
-            const newCode = new codes({ "discount": discount, "email": dati.email, "cf": dati.cf, "code": hashedCode });
-            await newCode.save();
+            await setCode(null, dati.email, dati.cf, discount);
         } else {
-            const user = await noleggiatori.findOne({ "_id": customerId });
-            const hashedCode = await createCode((Math.random() * (25 - 8 + 1)) + 8, user.contatti.email, discount);
-            const newCode = new codes({ "discount": discount, "customerId": customerId, "code": hashedCode });
-            await newCode.save();
+            await setCode(customerId, null, null, discount);
         }
         res.status(200);
     } catch (error) {
@@ -316,6 +332,25 @@ router.post('/admin/cliente/update', authenticateJWT, async (req, res) =>{
     } catch (err) {
         console.error(`Si è verificato un'errore nell'aggiornamento del cliente: ${err}`);
         res.render('errorPage', {err: `Errore nell'aggiornamento del cliente`});
+    }
+});
+
+router.get('/admin/messages', authenticateJWT, async (req, res) => {
+    const msgs = await messages.find();
+    const users = await noleggiatori.find();
+    const usersFiltered = [];
+    for (const user of users) {
+        if (msgs.find(msg => msg.customerId == user._id)) usersFiltered.push(user)
+    }
+    res.render('admin/messages', { messages: msgs, users: usersFiltered })
+});
+router.post('/admin/markAsRead', authenticateJWT, async (req, res) => {
+    try {
+        await messages.findOneAndUpdate({ "_id": req.body.id }, { "seen": req.body.action });
+        res.redirect('admin/messages');
+    } catch (error) {
+        console.log(error)
+        res.status(500)
     }
 });
 

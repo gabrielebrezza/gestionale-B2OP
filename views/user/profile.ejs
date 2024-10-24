@@ -342,6 +342,7 @@
                         throw new Error('Error uploading files');
                     }
                     const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').classList.remove('default')
                     imageBox.querySelector('img').src = `/user/images?dir=${dir}&timeStamp=${new Date().getTime()}`;
                 });
             }
@@ -362,6 +363,7 @@
                         throw new Error('Error deleting files');
                     }
                     const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').classList.add('default')
                     imageBox.querySelector('img').src = `/img/default/document.png`;
                 });
             }

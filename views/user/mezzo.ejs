@@ -117,6 +117,9 @@
     border-radius: 25px;
     min-width: 100%;
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
 }
 button.prevImageSlider, button.nextImageSlider {
   background: none;
@@ -635,7 +638,6 @@ window.onclick = function(event) {
         <div class="mezzo-header">
             <h1><%= mezzo.marca %> <%= mezzo.modello %></h1>
         </div>
-        
         <div class="mezzo-details">
             <div class="mezzo-info">
                 <h2>Descrizione</h2>

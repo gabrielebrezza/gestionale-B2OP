@@ -20,12 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow  = document.body.style.overflow != navBarOverflow ? navBarOverflow : 'auto';
         window.innerWidth
         if(navBarItems.style.opacity == 1){
+            toggleMenuBtn.classList.remove('active');
             document.body.style.overflow = 'auto';
             navBarItems.style.opacity = 0;
             setTimeout(() =>{     
                 navBarItems.style.display = 'none';
-            }, 0); 
+            }, 0);
         }else{
+            toggleMenuBtn.classList.add('active');
             navBarItems.style.display = 'block';
             setTimeout(() =>{     
                 navBarItems.style.opacity = 1;

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Messaggi</title>
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: #f4f4f4;
+            overflow-x: scroll;
+        }
+        @media (max-width: 825px){
+            table{
+                max-width: 1000px;
+                display: block;
+            }
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1e1e1e;
+            color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .row.hidden{
+            display: none;
+        }
+        .contactBtn{
+            cursor: pointer;
+            color: #1e90ff;
+        }
+        .notSeen{
+            cursor: pointer;
+            color: brown;
+        }
+        .seen{
+            cursor: pointer;
+            color: #1e90ff;
+        }
+        .message {
+            text-align: left;
+            max-height: 100px;
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .message.expanded {
+            white-space: normal;
+            overflow: visible;
+            max-height: none;
+            font-size: clamp(.8rem, 3vw, 1rem);
+        }
+
+        .show-more {
+            text-align: left;
+            color: #1e90ff;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="6">
+                        <label for="readFilter">Filtra Non Lette: </label>
+                        <input type="checkbox" id="readFilter">
+                    </th>
+                </tr>
+                <tr>
+                    <th>Azioni</th>
+                    <th>Data</th>
+                    <th>Cliente</th>
+                    <th>Email</th>
+                    <th>Oggetto</th>
+                    <th>Messaggio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(const msg of messages.reverse()){ %>
+                    <% let row = {};
+                    row.name = msg.name;
+                    row.email = msg.email;
+                    if (msg.customerId) {
+                        const user = users.find(user => user._id == msg.customerId);
+                        row.name = `${user.nome} ${user.cognome}`;
+                        row.email = user.contatti.email;
+                    } %>
+                    <tr class="row">
+                        <td>
+                            <a class="<%= msg.seen ? 'seen' : 'notSeen' %> readAction" data-id="<%= msg._id %>"><span class="material-symbols-rounded"> <%= msg.seen ? 'mark_email_read' : 'mark_email_unread' %></span></a>
+                            <a href="mailto:<%= row.email %>" class="contactBtn"><span class="material-symbols-rounded">alternate_email</span></a>
+                        </td>
+                        <td><%= msg.date ? msg.date.toLocaleDateString() : 'N/A'; %></td>
+                        <td><%= row.name; %></td>
+                        <td><%= row.email; %></td>
+                        <td><%= msg.subject; %></td>
+                        <td>
+                            <div class="message" id="message-<%= msg._id %>">
+                                <%= msg.message %>
+                            </div>
+                            <% if (msg.message.length > 35) { %>
+                             <span class="show-more" onclick="toggleMessage('<%= msg._id %>')">Mostra di più</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </main>
+    <script>
+        const contactBtns = document.querySelectorAll('.contactBtn');
+        for (const btn of contactBtns) {
+            btn.addEventListener('click', () => {
+                alert('Ti stiamo reindirizzando al tuo programma di posta elettronica. In caso non si aprisse automaticamente potrai copiare e incollare l\email per farlo manualmente');
+            });
+        }
+    </script>
+    <script>
+        function toggleMessage(id) {
+            const message = document.getElementById('message-' + id);
+            message.classList.toggle('expanded');
+
+            const toggleText = message.nextElementSibling;
+            if (message.classList.contains('expanded')) {
+                toggleText.textContent = 'Mostra meno';
+            } else {
+                toggleText.textContent = 'Mostra di più';
+            }
+        }
+    </script>
+    <script>
+        const readFilter = document.getElementById('readFilter');
+        const readBtn = document.querySelectorAll('.readAction');
+        for (const btn of readBtn) {
+            btn.addEventListener('click', async () => {
+                const icon = btn.querySelector('span');
+                const action = icon.innerText.includes('mark_email_unread');
+                const response = await fetch('/admin/markAsRead', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({id: btn.dataset.id, action})
+                        });
+                    
+                        if (!response.ok) {
+                            throw new Error('error marking message as seen');
+                            alert('Si è verificato un errore');
+                        }
+                        btn.classList.remove(action ? 'notSeen': 'seen');
+                        btn.classList.add(!action ? 'notSeen': 'seen');
+                        if(readFilter.checked){
+                            btn.closest('.row').classList.add('hidden');
+                        }
+                        icon.innerText = action ? 'mark_email_read' : 'mark_email_unread';
+            });
+        }
+        
+        readFilter.addEventListener('input', () => {
+            const rows = document.querySelectorAll('.seen');
+            if(readFilter.checked){
+                for (const row of rows) {
+                    row.closest('.row').classList.add('hidden');
+                    // Corretto: passa la funzione come riferimento
+                    row.addEventListener('click', () => hideRow(row.closest('.row')));
+                }
+            } else {
+                for (const row of rows) {
+                    row.closest('.row').classList.remove('hidden');
+                }
+            }
+        });
+
+        function hideRow(row){
+            if(readFilter.checked){
+                row.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

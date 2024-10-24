@@ -1,372 +1,443 @@
 @import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
-        @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Rubik", sans-serif;
-            font-optical-sizing: auto;
-            font-style: normal;
-            -webkit-tap-highlight-color: transparent;
-            scroll-behavior: smooth;
-        }
-        body {
-            background-color: var(--pageBg);
-            color: var(--textColor);
-            display: flex;
-            flex-direction: column;
-            min-height: 100dvh;
-        }
-        main{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 50px;
-            flex: 1;
-        }
-        main h1{
-            text-align: center;
-        }
-        .filtersContainer{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        #toggleFilters{
-            cursor: pointer;
-            transition: .25s;
-        }
-        #toggleFilters:hover{
-            color: var(--accentColor);
-        }
-        #toggleFilters span{
-            font-size: 2.5rem;
-        }
-        #filters{
-            max-width: 0;
-            max-height: 0;
-            opacity: 0;
-            pointer-events: none;
-            transition: .5s ease-in-out;
-        }
-        #filters.active{
-            max-width: 100%;
-            max-height: 600px;
-            opacity: 1;
-            pointer-events: all;
-            background: var(--elementsBg);
-            padding: 15px;
-            border-radius: 20px;
-        }
-        #filters form{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-        #filters .field{
-            display: flex;
-        }
-        #filters .field label{
-            color: var(--accentColor);
-        }
-        #filters select{
-            cursor: pointer;
-            text-align: center !important;
-        }
-        #filters input, #filters select{
-            min-width: 75px;
-            outline: none;
-            border: none;
-            border-radius: 0 !important;
-            border-bottom: 1px solid var(--accentColor);
-            color: var(--textColor);
-            text-align: right;
-            background: none;
-            padding: 4px;
-        }
+@import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
-        #filters input[type="number"]::-webkit-outer-spin-button,
-        #filters input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+}
 
-        #filters input[type="number"] {
-            -moz-appearance: textfield;
-        }
-        #filters input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-        }
-        #filtersErrorMessage:not(:empty){
-            margin-top: 5px;
-            text-align: right;
-            color: rgb(155, 69, 69);
-            opacity: .8;
-        }
-        @media (max-width: 1010px){
-            .filtersContainer{
-                flex-direction: column;
-            }
-            #filters form{
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-gap: 20px;
-            }
-            .field{
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-            }
-            .field input,.field select{
-                width: 130px;
-            }
-        }
-        @media (max-width: 650px){
-            #filters form{
-                display: flex;
-                align-items: flex-start;
-                flex-direction: column;
-            }
-        }
-        .overlay{
-            background: var(--pageBg);
-            border-radius: 20px;
-            animation: appear-overlay linear;
-            --animation-timeline: view();
-            --animation-range: entry 0 cover 25%;
-            animation-timeline: var(--animation-timeline);
-            animation-range: var(--animation-range);
-            transition: transform .25s;
-        }
-        .mezzoRow{
-            --animation-timeline: view();
-            --animation-range: entry 0 cover 25%;
-            position: relative;
-            max-width: 1000px;
-            width: 100%;
-            max-height: 800px;
-            background: var(--elementsBg);
-            transform: translateX(0);
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            border-radius: 20px;
-            filter: drop-shadow(5px 10px 10px #00000068);
-            animation: appear-opacity linear;
-            animation-timeline: var(--animation-timeline);
-            animation-range: var(--animation-range);
-            transition: opacity .75s ease-in-out, max-height .75s ease-in-out, padding .75s ease-in-out, transform .75s ease-in-out;
-        }
-        .overlay:has(.first-row-visible){
-            /* transition: .5s; */
-            animation: none;
-            --animation-timeline: none;
-            --animation-range: none;
-            animation-timeline: var(--animation-timeline);
-            animation-range: var(--animation-range);
-            
-        }
-        .first-row-visible {
-            --animation-timeline: none;
-            --animation-range: none;
-            transform: translateX(0);
-            animation: none;
-            /* transition: .5s; */
-        }
-        
-        .mezzoRow.hidden{
-            opacity: 0;
-            max-height: 0;
-            padding: 0;
-            transform: translateX(-200%);
-        }
-        @keyframes appear-opacity {
-            from{
-                opacity: 0;
-            }
-            to{
-                opacity: 1;
-            }
-        }
-        
-        @keyframes appear-overlay {
-            from{
-                transform: translateX(-200%);
-            }
-            to{
-                transform: translateX(0);
-            }
-        }
+body {
+    background-color: var(--pageBg);
+    color: var(--textColor);
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+}
 
-        .mezzoRow img{
-            max-width: 500px;
-            width: 100%;
-            object-fit: cover;
-            object-position: left center;
-            border-radius: 10px;
-        }
-        .fade-in {
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
-        
-        .fade-in.visible {
-            opacity: 1;
-        }
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 50px;
+    flex: 1;
+}
 
-        .mezzoRowRightSide h2{
-            text-transform: uppercase;
-        }
-        .mezzoDescription{
-            margin-top: 25px;
-            font-size: clamp(.65rem, 3vw, 1rem);
-        }
-        .mezzoDescription::first-letter{
-            text-transform: uppercase;
-        }
-        .prices{
-            margin-top: 15px;
-        }
-        .prices h3{
-            display: flex;
-            font-size: 1.2rem;
-            user-select: none;
-        }
-        .prices h3 details{
-            position: relative;
-        }
-        details summary::-webkit-details-marker {
-            display: none;
-        }
-        .prices h3 details summary{
-            list-style: none;
-            cursor: pointer;
-        }
-        .prices h3 details summary span{
-            font-weight: 500;
-        }
-        .prices h3 details summary:hover{
-            color: var(--accentColor);
-            transition: .5s ease-in-out;
-        }
+main h1 {
+    text-align: center;
+}
 
-        .prices h3 details .info-message{
-            position: absolute;
-            top: calc((1.2rem / 2) + 8px);
-            left: 18px;
-            width: 200px;
-            font-size: clamp(.75rem, 2vw, 1rem);
-            font-weight: 400;
-            line-height: calc(1rem + 7px);
-            background: var(--elementsBg);
-            border-radius: 13px;
-            border-top-left-radius: 0;
-            border: 2px solid var(--textColor);
-            padding: 10px;
-            filter: drop-shadow(15px 15px 10px #00000054);
-            user-select: text;
-        }
-        .prices ul{
-            list-style: none;
-            text-transform: capitalize;
-            font-size: clamp(.65rem, 3vw, 1rem);
-        }
-        .budgetElement:not(:empty){
-            margin-top: 15px;
-            font-size: clamp(.55rem, 3vw, .9rem);
-            opacity: .7;
-        }
-        .btnContainer{
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 25px;
-            align-items: center;
-        }
-        .viewBtn{
-            padding: 10px 20px;
-            background: var(--accentColor);
-            color: var(--defaultWhite);
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: .5s;
-            border: 2px solid var(--accentColor);
-        }
-        .viewBtn:hover{
-            background: var(--pageBg);
-            color: var(--accentColor);
-        }
+.filtersContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
-        .scroll-alert{
-            position: fixed;
-            bottom: 15px;
-            z-index: -1;
-            background: var(--elementsBg);
-            color: var(--accentColor);
-            padding: 15px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            animation: alert .75s ease-in-out infinite;
-            transition: transform .5s ease-in-out;
-        }
-        .scroll-alert span{
-            font-size: 2rem;
-        }
-        .alert-left{
-            left: 25px;
-        }
-        .alert-right{
-            right: 25px;
-        }
-        @keyframes alert {
-            0%{
-                scale: 1;
-            }
-            50%{
-                scale: .75;
-            }
-            100%{
-                scale: 1;
-            }
-        }
-        .scroll-alert.hidden{
-            opacity: 0;
-        }
-        .scroll-alert.upDirection{
-            transform: rotateZ(180deg);
-        }
-        @media (max-width: 1200px) {
-            .scroll-alert{
-                display: none;
-            }
-        }
-        @media (max-width: 900px) {
-            .mezzoRow{
-                max-width: 600px;
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-        @media (max-width: 430px) {
-            .mezzoRowRightSide h2{
-                text-align: center;
-            }
-            .btnContainer{
-                justify-content: center;
-            }
-            .viewBtn{
-                position: relative;
-                bottom: 0;
-                right: 0;
-            }
-        }
-        
+#toggleFilters {
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#toggleFilters:hover {
+    color: var(--accentColor);
+}
+
+#toggleFilters span {
+    font-size: 2.5rem;
+}
+
+#filters {
+    max-width: 0;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s ease-in-out;
+}
+
+#filters.active {
+    max-width: 100%;
+    max-height: 600px;
+    opacity: 1;
+    pointer-events: all;
+    background: var(--elementsBg);
+    padding: 15px;
+    border-radius: 20px;
+}
+
+#filters form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+#filters .field {
+    display: flex;
+}
+
+#filters .field label {
+    color: var(--accentColor);
+}
+
+#filters select {
+    cursor: pointer;
+    text-align: center !important;
+}
+
+#filters option {
+    background: var(--pageBg);
+    text-align: center;
+}
+
+#filters input,
+#filters select {
+    min-width: 75px;
+    outline: none;
+    border: none;
+    border-radius: 0 !important;
+    border-bottom: 1px solid var(--accentColor);
+    color: var(--textColor);
+    text-align: right;
+    background: none;
+    padding: 4px;
+}
+
+#filters input[type="number"]::-webkit-outer-spin-button,
+#filters input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#filters input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+#filters input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+#filtersErrorMessage:not(:empty) {
+    margin-top: 5px;
+    text-align: right;
+    color: rgb(155, 69, 69);
+    opacity: 0.8;
+}
+
+@media (max-width: 1010px) {
+    .filtersContainer {
+        flex-direction: column;
+    }
+
+    #filters form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+
+    .field {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .field input,
+    .field select {
+        width: 130px;
+    }
+}
+
+@media (max-width: 650px) {
+    #filters form {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+.overlay {
+    background: var(--pageBg);
+    border-radius: 20px;
+    animation: appear-overlay linear;
+    --animation-timeline: view();
+    --animation-range: entry 0 cover 25%;
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    transition: transform 0.25s;
+}
+
+.mezzoRow {
+    --animation-timeline: view();
+    --animation-range: entry 0 cover 25%;
+    position: relative;
+    max-width: 1000px;
+    width: 100%;
+    max-height: 800px;
+    background: var(--elementsBg);
+    transform: translateX(0);
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    filter: drop-shadow(5px 10px 10px #00000068);
+    animation: appear-opacity linear;
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    transition: opacity 0.75s ease-in-out, max-height 0.75s ease-in-out,
+        padding 0.75s ease-in-out, transform 0.75s ease-in-out;
+}
+
+.overlay:has(.first-row-visible) {
+    /* transition: .5s; */
+    animation: none;
+    --animation-timeline: none;
+    --animation-range: none;
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+}
+
+.first-row-visible {
+    --animation-timeline: none;
+    --animation-range: none;
+    transform: translateX(0);
+    animation: none;
+    /* transition: .5s; */
+}
+
+.mezzoRow.hidden {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    transform: translateX(-200%);
+}
+
+@keyframes appear-opacity {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes appear-overlay {
+    from {
+        transform: translateX(-200%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.mezzoRow img {
+    max-width: 500px;
+    width: 100%;
+    object-fit: cover;
+    object-position: left center;
+    border-radius: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+.fade-in.visible {
+    opacity: 1;
+}
+
+.mezzoRowRightSide h2 {
+    text-transform: uppercase;
+}
+
+.mezzoDescription {
+    margin-top: 25px;
+    font-size: clamp(0.65rem, 3vw, 1rem);
+}
+
+.mezzoDescription::first-letter {
+    text-transform: uppercase;
+}
+
+.prices {
+    margin-top: 15px;
+}
+
+.prices h3 {
+    display: flex;
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+.prices h3 details {
+    position: relative;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+.prices h3 details summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.prices h3 details summary span {
+    font-weight: 500;
+}
+
+.prices h3 details summary:hover {
+    color: var(--accentColor);
+    transition: 0.5s ease-in-out;
+}
+
+.prices h3 details .info-message {
+    position: absolute;
+    top: calc((1.2rem / 2) + 8px);
+    left: 18px;
+    width: 200px;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    font-weight: 400;
+    line-height: calc(1rem + 7px);
+    background: var(--elementsBg);
+    border-radius: 13px;
+    border-top-left-radius: 0;
+    border: 2px solid var(--textColor);
+    padding: 10px;
+    filter: drop-shadow(15px 15px 10px #00000054);
+    user-select: text;
+    text-align: justify;
+}
+
+.prices ul {
+    list-style: none;
+    text-transform: capitalize;
+    font-size: clamp(0.65rem, 3vw, 1rem);
+}
+
+.budgetElement:not(:empty) {
+    margin-top: 15px;
+    font-size: clamp(0.55rem, 3vw, 0.9rem);
+    opacity: 0.7;
+}
+
+.btnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    align-items: center;
+}
+
+.btnContainer a {
+    color: var(--defaultWhite);
+    background: var(--accentColor);
+    text-decoration: none;
+    outline: 2px dashed var(--accentColor);
+    outline-offset: -2px;
+    transition: 0.05s;
+}
+
+.btnContainer a:hover,
+.btnContainer a:focus {
+    outline-offset: 2px;
+}
+
+.viewBtn {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.scroll-alert {
+    position: fixed;
+    bottom: 15px;
+    z-index: -1;
+    background: var(--elementsBg);
+    color: var(--accentColor);
+    padding: 15px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    animation: alert 0.75s ease-in-out infinite;
+    transition: transform 0.5s ease-in-out;
+}
+
+.scroll-alert span {
+    font-size: 2rem;
+}
+
+.alert-left {
+    left: 25px;
+}
+
+.alert-right {
+    right: 25px;
+}
+
+@keyframes alert {
+    0% {
+        scale: 1;
+    }
+
+    50% {
+        scale: 0.75;
+    }
+
+    100% {
+        scale: 1;
+    }
+}
+
+.scroll-alert.hidden {
+    opacity: 0;
+}
+
+.scroll-alert.upDirection {
+    transform: rotateZ(180deg);
+}
+
+@media (max-width: 1200px) {
+    .scroll-alert {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .mezzoRow {
+        max-width: 600px;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 430px) {
+    .mezzoRowRightSide h2 {
+        text-align: center;
+    }
+
+    .btnContainer {
+        justify-content: center;
+    }
+
+    .viewBtn {
+        position: relative;
+        bottom: 0;
+        right: 0;
+    }
+}

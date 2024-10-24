@@ -165,4 +165,5 @@ document.addEventListener('DOMContentLoaded', () => {
     fromDateFilterInput.addEventListener('input', filter);
     toDateFilterInput.addEventListener('input', filter);
     budgetFilterInput.addEventListener('input', debouncedFilter);
+    filter();
 });

@@ -9,11 +9,14 @@ paypal.configure({
     client_secret: process.env.PAYPAL_SECRET
 });
 
-async function checkPaymentCompleted(bookingId){
-     setTimeout(async () => {
-        const { payment } = await bookings.findOne({"_id": bookingId}, {"payment": 1});
-        if(payment.state == 'pending'){
-            await bookings.deleteOne({"_id": bookingId});
+async function checkPaymentCompleted(bookingId, expiration){
+    setTimeout(async () => {
+        const booking = await bookings.findOne({ "_id": bookingId, "payment.expiration": expiration });
+        if (booking){
+           const { payment } = booking;
+           if (payment.state == 'pending') {
+               await bookings.deleteOne({ "_id": bookingId });
+           }
         }
     }, (1000 * 60 * 15) + (30 * 1000));
 }

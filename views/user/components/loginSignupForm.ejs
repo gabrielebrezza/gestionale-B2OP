@@ -898,6 +898,8 @@ input[type="number"].invalid{
                                 otpForm.classList.remove('active');
                                 otpForm.closest('.modal').classList.remove('active');
                                 document.body.style.overflow = 'auto';
+                                document.querySelector('.signupAlert').remove();
+                                localStorage.setItem('showsignupalert', false);
                                 setTimeout(() => {
                                     document.querySelectorAll('.modal').forEach(modal => modal.remove());
                                 }, 500);

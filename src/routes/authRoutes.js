@@ -12,8 +12,10 @@ const needVerificationUser =  require('../DB/needVerificationUser');
 const { generateToken, authenticateJWT, generateOTP } = require('../utils/authUtils.js');
 const { verifyUserImage } = require('../utils/fileUtils.js');
 const { sendEmail } = require('../utils/emailUtils.js');
-const admin = require('../DB/admin');
-const bookings = require('../DB/bookings.js');
+const { setCode } = require('../utils/discountUtils.js');
+
+
+
 router.use(bodyParser.json());
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -228,6 +230,7 @@ router.post('/user/signup', async (req, res) => {
         if(!existingUser){
             let user = await noleggiatori.findOne({"contatti.email": email });
             id = user._id;
+            await setCode(null, email, dati.cf, 30);
         }
         return res.status(200).json({ id, needVerification });
     } catch (error) {

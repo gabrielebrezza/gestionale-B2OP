@@ -169,6 +169,48 @@
             background: rgb(119, 64, 64);
         }
 
+
+
+        .imagesContainer{
+            margin: 0 auto;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-block: 50px;
+        }
+        .imageBox{
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 300px;
+            width: 100%;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        .imageBox img{
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            margin-top: 25px;
+        }
+        .imageBox .actionsBtns{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .imageBox .actionsBtns span{
+            cursor: pointer;
+        }
+        .imageBox .actionsBtns span.deleteImgBtn{
+            color: #7B0828;
+        }
+        .imageBox .actionsBtns span.uploadImgBtn{
+            color: #1e90ff;
+        }
+
     </style>
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -285,16 +327,75 @@
                 </tfoot>
             </table>
         </form>
-        <section class="imagesContainer">
-            <% const images = ["idCardBack", "idCardFront", "licenseBack", "licenseFront", "sanitaryBack", "sanitaryFront"] %>
-            <% const titles = ["Retro Carta D'Identità", "Fronte Carta D'Identità", "Retro Patente", "Fronte Patente", "Retro Tessera Sanitaria", "Fronte Tessera Sanitaria"] %>
-            <% images.forEach((image, i) => { %>
-                <div class="imageBox">
-                    <h3><%= titles[i] %></h3>
-                    <img src="<%= `/images?dir=${image}/${image}_${customer._id}.jpeg` %>" alt="<%= image %>" onerror="this.parentElement.remove();">
+        <div id="userId" data-id="<%= customer._id %>"></div>
+        <h2 style="text-align: center; margin-top: 25px; color: #f4f4f4;">Foto Documenti</h2>
+    <section class="imagesContainer">
+        <% const directories = ["idCardBack", "idCardFront", "licenseBack", "licenseFront", "sanitaryBack", "sanitaryFront"] %>
+        <% const titles = ["Retro Carta D'Identità", "Fronte Carta D'Identità", "Retro Patente", "Fronte Patente", "Retro Tessera Sanitaria", "Fronte Tessera Sanitaria"] %>
+        <% directories.forEach((dir, i) => { %>
+            <div class="imageBox">
+                <h3><%= titles[i] %></h3>
+                <img src="<%= `/admin/images?dir=${encodeURIComponent(`${dir}/${dir}_${customer._id}.jpeg`)}` %>" alt="<%= dir %>" onerror="this.src = `/img/default/document.png`; this.classList.add('default');">
+                <div class="actionsBtns">
+                    <form id="<%= `delete_${dir}_form` %>">
+                        <input type="hidden" name="dir" value="<%= dir %>">
+                        <span class="material-symbols-rounded deleteImgBtn">
+                            delete
+                        </span>
+                    </form>
+                    <form id="<%= `${dir}_form` %>"enctype="multipart/form-data">
+                        <label for="<%= `${dir}_image` %>">
+                            <span class="material-symbols-rounded uploadImgBtn">
+                                add_photo_alternate
+                            </span>
+                        </label>
+                        <input type="hidden" name="customerId" value="<%= customer._id %>">
+                        <input type="file" class="uploadImgInput" name="<%= `${dir}` %>" id="<%= `${dir}_image` %>" style="display: none;">
+                    </form>
                 </div>
-            <% }); %>
-        </section>
+            </div>
+        <% }); %>
+        <script>
+            const customerId = document.getElementById('userId').dataset.id;
+            const uploadImgInputs = document.querySelectorAll('.uploadImgInput');
+            for (const input of uploadImgInputs) {
+                input.addEventListener('change', async () => {
+                    const dir = input.name;
+                    const form = document.getElementById(`${dir}_form`);
+                    let formData = new FormData(form);
+                    const fileResponse = await fetch('/user/uploadFiles', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').src = `/admin/images?dir=${encodeURIComponent(`${dir}/${dir}_${customerId}.jpeg`)}&timeStamp=${new Date().getTime()}`;
+                });
+            }
+
+            const deleteImgBtns = document.querySelectorAll('.deleteImgBtn');
+            for (const btn of deleteImgBtns) {
+                btn.addEventListener('click', async () => {
+                    const form = btn.closest('form');
+                    const dir = btn.closest('form').id.split('_')[1];
+                    const fileResponse = await fetch('/admin/images/delete', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({dir: `${dir}/${dir}_${customerId}.jpeg`})
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error deleting files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').src = `/img/default/document.png`;
+                });
+            }
+        </script>
+    </section>
     </main>
 </body>
 </html>

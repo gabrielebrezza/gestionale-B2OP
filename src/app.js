@@ -11,6 +11,7 @@ const mezzi = require('./DB/mezzi.js');
 const bookings = require('./DB/bookings.js');
 const noleggiatori = require('./DB/noleggiatori.js');
 const codes = require('./DB/codes.js');
+const messages = require('./DB/message.js');
 const app = express();
 
 //routes
@@ -123,10 +124,15 @@ app.get('/cancel', userAuthenticateJWT, async (req, res) =>{
   res.render('user/payments/cancel', {customerId});
 })
 
-app.get('/', async (req, res) => {
-  res.redirect('/mezzi')
+app.get('/', userAuthenticateJWT, async (req, res) => {
+  const customerId = req.user ? req.user.id : null
+  res.render('user/home', { customerId: customerId })
 })
-
+app.get('/about-us', userAuthenticateJWT, async (req, res) => {
+  const customerId = req.user ? req.user.id : null
+  res.render('user/aboutUs', { customerId: customerId })
+})
+  
 app.get('/user/images', userAuthenticateJWT, async (req, res) => {
   try {
       if(!req.user) return res.status(401).send('NON AUTORIZZATO');
@@ -182,7 +188,7 @@ app.get('/mezzi', userAuthenticateJWT, async (req, res) => {
           bookings: filteredBookings
       };
   });
-    res.render('user/mezzi', {customerId, veicoli, noleggi});
+    res.render('user/mezzi', {customerId, veicoli, noleggi, mezzoType: req.query.type});
   } catch (error) {
     console.error(error);
     res.status(500).render('errorPage', {err: 'Errore del server'});
@@ -245,12 +251,14 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
       ],
       "payment.state": { $in: ['pending', 'completed'] }
     });
-
+    console.log(conflictingBooking)
+    let payingYet;
     if (conflictingBooking) {
-      if (conflictingBooking.payment.state === 'pending') {
+      payingYet = conflictingBooking.customerId == dati.customerId;
+      if (conflictingBooking.payment.state === 'pending' && !payingYet) {
         return res.status(409).render('errorPage', { err: 'Qualcun altro sta già pagando.' });
       }
-      if (conflictingBooking.payment.state === 'completed') {
+      if (conflictingBooking.payment.state === 'completed' && !payingYet) {
         return res.status(409).render('errorPage', { err: 'Il mezzo è già stato prenotato.' });;
       }
     }
@@ -308,22 +316,27 @@ app.post('/user/newRent', userAuthenticateJWT, async (req, res) => {
       }
       dati.customerId = user._id.toString();
     }
-    const newBooking = new bookings(dati);
-    await newBooking.save();
-    checkPaymentCompleted(newBooking._id);
+    let booking;
+    if (!payingYet){
+      booking = new bookings(dati);
+      await booking.save();
+    }else{
+      booking = await bookings.findOneAndUpdate({"_id": conflictingBooking._id}, dati);
+    }
+    checkPaymentCompleted(booking._id, expiration);
     if(newUser){
       let paymentMethod;
       if(dati.paypal == '') paymentMethod = 'paypal'; 
       if(dati.stripe == '') paymentMethod = 'stripe'; 
       if(dati.satispay == '') paymentMethod = 'satispay'; 
-      return res.status(200).json({ customerId: dati.customerId, paymentMethod: paymentMethod, bookingId: newBooking._id });
+      return res.status(200).json({ customerId: dati.customerId, paymentMethod: paymentMethod, bookingId: booking._id });
     }
 
     if(dati.paypal == ''){
-      return res.redirect(await createPaypal(dati.finalPrice, newBooking._id));
+      return res.redirect(await createPaypal(dati.finalPrice, booking._id));
     }
     if(dati.stripe == ''){
-      return res.redirect(await createStripe(dati.finalPrice, newBooking._id));
+      return res.redirect(await createStripe(dati.finalPrice, booking._id));
     }
     // if(dati.satispay == ''){}
 
@@ -395,12 +408,12 @@ app.get('/success', userAuthenticateJWT, async (req, res) => {
   res.render('user/payments/success', {booking, customerId});
 });
 
-app.get('/user/data', userAuthenticateJWT, async (req, res) => {
+app.get('/profile', userAuthenticateJWT, async (req, res) => {
   try {
     if(!req.user) return res.redirect('/');
     const customerId = req.user.id;
     const data = await noleggiatori.findOne({"_id": customerId});
-    res.render('user/dataPage', {customerId, data})
+    res.render('user/profile', {customerId, data})
   } catch (error) {
     console.error(error)
   }
@@ -416,6 +429,37 @@ app.post('/user/data/update', userAuthenticateJWT, async (req, res) =>{
   } catch (err) {
       console.error(`Si è verificato un'errore nell'aggiornamento del profilo cliente: ${err}`);
       res.render('errorPage', {err: `Errore nell'aggiornamento del profilo`});
+  }
+});
+
+app.post('/send-message', userAuthenticateJWT, async (req, res) =>{
+  const customerId = req.user ? req.user.id : null;
+  try {
+    const { subject, message } = req.body;
+    if (message.replace(/\s+/g, '') == '') return res.render('errorPage', { err: 'Il messaggio non può essere vuoto' });
+    if(customerId){
+      const newMessage = new messages({
+        "date": new Date(),
+        "customerId": customerId,
+        "subject": subject,
+        "message": message
+      });
+      await newMessage.save();
+    }else{
+      const { name, email } = req.body;
+      const newMessage = new messages({
+        "date": new Date(),
+        "name": name,
+        "email": email,
+        "subject": subject,
+        "message": message
+      });
+      await newMessage.save();
+    }
+    res.redirect('/about-us');
+  } catch (error) {
+    console.log('Si è verificato un errore nel salvataggio del messaggio: ', error);
+    res.render('errorPage', {err: 'Errore nel Salvataggio del messaggio'});
   }
 });
 

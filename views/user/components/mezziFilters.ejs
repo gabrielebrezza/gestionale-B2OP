@@ -10,14 +10,14 @@
             tune
         </span>
     </div>
-    <div id="filters" class="filters">
+    <div id="filters" class="filters <%= types.includes(mezzoType) ? 'active' : '' %>">
         <form onsubmit="event.preventDefault()">
             <div class="field">
                 <label for="mezzoType">Tipo: </label>
                 <select id="mezzoType"  style="text-transform: capitalize;">
-                    <option value="all">Tutti</option>
+                    <option value="all" <%= !types.includes(mezzoType) ? 'selected' : '' %>>Tutti</option>
                     <% for(const type of types){ %>
-                        <option value="<%= type %>"><%= type %></option>
+                        <option value="<%= type %>" <%= type == mezzoType ? 'selected' : '' %>><%= type %></option>
                     <% } %>
                 </select>
             </div>
