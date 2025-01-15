@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Mezzo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        
+        #updateUserForm{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 50px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            background: #f1f1f1;
+        }
+
+        th {
+            color: #fff;
+            background: var(--accentColor);
+            text-transform: uppercase;
+        }
+        th:first-child{
+            border-radius: 5px 0 0  0;
+        }
+        th:last-child{
+            border-radius:  0 5px 0  0;
+        }
+        tfoot td{
+            padding: 0;
+            background: #0000;
+            border: none;
+        }
+        #submitFormBtn{
+            width: 100%;
+            cursor: pointer;
+            padding: 10px 20px;
+            background: var(--accentColor);
+            color: #fff;
+            transition: .5s;
+            outline: none;
+            border: none;
+            border-radius: 0 0 5px 5px;
+        }
+        #submitFormBtn:hover{
+            opacity: .7;
+        }
+        .imageForms{
+            width: 50%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .imageForm{
+            max-width: 250px;
+            width: 100%;
+            background: #eee;
+            height: fit-content;
+            padding: 25px;
+            border-radius: 5px;
+            text-align: center;
+            color: #333;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-block: 15px;
+        }
+        #signPic{
+            width: 175px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        } 
+        #profilePic{
+            object-fit: contain;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .imageForm button, .imageForm label{
+            width: fit-content;
+            background: var(--accentColor);
+            color: #fff;
+            padding: 12px 12px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: .5s;
+            font-size: 1rem;
+        }
+        .uploadBtn{
+            padding: 12px 20px;
+        }
+        .imageForm button:hover, .imageForm label:hover {
+            background: var(--accentColor);
+        }
+        .imageForm input{
+            display: none;
+        }
+        .field{
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            text-align: justify;
+        }
+        .field p{
+            font-weight: bold;
+        }
+
+        .formField{
+            display: flex;
+            align-items: center;
+        }
+        .formField button{
+            width: fit-content;
+            height: 40px;
+            margin-inline: 10px;
+            display: flex;
+            align-items: center;
+        }
+        button.deleteButton {
+            background: var(--danger);
+            transition: .5s;
+        }
+        button.deleteButton:hover {
+            background: rgb(119, 64, 64);
+        }
+        #storicoNoleggi {
+            max-height: 500px;
+            overflow-y: auto;
+            display: block;
+        }
+
+        #storicoNoleggi thead {
+            top: 0;
+            position: sticky;
+            width: 100%;
+        }
+        #storicoNoleggi thead th{
+            border-radius: 0;
+        }
+        #newRentBtnTd{
+            text-align: center;
+        }
+        .newRentInput{
+            display: none;
+        }
+        #newRentForm{
+            display: flex;
+        }
+        .customerLink{
+            color: var(--accentColor);
+            text-decoration: none;
+        }
+        .customerLink, #noleggiatore{
+            text-transform: capitalize;
+        }
+        :is(.storicoInput, .newRentInput) > *:where(input, select){
+            padding: 5px;
+            background: none;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #333;
+        }
+        button.saveBookingBtn{
+            margin-left: 5px;
+            background: var(--accentColor);
+            color: #f1f1f1;
+            cursor: pointer;
+            width: fit-content;
+            border: none;
+            outline: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+        }
+        #tableSection{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #blurredBg{
+            display: none;
+            z-index: 2;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f1f1f1;
+            opacity: 0;
+            transition: opacity .5s;
+        }
+        #newUserFormContainer{
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        #newUserForm{
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background: var(--accentColor);
+        }
+        #newUserForm .field{
+            padding-block: 5px;
+            display: flex;
+            justify-content: space-between;
+            color:#f1f1f1;
+        }
+        #newUserForm .field input{
+            padding: 5px;
+        }
+.calendarWrapper{
+    max-width: 450px;
+    width: 100%;
+    background: #f1f1f1;
+    border-radius: 10px;
+    font-family: 'Poppins', 'sans-serif';
+}
+.calendarWrapper .calendarHead{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+.calendarHead .current-date{
+    text-transform: capitalize;
+    font-size: 1.45rem;
+    font-weight: 500;
+}
+.calendarHead .calendarIcons span{
+    height: 38px;
+    width: 38px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+    user-select: none;
+    transition: .4s ease-in-out;
+}
+.calendarHead .calendarIcons span:hover{
+    background: var(--accentColor);
+    color: #cccbcb;
+}
+.calendarHead .calendarIcons span:first-child:hover{
+    transform: translateX(-3px);
+}
+.calendarHead .calendarIcons span:last-child:hover{
+    transform: translateX(3px);
+}
+.calendarMain{
+    padding: 20px;
+}
+.calendarMain ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.calendarMain .days{
+    margin-bottom: 20px;
+    z-index: -1;
+}
+.calendarMain .weeks li{
+    font-weight: 500;
+}
+.calendarMain ul li{
+    position: relative;
+    width: calc( 100% / 7);
+}
+.calendarMain .days li{
+    cursor: pointer;
+    margin-top: 30px;
+    z-index: 0;
+}
+.days li.inactive{
+    color: #aaa;
+}
+.days li.active{
+    color: #fff;
+}
+.calendarMain .days li::before{
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translateX(-50%) translateY(-50%);
+    background: #f2f2f2;
+}
+
+.days li:hover::before{
+    background: #f2f2f2;
+}
+.days li.active::before{
+    background: var(--accentColor);
+}
+.days li.booked::before{
+    background: #7B0828;
+}.days li.booked.inactive::before{
+    background: #7B0828;
+    opacity: .6;
+}
+.days li.booked:not(.inactive){
+    color: #f2f2f2;
+}
+
+
+#prevFormPage, #nextFormPage{
+    height: 28px;
+    width: 28px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+    user-select: none;
+    background: #f2f2f2;
+}
+#prevFormPage.disabled, #nextFormPage.disabled{
+    background: #0000;
+    cursor: auto;
+}
+#nextFormPage{
+    margin-right: -10px;
+}
+.buttonContainer{
+    display: flex;
+    justify-content: space-between;
+}
+.buttonContainer button{
+    padding: 10px 25px;
+    background: var(--accentColor);
+    color: #f1f1f1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.material-symbols-outlined{
+    user-select: none;
+}
+.daysPrices input{
+    max-width: 22px;
+    outline: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #333;
+    text-align: center;
+}
+.daysPrices input:not(:placeholder-shown){
+    border: none;
+}
+    </style>
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    
+</head>
+<body class="dark">
+    <%- include('components/header.ejs') %>
+    
+    <main>
+        <%
+            let bookedDate = [];
+            for(const data of noleggi){
+                bookedDate.push(`${data.fromDate}-${data.toDate}`) 
+            }
+        %>
+        <div id="bookings" style="display:none;"><%=bookedDate%></div>
+        
+    <section id="tableSection">
+        <div class="calendarWrapper">
+            <div class="calendarHead">
+                <p class="current-date"></p>
+                <div class="calendarIcons">
+                    <span id="prev" class="material-symbols-outlined">
+                        chevron_left
+                    </span>
+                    <span id="next" class="material-symbols-outlined">
+                        chevron_right
+                    </span>
+                </div>
+            </div>
+            <div class="calendarMain">
+                <ul class="weeks">
+                    <li>Lun</li>
+                    <li>Mar</li>
+                    <li>Mer</li>
+                    <li>Gio</li>
+                    <li>Ven</li>
+                    <li>Sab</li>
+                    <li>Dom</li>
+                </ul>
+                <form id="pricesForm" action="/admin/mezzi/updateDaysPrices" method="POST">
+                    <ul class="daysPrices">
+                        <input type="hidden" name="id" value="<%= mezzo._id %>">
+                        <li><input type="text" name="price0" class="dayPrice" value="<%= mezzo.daysPrices[0] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price1" class="dayPrice" value="<%= mezzo.daysPrices[1] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price2" class="dayPrice" value="<%= mezzo.daysPrices[2] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price3" class="dayPrice" value="<%= mezzo.daysPrices[3] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price4" class="dayPrice" value="<%= mezzo.daysPrices[4] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price5" class="dayPrice" value="<%= mezzo.daysPrices[5] %>" required placeholder=" ">€</li>
+                        <li><input type="text" name="price6" class="dayPrice" value="<%= mezzo.daysPrices[6] %>" required placeholder=" ">€</li>
+                    </ul>
+                </form>
+                <ul class="days">
+                </ul>
+            </div>
+        </div>
+
+
+        <script>
+            const pricesForm = document.getElementById('pricesForm');
+            const inputs = document.querySelectorAll('.dayPrice');
+            let initialValues = {};
+
+            inputs.forEach(input => {
+                initialValues[input.name] = input.value;
+            });
+
+            inputs.forEach(input => {
+                input.addEventListener('blur', checkAllFilled);
+            });
+        
+            function checkAllFilled() {
+                const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+                const anyChanged = Array.from(inputs).some(input => input.value !== initialValues[input.name]);
+
+                if (allFilled && anyChanged) {
+                    const formData = new FormData(pricesForm);
+                    const data = {}
+                    formData.forEach((value, key) => (data[key] = value));
+                    fetch(pricesForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Errore nell\'invio del form');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Errore durante l\'invio del form:', error);
+                    });
+                }
+            }
+        </script>
+
+        
+            <table id="storicoNoleggi">
+                <thead>
+                    <th>Iniziato</th>
+                    <th>Da</th>
+                    <th>A</th>
+                    <th>Cliente</th>
+                    <th>Km</th>
+                    <th>Serbatoio Fine</th>
+                    <th>Prezzo Finale</th>
+                </thead>
+                
+                <tbody class="storicoNoleggiRows">
+                    <form id="newRentForm" action="/admin/mezzi/newRent" method="POST">
+                        <tr>
+                            <td id="newRentBtnTd" colspan="7">
+                                    <span id="newRentBtn" class="material-symbols-outlined" style="cursor: pointer;">
+                                        add
+                                    </span>
+                            </td>
+                            <input type="hidden" name="id" value="<%= mezzo._id %>">
+                            <td class="newRentInput"></td>
+                            <td class="newRentInput"><input type="date" name="fromDate" id="fromDate" required></td>
+                            <td class="newRentInput"><input type="date" name="toDate" id="toDate" required></td>
+                            <td class="newRentInput">
+                                <select name="customerId" id="noleggiatore">
+                                    <option value="newUser">Nuovo Utente</option>
+                                    <% for(const cliente of clienti){ %>
+                                        <option value="<%= cliente._id %>"><%= `${cliente.cognome} ${cliente.nome}` %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td class="newRentInput"><input type="number" name="km" id="km" min="<%= mezzo.km + 1 %>"></td>
+                            <td class="newRentInput">
+                                <input type="number" name="serbatoioFine" id="serbatoioFine">
+                                <button class="saveBookingBtn" type="submit">Salva</button>
+                            </td>
+                            <td class="newRentInput"></td>
+                        </tr>
+                        </form>
+                        <% for(const noleggio of noleggi.reverse()){ %>
+
+                            <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                            <form action="/admin/mezzi/rentEnded" method="POST">
+                                <input type="hidden" name="idMezzo" value="<%= mezzo._id %>">
+                                <input type="hidden" name="rentId" value="<%= noleggio._id %>">
+                            <% } %>
+                                <tr>
+                                    <td>
+                                        <% if (!noleggio.kmStarting && !noleggio.km) { %>
+                                            <input type="checkbox" name="rentStarted" required>
+                                        <% }else{ %>
+                                            <span class="material-symbols-outlined" style="color: green; font-size: 2.3rem;">
+                                                check_circle
+                                            </span>
+                                        <% } %>
+                                    </td>
+                                    <td><%= noleggio.fromDate.toLocaleDateString() %></td>
+                                    <td><%= noleggio.toDate.toLocaleDateString() %></td>
+                                    <td>
+                                        <a class="customerLink" href="/admin/cliente?id=<%= encodeURIComponent(noleggio.customerId) %>">
+                                            <% const noleggiatore = clienti.find( cliente => cliente._id == noleggio.customerId) %>
+                                            <%= `${noleggiatore.cognome} ${noleggiatore.nome}` %>
+                                        </a>
+                                    </td>
+                                    <td class="storicoInput">
+                                        <% if(noleggio.km){ %>
+                                            <%= noleggio.km %>
+                                            <strong>KM</strong>
+                                        <% }else{ %>
+                                            <input type="number" name="km" min="<%= mezzo.km + 1 %>">
+                                        <% } %>
+                                    </td>
+                                    <td class="storicoInput">
+                                        <% if(noleggio.serbatoioFine){ %>
+                                            <%= noleggio.serbatoioFine %>
+                                            <strong>L</strong>
+                                        <% }else{ %>
+                                            <input type="number" name="serbatoioFine">
+                                        <% } %>
+
+                                        <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                                            <button type="submit" class="saveBookingBtn">Salva</button>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if(noleggio.finalPrice){ %>
+                                            <%= noleggio.finalPrice %> € + IVA
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% if(!noleggio.km || !noleggio.serbatoioFine){ %>
+                            </form>
+                            <% } %>
+                        <% } %>
+                        
+                 </tbody>
+                </form>
+            </table>
+
+
+
+
+            <form id="updateMezzoForm" action="/admin/mezzo/updateMezzo" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Valore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <input type="hidden" name="id" value="<%= mezzo._id %>">
+                            <td>Targa:</td>
+                            <td><input type="text" id="targa" name="targa" value="<%= mezzo.targa %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Marca:</td>
+                            <td><input type="text" name="marca" value="<%= mezzo.marca %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Modello:</td>
+                            <td><input type="text" name="modello" value="<%= mezzo.modello %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Descrizione:</td>
+                            <td><textarea rows="8" name="descrizione"><%= mezzo.descrizione %></textarea>
+                        </tr>
+                        <tr>
+                            <td>Anno:</td>
+                            <td><input type="text" name="anno" value="<%= mezzo.anno %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Km:</td>
+                            <td><input type="text" name="km" value="<%= mezzo.km %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Tipologia:</td>
+                            <td>
+                                <select name="type">
+                                    <% 
+                                        let veicolsTypes = [ 'furgone', 'auto', 'moto'];
+                                        veicolsTypes = veicolsTypes.filter(type => type != mezzo.type)
+                                    %>
+                                    <option value="<%= mezzo.type %>"><%= mezzo.type %></option>
+                                    <% for(const type of veicolsTypes){ %>
+                                        <option value="<%= type %>"><%= type %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>€/KM + IVA:</td>
+                            <td><input type="number" name="kmPrice" min="0.01" step="0.01" value="<%= mezzo.kmPrice %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Km Inclusi:</td>
+                            <td><input type="number" name="kmIncluded" min="0" value="<%= mezzo.kmIncluded %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Assicurazione:</td>
+                            <td><input type="text" name="insuranceCompany" value="<%= mezzo.insuranceCompany %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Assicurazione:</td>
+                            <td><input type="date" name="expInsurance" value="<%= mezzo.expInsurance %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Bollo:</td>
+                            <td><input type="date" name="expPropTax" value="<%= mezzo.expPropTax %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Scadenza Revisione:</td>
+                            <td><input type="date" name="expRev" value="<%= mezzo.expRev %>"></td>
+                        </tr>
+                        <tr>
+                            <td>Note:</td>
+                            <td><textarea name="note"><%= mezzo.note %></textarea></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="2"><button id="submitFormBtn" type="submit">Salva</button></td>
+                    </tfoot>
+                </table>
+            </form>
+            <style>
+                .slider-container {
+                    display: flex;
+                    align-items: center;
+                    margin-block: 15px;
+                    background: #f9f9f9;
+                    border-radius: 15px;
+                    padding: 25px;
+                    max-width: 750px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .slider {
+                    position: relative;
+                    width: 100%;
+                    max-width: 550px;
+                    overflow: hidden;
+        
+                }
+                .slides {
+                    display: flex;
+                    align-items: center;
+                    transition: transform 0.5s ease;
+                }
+                .slide {
+                    position: relative;
+                    min-width: 100%;
+                    border-radius: 15px;
+                    cursor: pointer;
+                }
+                .slide img {
+                    width: 100%;
+                    border-radius: 15px;
+                }
+                .slide .delete-icon {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background-color: rgba(255, 255, 255, 0.7);
+                    border-radius: 50%;
+                    padding: 5px;
+                    cursor: pointer;
+                    transition: .25s ease-in-out;
+                }
+                .slide .delete-icon:hover  {
+                    color: #f9f9f9;
+                    background-color: #cb628098;
+                }
+                button.prevImageSlider, button.nextImageSlider {
+                    background: none;
+                    border: none;
+                    outline: none;
+                    border-radius: 50%;
+                    color: #333;
+                    cursor: pointer;
+                }
+                .form-slide {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                    border-radius: 15px;
+                    cursor: default;
+                }
+                .form-slide input[type="file"] {
+                    display: none;
+                }
+                .form-slide label span{
+                    cursor: pointer;
+                    font-size: 2rem;
+                    color: #f9f9f9;
+                }
+                .form-slide {
+                    background: var(--accentColor);
+                    height: 350px;
+                }
+            </style>
+            
+            <script>
+                let currentSliderIndex = 0;
+            
+                function showSlide(index) {
+                    const slides = document.querySelector('.slides');
+                    const totalSlides = document.querySelectorAll('.slide').length;
+            
+                    if (index >= totalSlides) {
+                        currentSliderIndex = 0;
+                    } else if (index < 0) {
+                        currentSliderIndex = totalSlides - 1;
+                    } else {
+                        currentSliderIndex = index;
+                    }
+            
+                    const offset = -currentSliderIndex * 100; // Spostamento in percentuale
+                    slides.style.transform = `translateX(${offset}%)`;
+                }
+            
+                function nextSlide() {
+                    showSlide(currentSliderIndex + 1);
+                }
+            
+                function prevSlide() {
+                    showSlide(currentSliderIndex - 1);
+                }
+            
+                function addImageToSlider(imageUrl, imageN) {
+                    const slidesContainer = document.querySelector('.slides');
+                    const newSlide = document.createElement('div');
+                    newSlide.classList.add('slide');
+                    
+                    newSlide.innerHTML = `
+                        <img src="${imageUrl}" onclick="openModal(this)">
+                        <span class="material-symbols-rounded delete-icon" data-image_number="${imageN}" onclick="deleteImage(this)">delete</span>
+                    `;
+                    slidesContainer.insertBefore(newSlide, slidesContainer.lastElementChild);
+                }
+            
+                async function deleteImage(deleteIcon) {
+                    const slide = deleteIcon.closest('.slide');
+                    const imageN = deleteIcon.dataset.image_number;
+                    const mezzoId = document.querySelector('.slides').dataset.mezzo_id;
+        
+                    const response = await fetch(`/admin/deleteImage/${mezzoId}/${imageN}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error('Error deleting files');
+                    }
+                    slide.remove();
+        
+                    const slides = document.querySelectorAll('.delete-icon');
+                    slides.forEach((slide, index) => {
+                        slide.dataset.image_number = index + 1;
+                    });
+        
+                    showSlide(currentSliderIndex);
+                }
+            
+                async function uploadImage(formData) {
+                    const fileResponse = await fetch('/admin/mezzo/addImage', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+                    const data = await fileResponse.json();
+                    addImageToSlider(data.imageUrl, data.fileNumber);
+                    document.querySelector('#uploadForm input[type="file"]').value = '';
+                }
+            
+                document.addEventListener('DOMContentLoaded', () => {
+                    showSlide(currentSliderIndex);
+            
+                    const uploadImageBtn = document.querySelector('#uploadForm input[type="file"]');
+                    uploadImageBtn.addEventListener('change', () => {
+                        const formData = new FormData(uploadForm);
+                        uploadImage(formData);
+                    });
+                });
+            </script>
+        
+            <div class="slider-container">
+                <button class="prevImageSlider" onclick="prevSlide()">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </button>
+                <div class="slider">
+                    <div class="slides" data-mezzo_id="<%= mezzo._id %>">
+                        <% for( let i = 1; i <= totalImages; i++ ) { %>
+                            <div class="slide">
+                                <img src="/img\mezzi/<%= `${mezzo._id}/${i}.jpg` %>" onclick="openModal(this)">
+                                <span class="material-symbols-rounded delete-icon" data-image_number="<%= i %>" onclick="deleteImage(this)">delete</span>
+                            </div>
+                        <% } %>
+                        
+            
+                        <!-- Form per aggiungere immagini come ultima slide -->
+                        <div class="slide form-slide">
+                            <form id="uploadForm" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="<%= mezzo._id %>">
+                                <label for="imageInput">
+                                    <span class="material-symbols-rounded">
+                                        add_photo_alternate
+                                    </span>
+                                </label>
+                                <input type="file" name="image" id="imageInput" type="image" required>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button class="nextImageSlider" onclick="nextSlide()">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </button>
+            </div>
+    </section>
+    
+        <script>
+            const newRentBtn = document.getElementById('newRentBtn');
+            const newRentBtnTd = document.getElementById('newRentBtnTd');
+            const newRentInput = document.querySelectorAll('.newRentInput');
+            newRentBtn.addEventListener('click', () => {
+                newRentBtnTd.remove();
+                for(const input of newRentInput){
+                    input.style.display = 'table-cell';
+                }
+            });
+        </script>
+        <div id="blurredBg"></div>
+        <div id="newUserFormContainer">
+            <form action="/admin/mezzi/newRent" method="POST" id="newUserForm">
+                <input type="hidden" name="id" value="<%= mezzo._id %>">
+                <input type="hidden" name="fromDate" id="fromDateInputNewUser">
+                <input type="hidden" name="toDate" id="toDateInputNewUser">
+                <input type="hidden" name="km" id="kmInputNewUser">
+                <input type="hidden" name="serbatoioFine" id="serbatoioFineInputNewUser">
+                <section class="page page1">
+                    <div class="field">
+                        <label for="newUserName">Nome:</label>
+                        <input type="text" name="nome" id="newUserName">
+                    </div>
+                    <div class="field">
+                        <label for="newUserSurname">Cognome:</label>
+                        <input type="text" name="cognome" id="newUserSurname">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCf">Codice Fiscale:</label>
+                        <input type="text" name="cf" id="newUserCf">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCUnivoco">Codice Univoco:</label>
+                        <input type="text" name="cUnivoco" id="newUserCUnivoco">
+                    </div>
+                    <div class="field">
+                        <label for="newUserPIVA">Partita IVA:</label>
+                        <input type="text" name="pIva" id="newUserPIVA">
+                    </div>
+                </section>
+                <section class="page page2" style="display: none;">
+                    <div class="field">
+                        <label for="newUserVia">Via:</label>
+                        <input type="text" name="residenza[via]" id="newUserVia">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCivico">Civico:</label>
+                        <input type="text" name="residenza[nCivico]" id="newUserCivico">
+                    </div>
+                    <div class="field">
+                        <label for="newUserCap">CAP:</label>
+                        <input type="text" name="residenza[cap]" id="newUserCap">
+                    </div>
+                    <div class="field">
+                        <label for="newUserComune">Comune:</label>
+                        <input type="text" name="residenza[comune]" id="newUserComune">
+                    </div>
+                    <div class="field">
+                        <label for="newUserProvincia">Provincia:</label>
+                        <input type="text" name="residenza[provincia]" id="newUserProvincia">
+                    </div>
+                    <div class="field">
+                        <label for="newUserEmail">Email:</label>
+                        <input type="text" name="contatti[email]" id="newUserEmail">
+                    </div>
+                    <div class="field">
+                        <label for="newUserTel">Tel:</label>
+                        <input type="text" name="contatti[tel]" id="newUserTel">
+                    </div>
+                    <div class="field">
+                        <label for="newUserPec">Pec:</label>
+                        <input type="text" name="contatti[pec]" id="newUserPec">
+                    </div>
+                </section>
+                <section class="page page3" style="display: none;">
+                    <div class="field">
+                        <label for="newUsernPatente">Numero Patente:</label>
+                        <input type="text" name="patente[numero]" id="newUsernPatente">
+                    </div>
+                    <div class="field">
+                        <label for="newUserRilascioPat">Rilascio Patente:</label>
+                        <input type="date" name="patente[rilascio]" id="newUserRilascioPat">
+                    </div>
+                    <div class="field">
+                        <label for="newUserOfficePat">Rilasciata Da:</label>
+                        <input type="text" name="patente[daUfficio]" id="newUserOfficePat">
+                    </div>
+                    <div class="field">
+                        <label for="newUserExpPat">Scadenza:</label>
+                        <input type="date" name="patente[scadenza]" id="newUserExpPat">
+                    </div>
+                </section>
+                <div class="buttonContainer">
+                    <div class="formIconContainer">
+                        <span id="prevFormPage" class="material-symbols-outlined disabled">
+                            chevron_left
+                        </span>
+                        <span id="nextFormPage" class="material-symbols-outlined">
+                            chevron_right
+                        </span>
+                    </div>
+                    <button id="newUserFormBtn" type="submit" style="display: none;">Salva</button>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            const newRentForm = document.getElementById('newRentForm');
+            const noleggiatoreInput = document.getElementById('noleggiatore');
+            const blurredBg = document.getElementById('blurredBg');
+            const newUserFormContainer = document.getElementById('newUserFormContainer');
+            const fromDateoldInput = document.getElementById('fromDate');
+            const toDateoldInput = document.getElementById('toDate');
+            const kmoldInput = document.getElementById('km');
+            const serbatoioFineoldInput = document.getElementById('serbatoioFine');
+            const fromDateNewInput = document.getElementById('fromDateInputNewUser');
+            const toDateNewInput = document.getElementById('toDateInputNewUser');
+            const kmNewInput = document.getElementById('kmInputNewUser');
+            const serbatoioFineNewInput = document.getElementById('serbatoioFineInputNewUser');
+            newRentForm.addEventListener('submit', event =>{
+                if(new Date(fromDateoldInput.value) > new Date(toDateoldInput.value)){
+                    alert('La data di inizio non può essere maggiore di quella di fine');
+                    event.preventDefault();
+                    fromDateoldInput.focus();
+                    return;
+                };
+                if(noleggiatoreInput.value != 'newUser') return;
+                event.preventDefault();
+                blurredBg.style.display = 'block';
+                newUserFormContainer.style.display = 'flex';
+                setTimeout(() => {
+                    blurredBg.style.opacity = .4;
+                    newUserFormContainer.style.opacity = 1;
+                }, 100);
+                fromDateNewInput.value = fromDateoldInput.value;
+                toDateNewInput.value = toDateoldInput.value;
+                kmNewInput.value = kmoldInput.value;
+                serbatoioFineNewInput.value = serbatoioFineoldInput.value;
+            });
+            const prevFormPage = document.getElementById('prevFormPage');
+            const nextFormPage = document.getElementById('nextFormPage');
+            const page1 = document.querySelector('.page1');
+            const page2 = document.querySelector('.page2');
+            const page3 = document.querySelector('.page3');
+            const newUserFormBtn = document.getElementById('newUserFormBtn');
+            prevFormPage.addEventListener('click', () => {
+                console.log('premuto')
+                if(page1.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page2.style.display = 'block';
+                    page3.style.display = 'none';
+                    nextFormPage.classList.remove('disabled');
+                    newUserFormBtn.style.display = 'none';
+                    return;
+                }
+                if(page1.style.display == 'none'){
+                    page1.style.display = 'block';
+                    page2.style.display = 'none';
+                    prevFormPage.classList.add('disabled');
+                    return;
+                }
+            });
+            nextFormPage.addEventListener('click', () => {
+                
+                console.log('primato')
+                if(page3.style.display != 'none') return;
+                if(page2.style.display == 'none') {
+                    page1.style.display = 'none';
+                    page2.style.display = 'block';
+                    prevFormPage.classList.remove('disabled');
+                    return;
+                }
+                if(page3.style.display == 'none') {
+                    page2.style.display = 'none';
+                    page3.style.display = 'block';
+                    nextFormPage.classList.add('disabled');
+                    newUserFormBtn.style.display = 'block';
+                    return;
+                }
+            });
+        </script>
+        <script>
+            const bookings = document.getElementById('bookings').innerText.split(',');
+            const currentDate = document.querySelector('.current-date'),
+            daysTag = document.querySelector('.days'),
+            prevNextIcons = document.querySelectorAll('.calendarIcons span')
+
+            let date = new Date(),
+            currYear = date.getFullYear(),
+            currMonth = date.getMonth();
+
+            const months = ['gennaio', 'febbrario', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+            const renderCalendar = () => {
+                let firstDateOfMonth = new Date(currYear, currMonth, 0).getDay(),
+                lastDateOfMonth = new Date(currYear, currMonth +1, 0).getDate(),
+                lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
+                let liTag = '';
+                for (let i = firstDateOfMonth; i > 0; i--) {
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split('-');
+                        console.log(fromDate, toDate)
+                        const data = `${currMonth == 0 ? currYear-1 : currYear}-${currMonth == 0 ? 12 : currMonth < 10 ? `0${currMonth}`: currMonth}-${lastDateOfLastMonth-i+1 < 10 ? `0${lastDateOfLastMonth-i+1}`: lastDateOfLastMonth-i+1}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${lastDateOfLastMonth-i+1}</li>`;
+                }
+
+                for (let i = 1; i <= lastDateOfMonth; i++) {
+                    let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+                    && currYear === new Date().getFullYear() ? 'active' : '';
+
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split('-');
+                        const data = `${currYear}-${currMonth+1 < 10 ? `0${currMonth+1}`: currMonth+1}-${i < 10 ? `0${i}`: i}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+
+                    liTag += `<li class="${isToday} ${isBooked ? 'booked' : ''}">${i}</li>`;
+                }
+                const totalRows = Math.ceil((firstDateOfMonth + lastDateOfMonth)/7);
+                const missingDaysOfNextMonth = totalRows*7 - (firstDateOfMonth + lastDateOfMonth);
+                for (let i = 1; i <= missingDaysOfNextMonth; i++) {
+                    let isBooked = false
+                    bookings.forEach(date => {
+                        const [fromDate, toDate] = date.split('-');
+                        const day = String(i).padStart(2, '0');
+                        const month = currMonth == 11 ? 1 : String(currMonth+2).padStart(2, '0');
+                        const data = `${currMonth == 11 ? currYear+1 : currYear}-${month}-${day}`;
+                        if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                    });
+
+                    liTag += `<li class="inactive ${isBooked ? 'booked' : ''}">${i}</li>`;
+                }
+                currentDate.innerText = `${months[currMonth]} ${currYear}`;
+                daysTag.innerHTML = liTag;
+            }
+            renderCalendar();
+            
+            for(const icon of prevNextIcons){
+                icon.addEventListener('click', () =>{
+                    currMonth = icon.id == 'prev' ? currMonth-1 : currMonth +1;
+                    if(currMonth < 0 || currMonth > 11){
+                        date = new Date(currYear, currMonth);
+                        currYear = date.getFullYear();
+                        currMonth = date.getMonth();
+                    }else{
+                        date = new Date();
+                    }
+                    renderCalendar();
+                });
+            }
+        </script>
+    </main>
+
+    <%  const expAlert = new Date();
+        expAlert.setDate(expAlert.getDate() + 10);
+        expAlert.setUTCHours(0, 0, 0, 0);
+        const propTaxExpired = new Date(mezzo.expPropTax) <= expAlert,
+            insuranceExpired = new Date(mezzo.expInsurance) <= expAlert,
+            revExpired = new Date(mezzo.expRev) <= expAlert;
+    %>
+    <% if (propTaxExpired || insuranceExpired || revExpired) { %>
+        <style>
+            #alertModal{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                display: flex;
+                flex-direction: column;
+                background: #cccbcb;
+                color: #7B0828;
+                padding: 25px;
+                border-radius: 15px;
+                transition: opacity .5s ease-in-out;
+            }
+            .closeModal{
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 1.7rem;
+                cursor: pointer;
+            }
+            #alertModal h1{
+                margin-top: 15px;
+            }
+            #alertModal h1 ul{
+                display: flex;
+                flex-direction: column;
+                gap: 35px;
+            }
+            #alertModal h1 ul li{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .alarmIcon{
+                display: inline-block;
+                animation: shake .5s ease-in-out;
+                animation-iteration-count: infinite;
+            }
+            .alertIcon{
+                display: inline-block;
+                animation: scaleIcon .5s ease-in-out;
+                animation-iteration-count: infinite;
+            }
+            @keyframes scaleIcon {
+                0%, 100% { transform: scale(1);}
+                25%, 75% { transform: scale(1.1);}
+                50% { transform: scale(.9);}
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0);}
+                25%, 75% { transform: translateX(-3px) rotateZ(-15deg);}
+                50% { transform: translateX(3px) rotateZ(15deg);}
+            }
+        </style>
+        <article id="alertModal">
+            <span class="material-symbols-outlined closeModal">
+                close
+            </span>
+            <div class="head">
+                <h1>
+                    <ul>
+                        <% if (propTaxExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Bollo in scadenza
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span> 
+                                    <span class="countDown" data-expiration="<%= mezzo.expPropTax %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                        <% if (insuranceExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Assicurazione <%= mezzo.insuranceCompany %> in scadenza
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span>
+                                    <span class="countDown" data-expiration="<%= mezzo.expInsurance %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                        <% if (revExpired) { %>
+                            <li>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alertIcon">
+                                        warning
+                                    </span>
+                                    Revisione in scadenza 
+                                </div>
+                                <div class="alertModalField">
+                                    <span class="material-symbols-outlined alarmIcon">
+                                        alarm
+                                    </span>
+                                    <span class="countDown" data-expiration="<%= mezzo.expRev %>"></span>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </h1>
+            </div>
+        </article>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const countDown = document.querySelectorAll('.countDown');
+
+            function updateCountDown(element) {
+                const expirationDate = new Date(element.dataset.expiration).getTime();
+                const now = new Date().getTime();
+                const distance = expirationDate - now;
+
+                if(distance <= 0){
+                    element.innerText = 'SCADUTA!!!';
+                    return;
+                }
+                const giorni = Math.floor(distance / (1000 * 60 *60 *24)),
+                      ore = Math.floor((distance % (1000 * 60 *60 *24)) / (1000 * 60 * 60)),
+                      minuti = Math.floor((distance % (1000 * 60 *60)) / (1000 * 60)),
+                      secondi = Math.floor((distance % (1000 * 60)) / 1000);
+                console.log(giorni, ore, minuti, secondi)
+                element.innerText = `${giorni} d ${ore} h ${minuti} min ${secondi} s`;
+            }
+
+            function updateAllCountDown(){
+                countDown.forEach(updateCountDown);
+            }
+            setInterval(updateAllCountDown, 1000);
+            updateAllCountDown();
+            const closeModal = document.querySelector('.closeModal');
+            const alertModal = document.getElementById('alertModal');
+
+            closeModal.addEventListener('click', () => {
+                alertModal.style.opacity = 0;
+                setTimeout(() =>{
+                    alertModal.style.display = 'none'; 
+                }, 500);
+            });
+            });
+            
+        </script>
+    <% } %>    
+</body>
+</html>

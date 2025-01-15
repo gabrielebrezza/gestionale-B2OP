@@ -1,0 +1,245 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/styles/user/components/header.css">
+<script src="/scripts/users/components/header.js"></script>
+<script src="/scripts/users/components/theme.js"></script>
+
+
+<header class="header">
+    <div class="logo">
+        <a href="/"><img src="/img/logo.png" alt="carmunfrà"></a>
+    </div>
+    <div class="openMenu">
+        <span id="toggleMenuBtn" class="material-symbols-rounded">
+            menu
+        </span>
+    </div>
+</header>
+<nav id="navBar">
+    <ul>
+        <li>
+            <a href="/">
+                <span class="material-symbols-rounded">
+                    home
+                </span>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="/mezzi">
+                <span class="material-symbols-rounded">
+                    local_shipping
+                </span>
+                Mezzi
+            </a>
+        </li>
+        <li>
+            <a href="/about-us">
+                <span class="material-symbols-rounded">
+                    corporate_fare
+                </span>
+                Noi
+            </a>
+        </li>
+        <% if (customerId) { %>
+            <li>
+                <a href="/profile">
+                    <span class="material-symbols-rounded">
+                        person
+                    </span>
+                    Profilo
+                </a>
+            </li>
+            <div class="headerBottomLink">
+                <li class="themeMode">
+                    <span class="material-symbols-rounded" onclick="toggleChangeTheme()"></span>
+                </li>
+                <li id="logOutList">
+                    <form action="/user/logout" method="POST">
+                        <button class="logoutBtn" type="submit">
+                            <span class="material-symbols-rounded">
+                                logout
+                            </span>
+                            <span>LOGOUT</span>
+                        </button>
+                    </form>
+                </li>
+            </div>
+        <% }else{ %>
+            <div class="headerBottomLink">
+                <li class="themeMode">
+                    <span class="material-symbols-rounded" onclick="toggleChangeTheme()"></span>
+                </li>
+                <li id="loginHeaderLink">
+                    <a class="loginLink">
+                        <span class="material-symbols-rounded">
+                            login
+                        </span>
+                        Accedi
+                    </a>
+                </li>
+                <li id="signupHeaderLink">
+                    <a class="signup">
+                        <span class="material-symbols-rounded">
+                            login
+                        </span>
+                        Registrati
+                    </a>
+                </li>
+            </div>
+        <% } %>
+    </ul>
+</nav>
+
+<script>
+
+    const links = document.querySelectorAll('#navBar ul li a');
+    const pagePath = window.location.pathname;
+    for (const link of links) {
+        if(pagePath == link.pathname){
+            link.removeAttribute('href');
+            link.parentElement.classList.add('active')
+        }
+    }
+</script>
+
+<style>
+    #loaderContainer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        background: var(--pageBg);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transition: opacity .25s ease;
+    }
+    #loaderContainer img{
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
+        animation: loader 1s infinite;
+    }
+    @keyframes loader {
+        0%{
+            transform: rotateX(45deg) rotateY(0deg) rotateZ(90deg);
+        }
+        25%{
+            transform: rotateX(0deg) rotateY(45deg);
+        }
+        50%{
+            transform: rotateX(45deg) rotateY(0deg);
+        }
+        75%{
+            transform: rotateX(0deg) rotateY(-45deg) rotateZ(-90deg);
+        }
+        100%{
+            transform: rotateX(-45deg) rotateY(0deg) rotateZ(90deg);
+        }
+    }
+</style>
+
+<div id="loaderContainer">
+    <img id="loader" src="/img/logo.png" alt="loader">
+</div>
+
+<script>
+    const loaderContainer = document.getElementById('loaderContainer');
+    const loader = document.getElementById('loader');
+    window.addEventListener('load', () =>{
+        setTimeout(() => {
+            loaderContainer.style.opacity = 0;
+            loaderContainer.style.pointerEvents = 'none';
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                loaderContainer.remove();
+                // window.scrollTo(0, 0);
+            }, 250);
+        }, 0);
+    });
+</script>
+
+
+<% if (!customerId) { %>
+    <style>
+        .signupAlert{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            max-width: 350px;
+            width: 100%;
+            padding: 25px;
+            filter: drop-shadow(5px 5px 8px #00000068);
+            background: var(--elementsBg);
+            border-radius: 15px;
+            z-index: 5;
+            max-height: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: max-height .3s, opacity .5s;
+        }
+        .signupAlert.active{
+            max-height: 100%;
+            pointer-events: all;
+            opacity: 1;
+        }
+        .signupAlert .closeSignupAlert{
+            font-weight: 700;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .signupAlert h3{
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .signupAlert p{
+            margin-top: 25px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .signupAlertBtn{
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.3rem;
+            color: var(--accentColor);
+            cursor: pointer;
+        }
+    </style>
+    <div class="signupAlert">
+        <h3>sconti!</h3>
+        <span class="material-symbols-outlined closeSignupAlert" style="cursor: pointer;">
+            close
+        </span>
+        <p>Iscriviti ora per avere uno sconto del 30% sul tuo primo acquisto!</p>
+        <div class="signupAlertBtn">
+            <a class="signup">Iscriviti</a>
+        </div>
+    </div>
+    
+    <script>
+        const closeSignupAlert = document.querySelector('.closeSignupAlert');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const signupAlert = document.querySelector('.signupAlert');
+                if(signupAlert){
+                    signupAlert.classList.add('active');
+                    closeSignupAlert.addEventListener('click', () => {
+                        signupAlert.classList.remove('active');
+                        localStorage.setItem('showsignupalert', false);
+                    });
+                }
+            }, 5000);
+            if(localStorage.getItem('showsignupalert') === 'false'){
+                document.querySelector('.signupAlert').remove();
+            }
+        });
+    </script>
+    <%- include('loginSignupForm.ejs') %>
+<% } %>
+

@@ -1,0 +1,1757 @@
+ovincia": {
+            "codice": "062",
+            "nome": "Benevento"
+        },
+        "sigla": "BN",
+        "codiceCatastale": "B267",
+        "cap": [
+            "82020"
+        ],
+        "popolazione": 1824
+    },
+    {
+        "nome": "Buonconvento",
+        "codice": "052003",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "09",
+            "nome": "Toscana"
+        },
+        "provincia": {
+            "codice": "052",
+            "nome": "Siena"
+        },
+        "sigla": "SI",
+        "codiceCatastale": "B269",
+        "cap": [
+            "53022"
+        ],
+        "popolazione": 3182
+    },
+    {
+        "nome": "Buonvicino",
+        "codice": "078020",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "18",
+            "nome": "Calabria"
+        },
+        "provincia": {
+            "codice": "078",
+            "nome": "Cosenza"
+        },
+        "sigla": "CS",
+        "codiceCatastale": "B270",
+        "cap": [
+            "87020"
+        ],
+        "popolazione": 2354
+    },
+    {
+        "nome": "Burago di Molgora",
+        "codice": "108013",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "108",
+            "nome": "Monza e della Brianza"
+        },
+        "sigla": "MB",
+        "codiceCatastale": "B272",
+        "cap": [
+            "20875"
+        ],
+        "popolazione": 4240
+    },
+    {
+        "nome": "Burcei",
+        "codice": "111007",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "111",
+            "nome": "Sud Sardegna"
+        },
+        "sigla": "SU",
+        "codiceCatastale": "B274",
+        "cap": [
+            "09040"
+        ],
+        "popolazione": 2896
+    },
+    {
+        "nome": "Burgio",
+        "codice": "084005",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "084",
+            "nome": "Agrigento"
+        },
+        "sigla": "AG",
+        "codiceCatastale": "B275",
+        "cap": [
+            "92010"
+        ],
+        "popolazione": 2780
+    },
+    {
+        "nome": "Burgos",
+        "codice": "090020",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "090",
+            "nome": "Sassari"
+        },
+        "sigla": "SS",
+        "codiceCatastale": "B276",
+        "cap": [
+            "07010"
+        ],
+        "popolazione": 944
+    },
+    {
+        "nome": "Buriasco",
+        "codice": "001041",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B278",
+        "cap": [
+            "10060"
+        ],
+        "popolazione": 1405
+    },
+    {
+        "nome": "Burolo",
+        "codice": "001042",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B279",
+        "cap": [
+            "10010"
+        ],
+        "popolazione": 1228
+    },
+    {
+        "nome": "Buronzo",
+        "codice": "002021",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "002",
+            "nome": "Vercelli"
+        },
+        "sigla": "VC",
+        "codiceCatastale": "B280",
+        "cap": [
+            "13040"
+        ],
+        "popolazione": 916
+    },
+    {
+        "nome": "Busachi",
+        "codice": "095017",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "095",
+            "nome": "Oristano"
+        },
+        "sigla": "OR",
+        "codiceCatastale": "B281",
+        "cap": [
+            "09082"
+        ],
+        "popolazione": 1379
+    },
+    {
+        "nome": "Busalla",
+        "codice": "010006",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "07",
+            "nome": "Liguria"
+        },
+        "provincia": {
+            "codice": "010",
+            "nome": "Genova"
+        },
+        "sigla": "GE",
+        "codiceCatastale": "B282",
+        "cap": [
+            "16012"
+        ],
+        "popolazione": 5741
+    },
+    {
+        "nome": "Busano",
+        "codice": "001043",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B284",
+        "cap": [
+            "10080"
+        ],
+        "popolazione": 1588
+    },
+    {
+        "nome": "Busca",
+        "codice": "004034",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "004",
+            "nome": "Cuneo"
+        },
+        "sigla": "CN",
+        "codiceCatastale": "B285",
+        "cap": [
+            "12022"
+        ],
+        "popolazione": 10113
+    },
+    {
+        "nome": "Buscate",
+        "codice": "015038",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "015",
+            "nome": "Milano"
+        },
+        "sigla": "MI",
+        "codiceCatastale": "B286",
+        "cap": [
+            "20010"
+        ],
+        "popolazione": 4751
+    },
+    {
+        "nome": "Buscemi",
+        "codice": "089004",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "089",
+            "nome": "Siracusa"
+        },
+        "sigla": "SR",
+        "codiceCatastale": "B287",
+        "cap": [
+            "96010"
+        ],
+        "popolazione": 1128
+    },
+    {
+        "nome": "Buseto Palizzolo",
+        "codice": "081002",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "081",
+            "nome": "Trapani"
+        },
+        "sigla": "TP",
+        "codiceCatastale": "B288",
+        "cap": [
+            "91012"
+        ],
+        "popolazione": 3031
+    },
+    {
+        "nome": "Busnago",
+        "codice": "108051",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "108",
+            "nome": "Monza e della Brianza"
+        },
+        "sigla": "MB",
+        "codiceCatastale": "B289",
+        "cap": [
+            "20874"
+        ],
+        "popolazione": 6413
+    },
+    {
+        "nome": "Bussero",
+        "codice": "015040",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "015",
+            "nome": "Milano"
+        },
+        "sigla": "MI",
+        "codiceCatastale": "B292",
+        "cap": [
+            "20060"
+        ],
+        "popolazione": 8532
+    },
+    {
+        "nome": "Busseto",
+        "codice": "034007",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "08",
+            "nome": "Emilia-Romagna"
+        },
+        "provincia": {
+            "codice": "034",
+            "nome": "Parma"
+        },
+        "sigla": "PR",
+        "codiceCatastale": "B293",
+        "cap": [
+            "43011"
+        ],
+        "popolazione": 7043
+    },
+    {
+        "nome": "Bussi sul Tirino",
+        "codice": "068005",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "13",
+            "nome": "Abruzzo"
+        },
+        "provincia": {
+            "codice": "068",
+            "nome": "Pescara"
+        },
+        "sigla": "PE",
+        "codiceCatastale": "B294",
+        "cap": [
+            "65022"
+        ],
+        "popolazione": 2636
+    },
+    {
+        "nome": "Busso",
+        "codice": "070005",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "14",
+            "nome": "Molise"
+        },
+        "provincia": {
+            "codice": "070",
+            "nome": "Campobasso"
+        },
+        "sigla": "CB",
+        "codiceCatastale": "B295",
+        "cap": [
+            "86010"
+        ],
+        "popolazione": 1367
+    },
+    {
+        "nome": "Bussolengo",
+        "codice": "023015",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "05",
+            "nome": "Veneto"
+        },
+        "provincia": {
+            "codice": "023",
+            "nome": "Verona"
+        },
+        "sigla": "VR",
+        "codiceCatastale": "B296",
+        "cap": [
+            "37012"
+        ],
+        "popolazione": 19483
+    },
+    {
+        "nome": "Bussoleno",
+        "codice": "001044",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B297",
+        "cap": [
+            "10053"
+        ],
+        "popolazione": 6363
+    },
+    {
+        "nome": "Busto Arsizio",
+        "codice": "012026",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "012",
+            "nome": "Varese"
+        },
+        "sigla": "VA",
+        "codiceCatastale": "B300",
+        "cap": [
+            "21052"
+        ],
+        "popolazione": 79692
+    },
+    {
+        "nome": "Busto Garolfo",
+        "codice": "015041",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "015",
+            "nome": "Milano"
+        },
+        "sigla": "MI",
+        "codiceCatastale": "B301",
+        "cap": [
+            "20020"
+        ],
+        "popolazione": 13479
+    },
+    {
+        "nome": "Butera",
+        "codice": "085003",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "085",
+            "nome": "Caltanissetta"
+        },
+        "sigla": "CL",
+        "codiceCatastale": "B302",
+        "cap": [
+            "93011"
+        ],
+        "popolazione": 4937
+    },
+    {
+        "nome": "Buti",
+        "codice": "050002",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "09",
+            "nome": "Toscana"
+        },
+        "provincia": {
+            "codice": "050",
+            "nome": "Pisa"
+        },
+        "sigla": "PI",
+        "codiceCatastale": "B303",
+        "cap": [
+            "56032"
+        ],
+        "popolazione": 5773
+    },
+    {
+        "nome": "Buttapietra",
+        "codice": "023016",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "05",
+            "nome": "Veneto"
+        },
+        "provincia": {
+            "codice": "023",
+            "nome": "Verona"
+        },
+        "sigla": "VR",
+        "codiceCatastale": "B304",
+        "cap": [
+            "37060"
+        ],
+        "popolazione": 6867
+    },
+    {
+        "nome": "Buttigliera Alta",
+        "codice": "001045",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B305",
+        "cap": [
+            "10090"
+        ],
+        "popolazione": 6386
+    },
+    {
+        "nome": "Buttigliera d'Asti",
+        "codice": "005012",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "005",
+            "nome": "Asti"
+        },
+        "sigla": "AT",
+        "codiceCatastale": "B306",
+        "cap": [
+            "14021"
+        ],
+        "popolazione": 2552
+    },
+    {
+        "nome": "Buttrio",
+        "codice": "030014",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "06",
+            "nome": "Friuli-Venezia Giulia"
+        },
+        "provincia": {
+            "codice": "030",
+            "nome": "Udine"
+        },
+        "sigla": "UD",
+        "codiceCatastale": "B309",
+        "cap": [
+            "33042"
+        ],
+        "popolazione": 4039
+    },
+    {
+        "nome": "Cabella Ligure",
+        "codice": "006025",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "006",
+            "nome": "Alessandria"
+        },
+        "sigla": "AL",
+        "codiceCatastale": "B311",
+        "cap": [
+            "15060"
+        ],
+        "popolazione": 554
+    },
+    {
+        "nome": "Cabiate",
+        "codice": "013035",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "013",
+            "nome": "Como"
+        },
+        "sigla": "CO",
+        "codiceCatastale": "B313",
+        "cap": [
+            "22060"
+        ],
+        "popolazione": 7412
+    },
+    {
+        "nome": "Cabras",
+        "codice": "095018",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "095",
+            "nome": "Oristano"
+        },
+        "sigla": "OR",
+        "codiceCatastale": "B314",
+        "cap": [
+            "09072"
+        ],
+        "popolazione": 9032
+    },
+    {
+        "nome": "Caccamo",
+        "codice": "082014",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "082",
+            "nome": "Palermo"
+        },
+        "sigla": "PA",
+        "codiceCatastale": "B315",
+        "cap": [
+            "90012"
+        ],
+        "popolazione": 8295
+    },
+    {
+        "nome": "Caccuri",
+        "codice": "101002",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "18",
+            "nome": "Calabria"
+        },
+        "provincia": {
+            "codice": "101",
+            "nome": "Crotone"
+        },
+        "sigla": "KR",
+        "codiceCatastale": "B319",
+        "cap": [
+            "88833"
+        ],
+        "popolazione": 1695
+    },
+    {
+        "nome": "Cadegliano-Viconago",
+        "codice": "012027",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "012",
+            "nome": "Varese"
+        },
+        "sigla": "VA",
+        "codiceCatastale": "B326",
+        "cap": [
+            "21031"
+        ],
+        "popolazione": 1867
+    },
+    {
+        "nome": "Cadelbosco di Sopra",
+        "codice": "035008",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "08",
+            "nome": "Emilia-Romagna"
+        },
+        "provincia": {
+            "codice": "035",
+            "nome": "Reggio nell'Emilia"
+        },
+        "sigla": "RE",
+        "codiceCatastale": "B328",
+        "cap": [
+            "42023"
+        ],
+        "popolazione": 10409
+    },
+    {
+        "nome": "Cadeo",
+        "codice": "033007",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "08",
+            "nome": "Emilia-Romagna"
+        },
+        "provincia": {
+            "codice": "033",
+            "nome": "Piacenza"
+        },
+        "sigla": "PC",
+        "codiceCatastale": "B332",
+        "cap": [
+            "29010"
+        ],
+        "popolazione": 6052
+    },
+    {
+        "nome": "Caderzone Terme",
+        "codice": "022029",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "04",
+            "nome": "Trentino-Alto Adige/Südtirol"
+        },
+        "provincia": {
+            "codice": "022",
+            "nome": "Trento"
+        },
+        "sigla": "TN",
+        "codiceCatastale": "B335",
+        "cap": [
+            "38080"
+        ],
+        "popolazione": 669
+    },
+    {
+        "nome": "Cadoneghe",
+        "codice": "028016",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "05",
+            "nome": "Veneto"
+        },
+        "provincia": {
+            "codice": "028",
+            "nome": "Padova"
+        },
+        "sigla": "PD",
+        "codiceCatastale": "B345",
+        "cap": [
+            "35010"
+        ],
+        "popolazione": 15964
+    },
+    {
+        "nome": "Cadorago",
+        "codice": "013036",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "013",
+            "nome": "Como"
+        },
+        "sigla": "CO",
+        "codiceCatastale": "B346",
+        "cap": [
+            "22071"
+        ],
+        "popolazione": 7631
+    },
+    {
+        "nome": "Cadrezzate con Osmate",
+        "codice": "012143",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "012",
+            "nome": "Varese"
+        },
+        "sigla": "VA",
+        "codiceCatastale": "M425",
+        "cap": [
+            "21062"
+        ],
+        "popolazione": 2590
+    },
+    {
+        "nome": "Caerano di San Marco",
+        "codice": "026006",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "05",
+            "nome": "Veneto"
+        },
+        "provincia": {
+            "codice": "026",
+            "nome": "Treviso"
+        },
+        "sigla": "TV",
+        "codiceCatastale": "B349",
+        "cap": [
+            "31031"
+        ],
+        "popolazione": 7941
+    },
+    {
+        "nome": "Cafasse",
+        "codice": "001046",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "001",
+            "nome": "Torino"
+        },
+        "sigla": "TO",
+        "codiceCatastale": "B350",
+        "cap": [
+            "10070"
+        ],
+        "popolazione": 3511
+    },
+    {
+        "nome": "Caggiano",
+        "codice": "065019",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "065",
+            "nome": "Salerno"
+        },
+        "sigla": "SA",
+        "codiceCatastale": "B351",
+        "cap": [
+            "84030"
+        ],
+        "popolazione": 2803
+    },
+    {
+        "nome": "Cagli",
+        "codice": "041007",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "11",
+            "nome": "Marche"
+        },
+        "provincia": {
+            "codice": "041",
+            "nome": "Pesaro e Urbino"
+        },
+        "sigla": "PU",
+        "codiceCatastale": "B352",
+        "cap": [
+            "61043"
+        ],
+        "popolazione": 9013
+    },
+    {
+        "nome": "Cagliari",
+        "codice": "092009",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "092",
+            "nome": "Cagliari"
+        },
+        "sigla": "CA",
+        "codiceCatastale": "B354",
+        "cap": [
+            "09121",
+            "09122",
+            "09123",
+            "09124",
+            "09125",
+            "09126",
+            "09127",
+            "09128",
+            "09129",
+            "09130",
+            "09131",
+            "09132",
+            "09133",
+            "09134"
+        ],
+        "popolazione": 149883
+    },
+    {
+        "nome": "Caglio",
+        "codice": "013037",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "013",
+            "nome": "Como"
+        },
+        "sigla": "CO",
+        "codiceCatastale": "B355",
+        "cap": [
+            "22030"
+        ],
+        "popolazione": 430
+    },
+    {
+        "nome": "Cagnano Amiterno",
+        "codice": "066013",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "13",
+            "nome": "Abruzzo"
+        },
+        "provincia": {
+            "codice": "066",
+            "nome": "L'Aquila"
+        },
+        "sigla": "AQ",
+        "codiceCatastale": "B358",
+        "cap": [
+            "67012"
+        ],
+        "popolazione": 1383
+    },
+    {
+        "nome": "Cagnano Varano",
+        "codice": "071008",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "16",
+            "nome": "Puglia"
+        },
+        "provincia": {
+            "codice": "071",
+            "nome": "Foggia"
+        },
+        "sigla": "FG",
+        "codiceCatastale": "B357",
+        "cap": [
+            "71010"
+        ],
+        "popolazione": 7451
+    },
+    {
+        "nome": "Caianello",
+        "codice": "061008",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "061",
+            "nome": "Caserta"
+        },
+        "sigla": "CE",
+        "codiceCatastale": "B361",
+        "cap": [
+            "81059"
+        ],
+        "popolazione": 1782
+    },
+    {
+        "nome": "Caiazzo",
+        "codice": "061009",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "061",
+            "nome": "Caserta"
+        },
+        "sigla": "CE",
+        "codiceCatastale": "B362",
+        "cap": [
+            "81013"
+        ],
+        "popolazione": 5657
+    },
+    {
+        "nome": "Caines",
+        "codice": "021014",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "04",
+            "nome": "Trentino-Alto Adige/Südtirol"
+        },
+        "provincia": {
+            "codice": "021",
+            "nome": "Bolzano/Bozen"
+        },
+        "sigla": "BZ",
+        "codiceCatastale": "B364",
+        "cap": [
+            "39010"
+        ],
+        "popolazione": 413
+    },
+    {
+        "nome": "Caino",
+        "codice": "017031",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "017",
+            "nome": "Brescia"
+        },
+        "sigla": "BS",
+        "codiceCatastale": "B365",
+        "cap": [
+            "25070"
+        ],
+        "popolazione": 2079
+    },
+    {
+        "nome": "Caiolo",
+        "codice": "014011",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "014",
+            "nome": "Sondrio"
+        },
+        "sigla": "SO",
+        "codiceCatastale": "B366",
+        "cap": [
+            "23010"
+        ],
+        "popolazione": 1035
+    },
+    {
+        "nome": "Cairano",
+        "codice": "064013",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "064",
+            "nome": "Avellino"
+        },
+        "sigla": "AV",
+        "codiceCatastale": "B367",
+        "cap": [
+            "83040"
+        ],
+        "popolazione": 348
+    },
+    {
+        "nome": "Cairate",
+        "codice": "012029",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "012",
+            "nome": "Varese"
+        },
+        "sigla": "VA",
+        "codiceCatastale": "B368",
+        "cap": [
+            "21050"
+        ],
+        "popolazione": 7830
+    },
+    {
+        "nome": "Cairo Montenotte",
+        "codice": "009015",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "07",
+            "nome": "Liguria"
+        },
+        "provincia": {
+            "codice": "009",
+            "nome": "Savona"
+        },
+        "sigla": "SV",
+        "codiceCatastale": "B369",
+        "cap": [
+            "17014"
+        ],
+        "popolazione": 13237
+    },
+    {
+        "nome": "Caivano",
+        "codice": "063011",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "063",
+            "nome": "Napoli"
+        },
+        "sigla": "NA",
+        "codiceCatastale": "B371",
+        "cap": [
+            "80023"
+        ],
+        "popolazione": 37654
+    },
+    {
+        "nome": "Calabritto",
+        "codice": "064014",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "15",
+            "nome": "Campania"
+        },
+        "provincia": {
+            "codice": "064",
+            "nome": "Avellino"
+        },
+        "sigla": "AV",
+        "codiceCatastale": "B374",
+        "cap": [
+            "83040"
+        ],
+        "popolazione": 2500
+    },
+    {
+        "nome": "Calalzo di Cadore",
+        "codice": "025008",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "05",
+            "nome": "Veneto"
+        },
+        "provincia": {
+            "codice": "025",
+            "nome": "Belluno"
+        },
+        "sigla": "BL",
+        "codiceCatastale": "B375",
+        "cap": [
+            "32042"
+        ],
+        "popolazione": 2173
+    },
+    {
+        "nome": "Calamandrana",
+        "codice": "005013",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "005",
+            "nome": "Asti"
+        },
+        "sigla": "AT",
+        "codiceCatastale": "B376",
+        "cap": [
+            "14042"
+        ],
+        "popolazione": 1784
+    },
+    {
+        "nome": "Calamonaci",
+        "codice": "084006",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "084",
+            "nome": "Agrigento"
+        },
+        "sigla": "AG",
+        "codiceCatastale": "B377",
+        "cap": [
+            "92010"
+        ],
+        "popolazione": 1375
+    },
+    {
+        "nome": "Calangianus",
+        "codice": "090021",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "090",
+            "nome": "Sassari"
+        },
+        "sigla": "SS",
+        "codiceCatastale": "B378",
+        "cap": [
+            "07023"
+        ],
+        "popolazione": 4267
+    },
+    {
+        "nome": "Calanna",
+        "codice": "080016",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "18",
+            "nome": "Calabria"
+        },
+        "provincia": {
+            "codice": "080",
+            "nome": "Reggio Calabria"
+        },
+        "sigla": "RC",
+        "codiceCatastale": "B379",
+        "cap": [
+            "89050"
+        ],
+        "popolazione": 979
+    },
+    {
+        "nome": "Calasca-Castiglione",
+        "codice": "103014",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "01",
+            "nome": "Piemonte"
+        },
+        "provincia": {
+            "codice": "103",
+            "nome": "Verbano-Cusio-Ossola"
+        },
+        "sigla": "VB",
+        "codiceCatastale": "B380",
+        "cap": [
+            "28873"
+        ],
+        "popolazione": 681
+    },
+    {
+        "nome": "Calascibetta",
+        "codice": "086005",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "086",
+            "nome": "Enna"
+        },
+        "sigla": "EN",
+        "codiceCatastale": "B381",
+        "cap": [
+            "94010"
+        ],
+        "popolazione": 4628
+    },
+    {
+        "nome": "Calascio",
+        "codice": "066014",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "13",
+            "nome": "Abruzzo"
+        },
+        "provincia": {
+            "codice": "066",
+            "nome": "L'Aquila"
+        },
+        "sigla": "AQ",
+        "codiceCatastale": "B382",
+        "cap": [
+            "67020"
+        ],
+        "popolazione": 137
+    },
+    {
+        "nome": "Calasetta",
+        "codice": "111008",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "20",
+            "nome": "Sardegna"
+        },
+        "provincia": {
+            "codice": "111",
+            "nome": "Sud Sardegna"
+        },
+        "sigla": "SU",
+        "codiceCatastale": "B383",
+        "cap": [
+            "09011"
+        ],
+        "popolazione": 2822
+    },
+    {
+        "nome": "Calatabiano",
+        "codice": "087010",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "087",
+            "nome": "Catania"
+        },
+        "sigla": "CT",
+        "codiceCatastale": "B384",
+        "cap": [
+            "95011"
+        ],
+        "popolazione": 5383
+    },
+    {
+        "nome": "Calatafimi-Segesta",
+        "codice": "081003",
+        "zona": {
+            "codice": "5",
+            "nome": "Isole"
+        },
+        "regione": {
+            "codice": "19",
+            "nome": "Sicilia"
+        },
+        "provincia": {
+            "codice": "081",
+            "nome": "Trapani"
+        },
+        "sigla": "TP",
+        "codiceCatastale": "B385",
+        "cap": [
+            "91013"
+        ],
+        "popolazione": 6938
+    },
+    {
+        "nome": "Calcata",
+        "codice": "056010",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "12",
+            "nome": "Lazio"
+        },
+        "provincia": {
+            "codice": "056",
+            "nome": "Viterbo"
+        },
+        "sigla": "VT",
+        "codiceCatastale": "B388",
+        "cap": [
+            "01030"
+        ],
+        "popolazione": 905
+    },
+    {
+        "nome": "Calceranica al Lago",
+        "codice": "022032",
+        "zona": {
+            "codice": "2",
+            "nome": "Nord-est"
+        },
+        "regione": {
+            "codice": "04",
+            "nome": "Trentino-Alto Adige/Südtirol"
+        },
+        "provincia": {
+            "codice": "022",
+            "nome": "Trento"
+        },
+        "sigla": "TN",
+        "codiceCatastale": "B389",
+        "cap": [
+            "38050"
+        ],
+        "popolazione": 1305
+    },
+    {
+        "nome": "Calci",
+        "codice": "050003",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "09",
+            "nome": "Toscana"
+        },
+        "provincia": {
+            "codice": "050",
+            "nome": "Pisa"
+        },
+        "sigla": "PI",
+        "codiceCatastale": "B390",
+        "cap": [
+            "56011"
+        ],
+        "popolazione": 6409
+    },
+    {
+        "nome": "Calciano",
+        "codice": "077004",
+        "zona": {
+            "codice": "4",
+            "nome": "Sud"
+        },
+        "regione": {
+            "codice": "17",
+            "nome": "Basilicata"
+        },
+        "provincia": {
+            "codice": "077",
+            "nome": "Matera"
+        },
+        "sigla": "MT",
+        "codiceCatastale": "B391",
+        "cap": [
+            "75010"
+        ],
+        "popolazione": 796
+    },
+    {
+        "nome": "Calcinaia",
+        "codice": "050004",
+        "zona": {
+            "codice": "3",
+            "nome": "Centro"
+        },
+        "regione": {
+            "codice": "09",
+            "nome": "Toscana"
+        },
+        "provincia": {
+            "codice": "050",
+            "nome": "Pisa"
+        },
+        "sigla": "PI",
+        "codiceCatastale": "B392",
+        "cap": [
+            "56012"
+        ],
+        "popolazione": 11684
+    },
+    {
+        "nome": "Calcinate",
+        "codice": "016043",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "016",
+            "nome": "Bergamo"
+        },
+        "sigla": "BG",
+        "codiceCatastale": "B393",
+        "cap": [
+            "24050"
+        ],
+        "popolazione": 5782
+    },
+    {
+        "nome": "Calcinato",
+        "codice": "017032",
+        "zona": {
+            "codice": "1",
+            "nome": "Nord-ovest"
+        },
+        "regione": {
+            "codice": "03",
+            "nome": "Lombardia"
+        },
+        "provincia": {
+            "codice": "017",
+            "nome": "Brescia"
+        },
+        "sigla": "BS",
+        "codice

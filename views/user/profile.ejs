@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilo</title>
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <style>
+        .dark #loaderContainer {
+            background: #1e1e1e;
+        }
+    </style>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Rubik", sans-serif;
+            background: var(--pageBg);
+            color: var(--textColor);
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background: var(--elementsBg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-header {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        
+        .profile-subtitle{
+            width: fit-content;
+            border-radius: 3px;
+            border-bottom: 3px solid var(--accentColor);
+        }
+        
+        .profile-action{
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        
+        span.btn-edit {
+            color: var(--accentColor);
+            text-decoration: none;
+            cursor: pointer;
+            transition: .25s ease-in-out;
+            font-size: 2rem;
+            user-select: none;
+        }
+        .btn-edit:hover {
+            opacity: .7;
+        }
+        
+        .profile-fieldset ul li{
+            list-style: none;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+        }
+        .profile-fieldset ul li strong{
+            opacity: .7;
+        }
+        .profile-fieldset ul li input, .profile-fieldset ul li select{
+            background: none;
+            border: none;
+            border-bottom: 2px solid var(--accentColor);
+            text-transform: capitalize;
+            font-size: 1rem;
+            color: var(--textColor);
+            max-width: 250px;
+            width: 100%;
+            margin: 5px 0;
+            outline: none;
+        }
+        .profile-fieldset ul li p{
+            font-size: 1rem;
+            max-width: 250px;
+            width: 100%;
+            margin: 5px 0;
+            text-align: right;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+        
+        .profile-input:disabled {
+            border: none;
+            color: var(--textColor);
+            text-align: right;
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        .profile-fieldset option {
+            background: var(--pageBg);
+        }
+        input[type="date"]:disabled::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+        
+        .profile-fieldset ul li input:not(:disabled), .profile-fieldset ul li select:not(:disabled){
+            border: none;
+            border-bottom: 1px solid var(--accentColor);
+            outline: none;
+            text-align: center;
+        }
+        
+        hr{
+            border: 1px dashed var(--accentColor);
+            margin-block: 20px;
+        }
+        
+        .submit-container{
+            margin-top: 25px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #submitBtn {
+            display: none;
+            opacity: 0;
+            color: var(--defaultWhite);
+            background: var(--accentColor);
+            padding: 10px 35px;
+            border: none;
+            outline: 2px dashed var(--accentColor);
+            outline-offset: -2px;
+            cursor: pointer;
+            transition: outline-offset .05s, opacity 0.25s;
+        }
+        #submitBtn:hover, #submitBtn:focus{
+            outline-offset: 2px;
+        }
+        .imagesContainer{
+            margin: 0 auto;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-block: 50px;
+        }
+        .imageBox{
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 300px;
+            width: 100%;
+            background: var(--elementsBg);
+            text-align: center;
+        }
+        .imageBox img{
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            margin-top: 25px;
+        }
+        body.dark .default{
+            filter: invert(1);
+        }
+        .imageBox .actionsBtns{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .imageBox .actionsBtns span{
+            cursor: pointer;
+        }
+        .imageBox .actionsBtns span.deleteImgBtn{
+            color: var(--danger);
+        }
+        .imageBox .actionsBtns span.uploadImgBtn{
+            color: var(--accentColor);
+        }
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            main{
+                margin-top: calc(var(--header-height)) !important;
+            }
+            .profile-subtitle{
+                margin-block: 15px;
+            }
+            .profile-fieldset ul li input {
+                font-size: .8rem;
+                max-width: 150px;
+            }
+            .profile-fieldset ul li p{
+                font-size: .8rem;
+                max-width: 150px;
+            }
+        }
+
+    </style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+     <main>
+        <div class="container">
+            <div class="profile-header">
+                <h1>Profilo Utente</h1>
+            </div>
+            <section class="profile">
+                
+                <form action="/profile/update" method="POST">
+                    <div class="profile-fieldset">
+                        <div class="profile-action">
+                            <h3 class="profile-subtitle">Dettagli Personali</h3>
+                            <span id="edit-button" class="material-symbols-rounded btn-edit">
+                                edit_note
+                            </span>
+                        </div>
+                        
+                        <ul>
+                            <li><strong>Nome:</strong> <input type="text" name="nome" value="<%= data.nome %>" id="detail-nome" class="profile-input" disabled  required></li>
+                            <li><strong>Cognome:</strong> <input type="text" name="cognome" value="<%= data.cognome %>" id="detail-cognome" class="profile-input" disabled  required></li>
+                            <li><strong>Codice Fiscale:</strong> <input style="text-transform: uppercase;" type="text" name="cf" value="<%= data.cf %>" id="cf" class="profile-input" disabled  <%= data.cf ? 'required' : '' %>></li>
+                            <li><strong>Partita IVA:</strong> <input style="text-transform: uppercase;" type="text" name="pIva" value="<%= data.pIva %>" class="profile-input" disabled <%= data.pIva ? 'required' : '' %>></li>
+                            <li><strong>Codice Univoco:</strong> <input style="text-transform: uppercase;" type="text" name="cUnivoco" value="<%= data.cUnivoco %>" class="profile-input" disabled <%= data.cUnivoco ? 'required' : '' %>></li>
+                            <li><strong>Telefono:</strong> <input type="text" name="contatti[tel]" value="<%= data.contatti.tel %>" id="telefono" class="profile-input" disabled  required></li>
+                            <li title="Per questioni di sicurezza l'email non può essere modificata dopo aver creato l'account"><strong>Email:</strong> <p style="opacity: .5;"><%= data.contatti.email %></p></li>
+                            <input type="hidden" name="contatti[email]" value="<%= data.contatti.email %>">
+                            <li><strong>PEC:</strong> <input type="text" name="contatti[pec]" value="<%= data.contatti.pec %>" class="profile-input" disabled <%= data.contatti.pec ? 'required' : '' %>></li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="profile-fieldset">
+                        <h3 class="profile-subtitle">Residenza</h3>
+                        <ul>
+                            <li><strong>Via:</strong> <input type="text" name="residenza[via]" value="<%= data.residenza.via %>" id="via" class="profile-input" disabled required></li>
+                            <li><strong>Civico:</strong> <input type="text" name="residenza[nCivico]" value="<%= data.residenza.nCivico %>" id="ncivico" class="profile-input" disabled required></li>
+                            <li><strong>CAP:</strong> <input type="text" name="residenza[cap]" value="<%= data.residenza.cap %>" id="cap" class="profile-input" disabled required></li>
+                            <li><strong>Comune:</strong> <input type="text" name="residenza[comune]" value="<%= data.residenza.comune %>" id="comune" class="profile-input" disabled required></li>
+                            <%  let province = [
+                                    "AG", "AL", "AN", "AO", "AR", "AP", "AT", "AV", "BA", "BT", "BL", "BN", 
+                                    "BG", "BI", "BO", "BZ", "BS", "BR", "CA", "CL", "CB", "CE", "CT", "CZ", 
+                                    "CH", "CO", "CS", "CR", "KR", "CN", "EN", "FM", "FE", "FI", "FG", "FC", 
+                                    "FR", "GE", "GO", "GR", "IM", "IS", "AQ", "SP", "LT", "LE", "LC", "LI", 
+                                    "LO", "LU", "MC", "MN", "MS", "MT", "ME", "MI", "MO", "MB", "NA", "NO", 
+                                    "NU", "OR", "PD", "PA", "PR", "PV", "PG", "PU", "PE", "PC", "PI", "PT", 
+                                    "PN", "PZ", "PO", "RG", "RA", "RC", "RE", "RI", "RN", "RM", "RO", "SA", 
+                                    "SS", "SV", "SI", "SR", "SO", "SU", "TA", "TE", "TR", "TO", "TP", "TN", 
+                                    "TV", "TS", "UD", "VA", "VE", "VB", "VC", "VR", "VV", "VI", "VT"
+                                ];
+                            %>
+                            <% province = province.filter(pr => pr != data.residenza.provincia.toUpperCase()) %>
+                            
+                            <li>
+                                <strong>Provincia:</strong> 
+                                <select name="residenza[provincia]" id="provincia" class="profile-input" disabled required>
+                                    <option value="<%= data.residenza.provincia.toUpperCase() %>"><%= data.residenza.provincia.toUpperCase() %></option>
+                                    <% for(const pr of province){ %>
+                                        <option value="<%= pr %>"><%= pr %></option>
+                                    <% } %>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="profile-fieldset">
+                        <h3 class="profile-subtitle">Patente di Guida</h3>
+                        <ul>
+                            <li><strong>Numero Patente:</strong> <input type="text" name="patente[numero]" value="<%= data.patente.numero %>" id="patente-numero" class="profile-input" disabled required></li>
+                            <li><strong>Rilasciata Da:</strong> <input type="text" name="patente[daUfficio]" value="<%= data.patente.daUfficio %>" id="patente-rilasciatoDa" class="profile-input" disabled <%= data.patente.daUfficio ? 'required' : '' %>></li>
+                            <li><strong>Rilascio:</strong> <input type="date" name="patente[rilascio]" value="<%= data.patente.rilascio %>" id="patente-rilascio" class="profile-input" disabled required></li>
+                            <li><strong>Scadenza:</strong> <input type="date" name="patente[scadenza]" value="<%= data.patente.scadenza %>" id="patente-scadenza" class="profile-input" disabled required></li>
+                        </ul>
+                    </div>
+                    <div class="submit-container">
+                        <button id="submitBtn" type="submit">Salva</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const editButton = document.getElementById('edit-button');
+            const inputs = document.querySelectorAll('.profile-input');
+            const submitBtn = document.getElementById('submitBtn');
+            const values = [];
+
+            editButton.addEventListener('click', () => {
+                const editBtnContent = editButton.textContent.trim();
+                const isEditing = editBtnContent == 'edit_note';
+                inputs.forEach((input, index) => {
+                    if(input.disabled) values.push(input.value);
+                    if(!input.disabled) input.value = values[index];
+                    if(index == 0 && isEditing) input.focus();
+                    input.disabled = !input.disabled;
+                });
+                editButton.textContent = isEditing ? 'close' : 'edit_note';
+                editButton.style.fontWeight = isEditing ? '600' : '';
+                submitBtn.style.display = isEditing ? 'block' : 'none';
+                setTimeout(() => {
+                    submitBtn.style.opacity = isEditing ? 1 : 0;
+                }, 0);
+                
+            });
+        });
+    </script>
+    <h2 style="text-align: center; margin-top: 25px;">Foto Documenti</h2>
+    <section class="imagesContainer">
+        <% const directories = ["idCardBack", "idCardFront", "licenseBack", "licenseFront", "sanitaryBack", "sanitaryFront"] %>
+        <% const titles = ["Retro Carta D'Identità", "Fronte Carta D'Identità", "Retro Patente", "Fronte Patente", "Retro Tessera Sanitaria", "Fronte Tessera Sanitaria"] %>
+        <% directories.forEach((dir, i) => { %>
+            <div class="imageBox">
+                <h3><%= titles[i] %></h3>
+                <img src="<%= `/user/images?dir=${dir}` %>" alt="<%= dir %>" onerror="this.src = `/img/default/document.png`; this.classList.add('default');">
+                <div class="actionsBtns">
+                    <form id="<%= `delete_${dir}_form` %>">
+                        <input type="hidden" name="dir" value="<%= dir %>">
+                        <span class="material-symbols-rounded deleteImgBtn">
+                            delete
+                        </span>
+                    </form>
+                    <form id="<%= `${dir}_form` %>"enctype="multipart/form-data">
+                        <label for="<%= `${dir}_image` %>">
+                            <span class="material-symbols-rounded uploadImgBtn">
+                                add_photo_alternate
+                            </span>
+                        </label>
+                        <input type="hidden" name="customerId" value="<%= customerId %>">
+                        <input type="file" class="uploadImgInput" name="<%= `${dir}` %>" id="<%= `${dir}_image` %>" style="display: none;">
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+        <script>
+            const uploadImgInputs = document.querySelectorAll('.uploadImgInput');
+            for (const input of uploadImgInputs) {
+                input.addEventListener('change', async () => {
+                    const dir = input.name;
+                    const form = document.getElementById(`${dir}_form`);
+                    let formData = new FormData(form);
+                    const fileResponse = await fetch('/user/uploadFiles', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').classList.remove('default')
+                    imageBox.querySelector('img').src = `/user/images?dir=${dir}&timeStamp=${new Date().getTime()}`;
+                });
+            }
+
+            const deleteImgBtns = document.querySelectorAll('.deleteImgBtn');
+            for (const btn of deleteImgBtns) {
+                btn.addEventListener('click', async () => {
+                    const form = btn.closest('form');
+                    const dir = btn.closest('form').id.split('_')[1];
+                    const fileResponse = await fetch('/user/images/delete', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({dir: dir})
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error deleting files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').classList.add('default')
+                    imageBox.querySelector('img').src = `/img/default/document.png`;
+                });
+            }
+        </script>
+    </section>
+    <%- include('components/footer.ejs') %>
+</body>
+</html>

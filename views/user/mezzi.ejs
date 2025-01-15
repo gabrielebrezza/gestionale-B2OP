@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <title>Parco Mezzi - CarMunfrà</title>
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <style>
+        .dark #loaderContainer {
+            background: #1e1e1e;
+        }
+    </style>
+
+    <meta name="description" content="Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale. Scopri il nostro parco mezzi!">
+<meta name="robots" content="follow, index">
+<link rel="canonical" href="https://www.carmunfra.it/mezzi">
+<meta name="keywords" content="noleggio furgoni, noleggio automobili, noleggio veicoli, trasporto merci, trasporto persone, Monferrato, Casale Monferrato">
+
+<meta property="og:title" content="Parco Mezzi - CarMunfrà">
+<meta property="og:description" content="Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale.">
+<meta property="og:url" content="https://www.carmunfra.it/mezzi">
+<% const imgIndex = Math.floor(Math.random() * veicoli.length); %>
+<% if (veicoli.length > 0) { %>
+    <meta property="og:image" content="/img/mezzi/<%= veicoli[imgIndex]._id %>/1.jpg">
+<% } %>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "AutoRental",
+    "name": "CarMunfrà",
+    "url": "https://www.carmunfra.it",
+    "logo": "https://www.carmunfra.it/wp-content/uploads/2023/02/cropped-logo.png",
+    "description": "Noleggio furgoni e automobili per il trasporto di merci e persone in Piemonte, nel Monferrato e Casale.",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Casale Monferrato",
+        "addressRegion": "Piemonte",
+        "addressCountry": "IT"
+    },
+    "openingHours": "Mo-Su 09:00-17:00",
+    "telephone": "+39 0142 540773",
+    "image": "<%= veicoli.length > 0?  `https://www.carmunfra.it/img/mezzi/${veicoli[imgIndex]._id}.jpg` : '' %>",
+    "sameAs": [
+        "https://www.instagram.com/carmunfra",
+        "https://www.facebook.com/carmunfra"
+    ]
+}
+</script>
+    <link rel="stylesheet" href="/styles/user/mezzi.css">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <script>document.addEventListener('DOMContentLoaded', () => setTimeout(() => window.scrollTo(0, 0), 1000)); </script>
+    <main>
+        <h1 style="text-transform: uppercase;">
+            Parco Mezzi CarMunfrà
+        </h1>
+        <%- include('components/mezziFilters.ejs') %>
+        <% const days = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica']; %>
+        <% let num = 0; %>
+        <% for(const mezzo of veicoli) { %>
+            <div class="overlay">
+                <article class="mezzoRow" id="row_<%= num++ %>" data-type="<%= mezzo.type %>" data-bookings="<%= JSON.stringify(mezzo.bookings) %>" data-prices="<%= JSON.stringify(mezzo.daysPrices) %>" data-kmprices="<%= mezzo.kmIncluded %> <%= mezzo.kmPrice.toFixed(2) %>">
+                    <img alt="<%= mezzo.marca %> <%= mezzo.modello %>" loading="lazy" data-image="/img/mezzi/<%= mezzo._id %>/1.jpg">
+                    <section class="mezzoRowRightSide">
+                        <h2><%= mezzo.marca %> <%= mezzo.modello %></h2>
+                        <p class="mezzoDescription"><%= mezzo.descrizione %></p>
+                        <div class="prices">
+                            <h3>
+                                <details>
+                                    <summary>
+                                        <span class="material-symbols-outlined">
+                                            info
+                                        </span>
+                                    </summary>
+                                    <div class="info-message">
+                                        <p>Il prezzo può variare in base al numero di km oltre a quelli inclusi (<%= mezzo.kmIncluded %> km) di <%= mezzo.kmPrice.toFixed(2) %>€/km</p>
+                                    </div>
+                                </details>
+                                Prezzi
+                            </h3>
+                            <ul>
+                                <% for (let [weekDays, price] of Object.entries(mezzo.daysPrices)) { %>
+                                    <li><%= days[weekDays] %>: <s><%= mezzo.discountedDays.includes(weekDays) ? `${((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 + (price === ((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 ? 5 : 0)} €` : '' %></s> <%= price %> € </li>
+                                <% } %>
+                            </ul>
+                            <p class="budgetElement"></p>
+                        </div>
+                        <div class="btnContainer">
+                            <a href="/mezzo?id=<%= mezzo._id %>" class="viewBtn">Prenota ora!</a>
+                        </div>
+                    </section>
+                </article>
+            </div>
+        <% } %>
+        <div class="scroll-alert alert-left">
+            <span class="material-symbols-rounded">
+                keyboard_arrow_down
+            </span>
+        </div>
+        <div class="scroll-alert alert-right">
+            <span class="material-symbols-rounded">
+                keyboard_arrow_down
+            </span>
+        </div>
+    </main>
+    <script>
+        let lastScrollTop = 0;
+
+        document.addEventListener('scroll', function() {
+            var fixedElements = document.querySelectorAll('.scroll-alert');
+            var container = document.querySelector('main');
+            var containerRect = container.getBoundingClientRect();
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            for (const fixedElement of fixedElements) {
+                var rect = fixedElement.getBoundingClientRect();
+            
+                if (rect.top + rect.height < containerRect.top || rect.bottom > containerRect.bottom) {
+                    fixedElement.classList.add('hidden');
+                } else {
+                    fixedElement.classList.remove('hidden');
+                }
+            
+                if (currentScrollTop > lastScrollTop || currentScrollTop == 0) {
+                    fixedElement.classList.remove('upDirection');
+                } else {
+                    fixedElement.classList.add('upDirection');
+                }
+            }
+        
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        });
+    </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('.mezzoRow img');
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.image;
+                img.classList.add('visible');
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '0px 0px 100px 0px',
+        threshold: 0.1
+    });
+
+    images.forEach(img => {
+        img.classList.add('fade-in');
+        observer.observe(img);
+    });
+});
+
+    </script>
+
+    <%- include('components/footer.ejs') %>
+</body>
+</html>

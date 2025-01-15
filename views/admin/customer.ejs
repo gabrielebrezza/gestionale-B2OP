@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Cliente</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding-bottom: 50px;
+        }
+        #updateUserForm{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 50px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--placeholders);
+            background: var(--elementsBg);
+        }
+
+        th {
+            color: var(--textColor);
+            background: var(--accentColor);
+            text-transform: uppercase;
+        }
+        th:first-child{
+            border-radius: 5px 0 0  0;
+        }
+        th:last-child{
+            border-radius:  0 5px 0  0;
+        }
+        td{
+            color: var(--textColor);
+        }
+        td input{
+            background: #0000;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid var(--accentColor);
+            padding: 5px;
+            color: var(--textColor);
+        }
+        tfoot td{
+            padding: 0;
+            background: #0000;
+            border: none;
+        }
+        #submitFormBtn{
+            width: 100%;
+            cursor: pointer;
+            padding: 10px 20px;
+            background: var(--accentColor);
+            color: var(--textColor);
+            transition: .5s;
+            outline: none;
+            border: none;
+            border-radius: 0 0 5px 5px;
+        }
+        #submitFormBtn:hover{
+            opacity: .7;
+        }
+        .imageForms{
+            width: 50%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .imageForm{
+            max-width: 250px;
+            width: 100%;
+            background: var(--elementsBg);
+            height: fit-content;
+            padding: 25px;
+            border-radius: 5px;
+            text-align: center;
+            color: var(--textColor);
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-block: 15px;
+        }
+        #signPic{
+            width: 175px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        } 
+        #profilePic{
+            object-fit: contain;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .imagesContainer{
+            margin: 0 auto;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-block: 50px;
+            color: var(--textColor);
+        }
+        .imageBox{
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 300px;
+            width: 100%;
+            background: var(--elementsBg);
+            text-align: center;
+        }
+        .imageBox img{
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            margin-top: 25px;
+        }
+        .imageBox .actionsBtns{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .imageBox .actionsBtns span{
+            cursor: pointer;
+        }
+        .imageBox .actionsBtns span.deleteImgBtn{
+            color: var(--danger);
+        }
+        .imageBox .actionsBtns span.uploadImgBtn{
+            color: var(--accentColor);
+        }
+        body.dark .default{
+            filter: invert(1);
+        }
+
+    </style>
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    
+</head>
+<body class="dark">
+    <%- include('components/header.ejs') %>
+    
+    <main>
+        <form id="updateCustomerForm" action="/admin/cliente/update" method="POST" class="form-container">
+            <table class="form-table">
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valore</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <input type="hidden" name="id" value="<%= customer._id %>">
+                        <td>Cognome</td>
+                        <td><input type="text" name="cognome" value="<%= customer.cognome %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Nome</td>
+                        <td><input type="text" name="nome" value="<%= customer.nome %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Codice Fiscale</td>
+                        <td><input type="text" name="cf" value="<%= customer.cf %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Codice Univoco</td>
+                        <td><input type="text" name="cUnivoco" value="<%= customer.cUnivoco %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Partita Iva</td>
+                        <td><input type="text" name="pIva" value="<%= customer.pIva %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Residenza:</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Via</td>
+                        <td><input type="text" name="residenza[via]" value="<%= customer.residenza.via %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Civico</td>
+                        <td><input type="text" name="residenza[nCivico]" value="<%= customer.residenza.nCivico %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Comune</td>
+                        <td><input type="text" name="residenza[comune]" value="<%= customer.residenza.comune %>"></td>
+                    </tr>
+                    <tr>
+                        <td>CAP</td>
+                        <td><input type="text" name="residenza[cap]" value="<%= customer.residenza.cap %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Provincia</td>
+                        <td><input type="text" name="residenza[provincia]" value="<%= customer.residenza.provincia %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Contatti:</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td><input type="text" name="contatti[email]" value="<%= customer.contatti.email %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Tel</td>
+                        <td><input type="text" name="contatti[tel]" value="<%= customer.contatti.tel %>"></td>
+                    </tr>
+                    <tr>
+                        <td>PEC</td>
+                        <td><input type="text" name="contatti[pec]" value="<%= customer.contatti.pec %>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Patente</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero</td>
+                        <td><input type="text" name="patente[numero]" value="<%= customer.patente.numero %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Data Rilascio</td>
+                        <td><input type="date" name="patente[rilascio]" value="<%= customer.patente.rilascio %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Rilasciata da</td>
+                        <td><input type="text" name="patente[daUfficio]" value="<%= customer.patente.daUfficio %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Scadenza</td>
+                        <td><input type="date" name="patente[scadenza]" value="<%= customer.patente.scadenza %>"></td>
+                    </tr>
+                    <tr>
+                        <td>Ultimo Accesso</td>
+                        <td><%= customer.lastVisit ? customer.lastVisit.toLocaleString() : 'N/A' %></td>
+                    </tr>
+                    <tr>
+                        <td>Note</td>
+                        <td><textarea name="note"><%= customer.note %></textarea></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <td colspan="2"><button id="submitFormBtn" type="submit">Salva</button></td>
+                </tfoot>
+            </table>
+        </form>
+        <div id="userId" data-id="<%= customer._id %>"></div>
+        <h2 style="text-align: center; margin-top: 25px; color: #f4f4f4;">Foto Documenti</h2>
+    <section class="imagesContainer">
+        <% const directories = ["idCardBack", "idCardFront", "licenseBack", "licenseFront", "sanitaryBack", "sanitaryFront"] %>
+        <% const titles = ["Retro Carta D'Identità", "Fronte Carta D'Identità", "Retro Patente", "Fronte Patente", "Retro Tessera Sanitaria", "Fronte Tessera Sanitaria"] %>
+        <% directories.forEach((dir, i) => { %>
+            <div class="imageBox">
+                <h3><%= titles[i] %></h3>
+                <img src="<%= `/admin/images?dir=${encodeURIComponent(`${dir}/${dir}_${customer._id}.jpeg`)}` %>" alt="<%= dir %>" onerror="this.src = `/img/default/document.png`; this.classList.add('default');">
+                <div class="actionsBtns">
+                    <form id="<%= `delete_${dir}_form` %>">
+                        <input type="hidden" name="dir" value="<%= dir %>">
+                        <span class="material-symbols-rounded deleteImgBtn">
+                            delete
+                        </span>
+                    </form>
+                    <form id="<%= `${dir}_form` %>"enctype="multipart/form-data">
+                        <label for="<%= `${dir}_image` %>">
+                            <span class="material-symbols-rounded uploadImgBtn">
+                                add_photo_alternate
+                            </span>
+                        </label>
+                        <input type="hidden" name="customerId" value="<%= customer._id %>">
+                        <input type="file" class="uploadImgInput" name="<%= `${dir}` %>" id="<%= `${dir}_image` %>" style="display: none;">
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+        <script>
+            const customerId = document.getElementById('userId').dataset.id;
+            const uploadImgInputs = document.querySelectorAll('.uploadImgInput');
+            for (const input of uploadImgInputs) {
+                input.addEventListener('change', async () => {
+                    const dir = input.name;
+                    const form = document.getElementById(`${dir}_form`);
+                    let formData = new FormData(form);
+                    const fileResponse = await fetch('/user/uploadFiles', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error uploading files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').src = `/admin/images?dir=${encodeURIComponent(`${dir}/${dir}_${customerId}.jpeg`)}&timeStamp=${new Date().getTime()}`;
+                });
+            }
+
+            const deleteImgBtns = document.querySelectorAll('.deleteImgBtn');
+            for (const btn of deleteImgBtns) {
+                btn.addEventListener('click', async () => {
+                    const form = btn.closest('form');
+                    const dir = btn.closest('form').id.split('_')[1];
+                    const fileResponse = await fetch('/admin/images/delete', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({dir: `${dir}/${dir}_${customerId}.jpeg`})
+                    });
+                    if (!fileResponse.ok) {
+                        throw new Error('Error deleting files');
+                    }
+                    const imageBox = form.closest('.imageBox');
+                    imageBox.querySelector('img').src = `/img/default/document.png`;
+                });
+            }
+        </script>
+    </section>
+    </main>
+</body>
+</html>

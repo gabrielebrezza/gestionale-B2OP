@@ -1,0 +1,37 @@
+body {
+    /* transition: background-color 0.5s ease, color 0.5s ease; */
+    --defaultWhite: #f4f4f4;
+    --defaultBlack: #333;
+    --defaultBlackBg: #1e1e1e;
+    --pageBg: #f4f4f4;
+    --textColor: #333;
+    --elementsBg: #e6e3e3;
+    /* --accentColor: #7e4cce; */
+    --accentColor: #486EB9;
+    --danger: #7B0828;
+    --placeHolders: #555;
+}
+
+body.light {
+    --pageBg: #f4f4f4;
+    --textColor: #333;
+    --elementsBg: #e6e3e3;
+    /* --accentColor: #7e4cce; */
+    --accentColor: #486EB9;
+    --danger: #7B0828;
+    --placeHolders: #555;
+}
+
+body.dark {
+    --pageBg: #1e1e1e;
+    --textColor: #f1f1f1;
+    --elementsBg: #2a2a2a;
+    /* --accentColor: #af82f8; */
+    --accentColor: #486EB9;
+    --danger: #af3a5b;
+    --placeHolders: #c2c2c2;
+}
+
+body.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+    <title>Admin - Mezzi</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: #f4f4f4;
+            overflow-x: scroll;
+        }
+        @media (max-width: 825px){
+            table{
+                max-width: 1000px;
+                display: block;
+            }
+        }
+        th, td{
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: var(--defaultBlackBg);
+            color: var(--textColor);
+        }
+        .cellContent {
+            display: flex;
+        }
+        span{
+            user-select: none;
+            cursor: pointer;
+        }
+        .elimina{
+            color: var(--danger);
+        }
+        .theadBtn, .action{
+            margin-left: 10px;
+            cursor: pointer;
+            user-select: none;
+            display: none;
+            outline: none;
+            border: none;
+            background: #0000;
+        }
+        .numero {
+            margin-left: 5px;
+        }
+
+        td a{
+            color: var(--accentColor);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .unavailable{
+            color: var(--danger);
+        }
+        .available{
+            color: var(--accentColor);
+        }
+        thead tr th:has(select){
+            width: 100%;
+            text-align: center;
+        }
+        thead tr th select{
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="dark">
+    <%- include('components/header.ejs') %>
+    <main>
+        <%- include('components/nuovoMezzoForm') %>
+        <table>
+            <form action="/admin/mezzi/delete" id="actionForm" method="POST">
+                <thead>
+                    <tr>
+                        <th colspan="8">
+                            <select id="typeFilter">
+                                <option value="all">Tutti</option>
+                                <option value="furgone">Furgone</option>
+                                <option value="auto">Auto</option>
+                                <option value="moto">Moto</option>
+                            </select>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <span id="selectUsers" class="material-symbols-outlined">
+                                checklist
+                            </span>
+                            <button type="submit" class="elimina theadBtn action" name="action" value="elimina">
+                                <span class="material-symbols-outlined">
+                                    delete_forever
+                                </span>
+                            </button>
+                        </th>
+                        <th>targa</th>
+                        <th>marca</th>
+                        <th>modello</th>
+                        <th>km</th>
+                        <th>anno</th>
+                        <th>stato</th>
+                        <th>note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let index = 1 %>
+                    <% for(const mezzo of veicoli){ %>
+                        <tr data-type="<%= mezzo.type %>" class="tableRow">
+                            <td>
+                                <div class="cellContent">
+                                    <input class="action" type="checkbox" name="mezzo<%= index %>" value="<%= mezzo._id %>">
+                                    <div class="numero">
+                                        <%= index++ %>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="<%= `/admin/mezzo?id=${encodeURIComponent(mezzo._id)}` %> ">
+                                    <%= mezzo.targa %>
+                                </a>
+                            </td>
+                            <td><%= mezzo.marca %></td>
+                            <td><%= mezzo.modello %></td>
+                            <td><%= mezzo.km %> <strong>km</strong></td>
+                            <td><%= mezzo.anno %></td>
+                            <% let today = new Date();
+                            today.setUTCHours(0, 0, 0, 0);
+                                let mezzoOut = false
+                                const storicoNoleggi = noleggi.filter( noleggio => noleggio.mezzoId == mezzo._id);
+                                for(const noleggio of storicoNoleggi.reverse()){
+                                    const fromDate = new Date(noleggio.fromDate);
+                                    const toDate = new Date(noleggio.toDate);
+                                    if(fromDate <= today && toDate >= today){
+                                        mezzoOut = true;
+                                        break;
+                                    } 
+                                } %>
+                            <td>
+                                <span class="material-symbols-outlined <%= mezzoOut ? 'unavailable' : 'available' %>">
+                                    car_rental
+                                </span>
+                                <%  const expAlert = new Date();
+                                expAlert.setDate(expAlert.getDate() + 10);
+                                expAlert.setUTCHours(0, 0, 0, 0);
+                                const propTaxExpired = new Date(mezzo.expPropTax) <= expAlert,
+                                    insuranceExpired = new Date(mezzo.expInsurance) <= expAlert,
+                                    revExpired = new Date(mezzo.expRev) <= expAlert;
+                            %>
+                            <% if (propTaxExpired || insuranceExpired || revExpired) { %>
+                                <style>
+                                    .alertIcon{
+                                        display: inline-block;
+                                        animation: scaleIcon .5s ease-in-out;
+                                        animation-iteration-count: infinite;
+                                        color: red;
+                                    }
+                                    @keyframes scaleIcon {
+                                        0%, 100% { transform: scale(1);}
+                                        25%, 75% { transform: scale(1.1);}
+                                        50% { transform: scale(.9);}
+                                    }
+                                </style>
+                                <span class="material-symbols-outlined alertIcon">
+                                    warning
+                                </span>
+                            <% } %>
+                            </td>
+                            <td><%= mezzo.note %></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </form>
+        </table>
+    </main>
+    <script>
+        const selectUsersBtn = document.getElementById('selectUsers');
+        const actionUsersTd = document.querySelectorAll('.action');
+        const actionUsersForm = document.getElementById('actionForm');
+        selectUsersBtn.addEventListener('click', () => {
+            actionUsersTd.forEach((td) => {
+                td.style.display = td.style.display != 'inline-flex' ? 'inline-flex' : 'none';
+            });
+        });
+
+        actionUsersForm.addEventListener('submit',event => {
+            const confirmSubmission = confirm("Sei sicuro di voler eliminare i mezzi selezionati?");
+            if (!confirmSubmission) event.preventDefault();
+        });
+    </script>
+
+
+<script>
+    const trs = document.querySelectorAll('.tableRow');
+    const typeFilter = document.getElementById('typeFilter');
+
+    function filterElements() {
+        for(const tr of trs){
+            if(tr.dataset.type == typeFilter.value || typeFilter.value == 'all'){
+                tr.style.display = 'table-row';
+            }else{
+                tr.style.display = 'none'
+            }
+        }
+    }
+
+    typeFilter.addEventListener('input', filterElements)
+</script>
+</body>
+</html>

@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= mezzo.marca.toUpperCase() %> - CarMunfrà</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <style>
+        .dark #loaderContainer {
+            background: #1e1e1e;
+        }
+    </style>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Rubik", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+        }
+        body{
+            background: var(--pageBg);
+            color: var(--textColor);
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: var(--elementsBg);
+            border-radius: 8px;
+            filter: drop-shadow(5px 5px 5px #0000006c);
+        }
+        .mezzo-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .mezzo-header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 2vw, 2.5rem);
+            text-transform: uppercase;
+        }
+        .mezzo-details {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .mezzo-details:has(.slider-container) {
+            margin-top: 75px;
+        }
+        .mezzo-info{
+            max-width: 50%;
+        }
+        .mezzo-info:has(.slider-container button) > *:where(p, h2) {
+            margin-left: 24px;
+        }
+        .mezzo-info p {
+            font-size: clamp(.9rem, 2vw, 1.1rem);
+            line-height: 1.6em;
+        }
+        .mezzo-info p::first-letter{
+            text-transform: uppercase;
+        }
+        .mezzo-info h2 {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            text-align: left;
+        }
+.slider-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-block: 15px;
+    background: var(--pageBg);
+    padding: 20px;
+    border-radius: 15px;
+}
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.slides {
+    display: flex;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+.slide {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slide img{
+    padding: 15px;
+    border-radius: 25px;
+    min-width: 100%;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+button.prevImageSlider, button.nextImageSlider {
+  background: none;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  color: var(--textColor);
+  cursor: pointer;
+}
+
+
+.image-modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: .5s ease-in-out;
+}
+
+.image-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.image-modal-container {
+    max-height: 90vh;
+    max-width: 80vw;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 15px;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.image-modal.close:hover, .image-modal.close:focus {
+  color: #bbb;
+}
+        .mezzo-pricing {
+            min-width: 275px;
+            background: var(--pageBg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .mezzo-pricing h3 {
+            margin-top: 0;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--accentColor);
+            margin: 8px 0;
+        }
+        .mezzo-pricing ul {
+            list-style: none;
+        }
+        .mezzo-pricing p, .mezzo-pricing li {
+            font-size: clamp(.9rem, 2vw, 1.2rem);
+        }
+
+@media (max-width: 790px) {
+    .mezzo-info{
+        max-width: 100%;
+    }
+    .mezzo-pricing{
+        width: 100%;
+    }
+}
+@media (max-width: 280px) {
+    .mezzo-pricing {
+        min-width: 100%;
+        padding: 5px;
+    }
+}
+
+        .calendar-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--pageBg);
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .calendar-box p {
+            font-size: clamp(.9rem, 2vw, 1.2rem);
+            color: var(--textColor);
+        }
+
+
+        .calendarWrapper{
+    max-width: 450px;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'Poppins', 'sans-serif';
+}
+.calendarWrapper .calendarHead{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+.calendarHead .current-date{
+    text-transform: capitalize;
+    font-size: clamp(1rem, 1vw, 1.45rem);
+    font-weight: 500;
+}
+.calendarHead .calendarIcons span{
+    height: 38px;
+    width: 38px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+    user-select: none;
+    transition: .4s ease-in-out;
+}
+.calendarHead .calendarIcons span:hover{
+    background: var(--accentColor);
+    color: #cccbcb;
+}
+.calendarHead .calendarIcons span:first-child:hover{
+    transform: translateX(-3px);
+}
+.calendarHead .calendarIcons span:last-child:hover{
+    transform: translateX(3px);
+}
+.calendarMain{
+    padding: 20px;
+}
+.calendarMain ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.calendarMain .days{
+    margin-bottom: 20px;
+    z-index: -1;
+}
+.calendarMain .weeks li{
+    font-weight: 500;
+}
+.calendarMain ul li{
+    position: relative;
+    width: calc( 100% / 7);
+}
+.calendarMain .days li{
+    cursor: pointer;
+    margin-top: 30px;
+    z-index: 0;
+    transition: color .5s;
+}
+.days li.inactive{
+    color: #aaa;
+}
+.days li.expired{
+    color: #aaa;
+    cursor: auto;
+    pointer-events: none;
+    background: none;
+}
+.days li{
+    user-select: none;
+}
+.days li.active{
+    color: var(--defaultWhite);
+}
+.calendarMain .days li::before{
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translateX(-50%) translateY(-50%);
+    transition: background .3s;
+}
+
+.days li:hover::before{
+    background: var(--accentColor);
+    opacity: .75;
+}
+.days li:hover{
+    color: var(--defaultWhite);
+}
+.days li.active::before{
+    background: rgb(26, 204, 26);
+}
+.days li.booked{
+    cursor: auto;
+    pointer-events: none;
+}
+.days li.booked::before{
+    background: var(--danger);
+}
+.days li.booked.inactive::before{
+    background: var(--danger);
+    opacity: .6;
+}
+.days li.booked:not(.inactive){
+    color: var(--defaultWhite);
+}
+
+.days li.selected::before{
+    background: var(--accentColor);
+}
+.days li.selected{
+    color: var(--defaultWhite);
+}
+
+#userForm {
+    max-width: 450px;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'Poppins', 'sans-serif';
+    overflow: hidden;
+    position: relative;
+}
+
+#userForm .pagesContainer {
+    width: calc(100% * var(--pages));
+    height: max-content;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+#userForm .page {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    margin: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    opacity: 0;
+    transform: translateX(100%);
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#userForm .page.active {
+    opacity: 1;
+    transform: translateX(calc(var(--page) * -100%));
+    z-index: 2;
+}
+
+#userForm .page .field{
+    display: flex;
+    justify-content: space-between;
+}
+
+#userForm .page .field:not(.termsField) > *:where(select, input:not([type="checkbox"] [type="file"])){
+    max-width: 150px;
+    width: 100%;
+    padding: 5px;
+    background: none;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--accentColor);
+    color: var(--textColor);
+}
+#userForm select option {
+    background: var(--pageBg);
+}
+.paymentMethodContainer{
+    width: calc(100% + 75px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+.paymentMethodContainer:has(.active){
+    padding: 25px;
+    padding-top: 35px;
+    gap: 20px;
+}
+.userFormBtn{
+    opacity: 0;
+    pointer-events: none;
+    max-height: 0;
+    transition: .25s;
+}
+.discountContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.discountContainer label{
+    opacity: .75;
+    font-size: clamp(.9rem, 2vw, 1rem);
+}
+button.userFormBtn{
+    max-width: 215px;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background: var(--accentColor);
+    color: var(--defaultWhite);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 1rem;
+}
+.userFormBtn.active{
+    max-height: 100px;
+    padding: 10px 20px;
+    gap: 5px;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+button.userFormBtn i{
+    font-size: 24px;
+}
+button.userFormBtn img{
+    width: 24px;
+    filter: brightness(0) invert(1);
+}
+button.userFormBtn:nth-child(2){
+    background: #0070BA;
+}
+button.userFormBtn:nth-child(3){
+    background: #FF3D00;
+}
+
+button.userFormBtn:hover{
+    padding: 10px 0;
+}
+.formIconContainer{
+    margin-block: 10px;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    z-index: 2;
+}
+
+p.loginAlert{
+    margin-top: 20px;
+    font-size: .8rem;
+}
+.accountLink{
+    color: var(--accentColor);
+    font-weight: 500;
+    cursor: pointer;
+}
+.formIconContainer span.disabled{
+    opacity: 0;
+    pointer-events: none;
+}
+#userForm .buttonContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.field.termsField{
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    justify-content: center !important;
+    gap: 5px;
+    color: #bcb9b9;
+}
+.field.termsField > input{
+    cursor: pointer;
+    accent-color: var(--accentColor);
+}
+@media (max-width: 480px){
+    .mezzo-details {
+        flex-direction: column;
+    }
+
+
+    .calendarWrapper .calendarHead{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px 0px;
+    }
+    .calendarHead .current-date{
+        font-size: 1.25rem;
+    }
+
+    .calendarMain .days li::before{
+        height: 35px;
+        width: 35px;
+    }
+    .calendarHead .calendarIcons span{
+        height: 25px;
+        width: 25px;
+        line-height: 25px;
+        font-size: 1.4rem;
+    }
+    .calendarMain{
+        padding: 10px;
+    }
+    #preventivoElement, p.loginAlert, .calendar-box > p{
+        width: 100%;
+        font-size: .5rem;
+    }
+}
+
+#preventivoElement{
+    max-width: 450px;
+}
+
+#userForm .custom-file-upload {
+    padding: 10px 20px;
+}
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <%- include('components/header.ejs') %>
+    <main>
+        <script>
+            let currentSliderIndex = 0;
+
+function showSlide(index) {
+  const slides = document.querySelector('.slides');
+  const totalSlides = document.querySelectorAll('.slide').length;
+
+  if (index >= totalSlides) {
+    currentSliderIndex = 0;
+  } else if (index < 0) {
+    currentSliderIndex = totalSlides - 1;
+  } else {
+    currentSliderIndex = index;
+  }
+
+  const offset = -currentSliderIndex * 100; // Spostamento in percentuale
+  slides.style.transform = `translateX(${offset}%)`;
+}
+
+function nextSlide() {
+  showSlide(currentSliderIndex + 1);
+}
+
+function prevSlide() {
+  showSlide(currentSliderIndex - 1);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  showSlide(currentSliderIndex);
+});
+
+
+function openModal(image) {
+  const modal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  document.body.style.overflow = 'hidden';
+  modal.classList.add('active');
+  modalImage.src = image.src;
+}
+
+function closeModal() {
+  const modal = document.getElementById("imageModal");
+  modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById("imageModal");
+  if (event.target === modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+
+        </script>
+        <div id="imageModal" class="image-modal" onclick="closeModal()">
+            <span class="material-symbols-rounded image-modal-close" onclick="closeModal()">
+                close
+            </span>
+            <div class="image-modal-container">
+                <img loading="lazy" class="image-modal-content" id="modalImage">
+            </div>
+        </div>
+    <div class="container">
+        <div class="mezzo-header">
+            <h1><%= mezzo.marca %> <%= mezzo.modello %></h1>
+        </div>
+        <div class="mezzo-details">
+            <div class="mezzo-info">
+                <h2>Descrizione</h2>
+                <p><%= mezzo.descrizione %></p>
+                <% if (totalImages >= 1) { %>
+                    <div class="slider-container">
+                        <% if (totalImages >= 2) { %>
+                            <button class="prevImageSlider" onclick="prevSlide()">
+                                <span class="material-symbols-rounded">
+                                    chevron_left
+                                </span>
+                            </button>
+                        <% } %>
+                        <div class="slider">
+                            <div class="slides">
+                                <% for( let i = 1; i <= totalImages; i++ ) { %>
+                                    <div class="slide">
+                                        <img src="/img/mezzi/<%= `${mezzo._id}/${i}.jpg` %>" loading="lazy" onclick="openModal(this)">
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% if (totalImages >= 2) { %>
+                            <button class="nextImageSlider" onclick="nextSlide()">
+                                <span class="material-symbols-rounded">
+                                    chevron_right
+                                </span>
+                            </button>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="mezzo-pricing">
+                <h3>Prezzi e Dettagli</h3>
+                <p>Chilometri inclusi: <%= mezzo.kmIncluded %> km</p>
+                <p>Costo per chilometro extra: <%= mezzo.kmPrice.toFixed(2) %> €</p>
+                <h3>Tariffe giornaliere:</h3>
+                <ul>
+                    <% const weekDays = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'] %>
+                    <% for (let [days, price] of Object.entries(mezzo.daysPrices)) { %>
+                        <li class="price" data-price="<%= price %>"><%= weekDays[days] %>: <s><%= mezzo.discountedDays.includes(days) ? `${((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 + (price === ((price + (price * mezzo.discount) / 100 + 2.5) / 5 | 0) * 5 ? 5 : 0)} €` : '' %></s> <%= price %> € </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="calendar-box">
+            <p>Selezionare data di inizio e di fine noleggio:</p>
+            
+            <div class="calendarWrapper">
+                <div class="calendarHead">
+                    <p class="current-date"></p>
+                    <div class="calendarIcons">
+                        <span id="prev" class="material-symbols-rounded" style="display: none;">
+                            chevron_left
+                        </span>
+                        <span id="next" class="material-symbols-rounded">
+                            chevron_right
+                        </span>
+                    </div>
+                </div>
+                <div class="calendarMain">
+                    <ul class="weeks">
+                        <li>Lun</li>
+                        <li>Mar</li>
+                        <li>Mer</li>
+                        <li>Gio</li>
+                        <li>Ven</li>
+                        <li>Sab</li>
+                        <li>Dom</li>
+                    </ul>
+                    <ul class="days">
+                    </ul>
+                </div>
+            </div>
+            <p id="preventivoElement" style="display: none;"> <%= mezzo.kmIncluded ? ` con ${mezzo.kmIncluded} km inclusi ` : '' %> <%= mezzo.kmPrice ? ` più ${mezzo.kmPrice.toFixed(2)}€ + IVA ogni km extra` : '' %>.</p>
+
+            <form id="userForm" <%= !customerId ? 'enctype=multipart/form-data' : 'action=/user/newRent method=POST'  %> style="display: none;">
+                <input type="hidden" name="mezzoId" value="<%= mezzo._id %>">
+                <input type="hidden" name="fromDate">
+                <input type="hidden" name="toDate">
+                <% if (!customerId) { %>
+                    <div class="pagesContainer" style="--pages: 4">
+                        <section class="page page1" style="--page: 0">
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Nome:</label>
+                                <input type="text" name="nome" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Cognome:</label>
+                                <input type="text" name="cognome" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Codice Fiscale:</label>
+                                <input type="text" name="cf" minlength="16" maxlength="16" required>
+                            </div>
+                            <div class="field">
+                                <label>Codice Univoco:</label>
+                                <input type="text" name="cUnivoco">
+                            </div>
+                            <div class="field">
+                                <label>Partita IVA:</label>
+                                <input type="text" name="pIva">
+                            </div>
+                        </section>
+                        <section class="page page2" style="--page: 1">
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Via:</label>
+                                <input type="text" name="residenza[via]" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Civico:</label>
+                                <input type="text" name="residenza[nCivico]" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>CAP:</label>
+                                <input type="text" name="residenza[cap]" minlength="5" maxlength="5" autocomplete="postal-code" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Comune:</label>
+                                <input type="text" name="residenza[comune]" autocomplete="address-level2" required>
+                            </div>
+                            <div class="field">
+                                <%  let province = [
+                                        "AG", "AL", "AN", "AO", "AR", "AP", "AT", "AV", "BA", "BT", "BL", "BN", 
+                                        "BG", "BI", "BO", "BZ", "BS", "BR", "CA", "CL", "CB", "CE", "CT", "CZ", 
+                                        "CH", "CO", "CS", "CR", "KR", "CN", "EN", "FM", "FE", "FI", "FG", "FC", 
+                                        "FR", "GE", "GO", "GR", "IM", "IS", "AQ", "SP", "LT", "LE", "LC", "LI", 
+                                        "LO", "LU", "MC", "MN", "MS", "MT", "ME", "MI", "MO", "MB", "NA", "NO", 
+                                        "NU", "OR", "PD", "PA", "PR", "PV", "PG", "PU", "PE", "PC", "PI", "PT", 
+                                        "PN", "PZ", "PO", "RG", "RA", "RC", "RE", "RI", "RN", "RM", "RO", "SA", 
+                                        "SS", "SV", "SI", "SR", "SO", "SU", "TA", "TE", "TR", "TO", "TP", "TN", 
+                                        "TV", "TS", "UD", "VA", "VE", "VB", "VC", "VR", "VV", "VI", "VT"
+                                    ];
+                                %>
+                                <label title="Campo Obbligatorio"><sup>*</sup>Provincia:</label>
+                                <select name="residenza[provincia]" autocomplete="address-level1" required>
+                                    <% for(const pr of province){ %>
+                                        <option value="<%= pr %>"><%= pr %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Email:</label>
+                                <input type="email" name="contatti[email]" autocomplete="email" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Tel:</label>
+                                <input type="tel" name="contatti[tel]" autocomplete="tel" required>
+                            </div>
+                            <div class="field">
+                                <label >Pec:</label>
+                                <input type="email" name="contatti[pec]">
+                            </div>
+                        </section>
+                        <section class="page page3" style="--page: 2">
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Numero Patente:</label>
+                                <input type="text" name="patente[numero]" required>
+                            </div>
+                            <div class="field">
+                                <label>Rilasciata Da:</label>
+                                <input type="text" name="patente[daUfficio]">
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Rilascio Patente:</label>
+                                <input type="date" name="patente[rilascio]" required>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Scadenza:</label>
+                                <input type="date" name="patente[scadenza]" required>
+                            </div>
+                        </section>
+                        <section class="page page4" style="--page: 3">
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Fronte Patente:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="licenseFront" id="licenseFrontForm"  accept="image/jpeg, image/png">
+                                    <label for="licenseFrontForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Retro Patente:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="licenseBack" id="licenseBackForm"  accept="image/jpeg, image/png">
+                                    <label for="licenseBackForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Fronte Carta d'Identità:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="idCardFront" id="idCardFrontForm"  accept="image/jpeg, image/png">
+                                    <label for="idCardFrontForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Retro Carta d'Identità:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="idCardBack" id="idCardBackForm"  accept="image/jpeg, image/png">
+                                    <label for="idCardBackForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Fronte Tessera Sanitaria:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="sanitaryFront" id="sanitaryFrontForm"  accept="image/jpeg, image/png">
+                                    <label for="sanitaryFrontForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label title="Campo Obbligatorio">Retro Tessera Sanitaria:</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" class="file" name="sanitaryBack" id="sanitaryBackForm"  accept="image/jpeg, image/png">
+                                    <label for="sanitaryBackForm">
+                                        <span class="material-symbols-outlined upload-icon">
+                                            upload_file
+                                        </span>
+                                        <span class="upload-text">Carica foto</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field termsField">
+                                <label title="Campo Obbligatorio"><sup>*</sup>Accetto Termini e Condizioni:</label>
+                                <input type="checkbox" name="terms" required>
+                            </div>
+                        </section>
+                    </div>
+                <% } %>
+                <div class="buttonContainer">
+                    <% loggedIn = customerId ? 'active' : ''; %>
+                    <div class="paymentMethodContainer">
+                        <div class="userFormBtn discountContainer <%= loggedIn %>">
+                            <label for="discountCode">Hai un codice Sconto?</label>
+                            <input style="background: none; outline: none; border: none; border-bottom: 2px solid var(--accentColor); color: var(--textColor);" type="text" name="code" id="discountCode">
+                        </div>
+                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="paypal">
+                            <i class="fa fa-paypal"></i>
+                            Paga con Paypal
+                        </button>
+                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="satispay">
+                            <img src="/img/default/satispay-logo.png" alt="Satispay Logo">
+                            Paga con Satispay
+                        </button>
+                        <button class="userFormBtn <%= loggedIn %>" type="submit" name="stripe">
+                            <i class="fa fa-credit-card"></i>
+                            Paga con Carta
+                        </button>
+                    </div>
+                    <% if (!customerId) { %>
+                        <div class="formIconContainer">
+                            <span id="prevFormPage" class="material-symbols-outlined disabled prevNextIcons">
+                                chevron_left
+                            </span>
+                            <span id="nextFormPage" class="material-symbols-outlined prevNextIcons">
+                                chevron_right
+                            </span>
+                        </div>
+                    <% } %>
+                </div>
+                <% if (!customerId) { %>
+                    <p class="loginAlert">Per semplificare il checkout in futuro <a class="accountLink signup">Crea un Account</a> o se lo hai già <a class="accountLink loginLink">Accedi</a></p>
+                <% } %>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const userFormFileInputs = document.querySelectorAll('#userForm .custom-file-upload input');
+        for(const input of userFormFileInputs){
+            input.addEventListener('change', () => {
+                const label = input.nextElementSibling;
+                label.querySelector('.upload-icon').innerText = 'done_outline';
+                label.querySelector('.upload-text').innerText = 'Caricata'
+            })
+        }
+    </script>
+
+    <% if (!customerId) { %>
+        <script>
+            createPageNavigation('prevFormPage', 'nextFormPage', 'page', '.userFormBtn', 'class');
+            document.addEventListener('DOMContentLoaded', () => {
+                const userForm = document.getElementById('userForm');
+
+                async function handleUserFormSubmit(event){
+                    event.preventDefault();
+                    if(!document.querySelector('.pagesContainer')){
+                        userForm.submit();
+                        return;
+                    }
+                    const formData = new FormData(userForm);
+                    const newFormData = {}
+                    formData.forEach((value, key) => {
+                        const keys = key.split('[').map(k => k.replace(']', ''));
+                        keys.reduce((acc, currentKey, index) => {
+                            if (index === keys.length - 1) {
+                                acc[currentKey] = value;
+                            } else {
+                                acc[currentKey] = acc[currentKey] || {};
+                            }
+                            return acc[currentKey];
+                        }, newFormData);
+                    });
+                    newFormData[event.submitter.name] = '';
+                    try {
+                        const response = await fetch('/user/newRent', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(newFormData)
+                        });
+                    
+                        if (!response.ok) {
+                            throw new Error('Error creating user');
+                        }
+                    
+                        const data = await response.json();
+                        const customerId = data.customerId;
+                        console.log(data);
+                        const fileData = new FormData();
+                        fileData.append('customerId', customerId);
+                        const fileFields = [
+                            'licenseFrontForm',
+                            'licenseBackForm',
+                            'idCardFrontForm',
+                            'idCardBackForm',
+                            'sanitaryFrontForm',
+                            'sanitaryBackForm'
+                        ];
+                    
+                        fileFields.forEach(fieldId => {
+                            const fileInput = document.getElementById(fieldId).files[0];
+                            if (fileInput) {
+                                fileData.append(fieldId.replace('Form', ''), fileInput);
+                            }
+                        });
+                        const fileResponse = await fetch('/user/uploadFiles', {
+                            method: 'POST',
+                            body: fileData
+                        });
+                        if (!fileResponse.ok) {
+                            throw new Error('Error uploading files');
+                        }
+                        const fileDataResponse = await fileResponse.json();
+                        console.log('File caricati con successo:', fileDataResponse);
+                        const startPaymentResponse = await fetch('/user/startPayment', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({paymentMethod: data.paymentMethod, bookingId: data.bookingId, customerId: data.customerId})
+                        });
+                        if (!startPaymentResponse.ok) {
+                            alert('Si è verificato un\'errore. Riprova per favore. Ci scusiamo per il disagio');
+                            window.location.reload();
+                            throw new Error('Error starting payment');
+                        }
+                        const startPaymentDataResponse = await startPaymentResponse.json();
+                        window.location.href = startPaymentDataResponse.paymentUrl;
+                    } catch (error) {
+                        console.error('Errore:', error);
+                    }
+                } 
+                userForm.addEventListener('submit', handleUserFormSubmit);
+            });
+        </script>
+    <% } %>
+    
+    
+
+
+    <%
+        let bookedDate = [];
+        for(const data of noleggi){
+            bookedDate.push(`${data.fromDate}-${data.toDate}`) 
+        }
+    %>
+    <div id="bookings" style="display:none;"><%=bookedDate%></div>
+    <script>
+        const bookings = document.getElementById('bookings').innerText.split(',');
+        const currentDate = document.querySelector('.current-date'),
+        daysTag = document.querySelector('.days'),
+        prevNextIcons = document.querySelectorAll('.calendarIcons span')
+
+        let date = new Date(),
+        today = new Date();
+        currYear = date.getFullYear(),
+        realYear = date.getFullYear(),
+        currMonth = date.getMonth(),
+        realMonth = date.getMonth();
+
+        const months = ['gennaio', 'febbrario', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+        const renderCalendar = () => {
+            let firstDateOfMonth = new Date(currYear, currMonth, 0).getDay(),
+            lastDateOfMonth = new Date(currYear, currMonth +1, 0).getDate(),
+            lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
+            let liTag = '';
+            for (let i = firstDateOfMonth; i > 0; i--) {
+                let isBooked = false
+                const day = String(lastDateOfLastMonth-i+1).padStart(2, '0');
+                const month = currMonth == 0 ? 12 : String(currMonth).padStart(2, '0');
+                const year = currMonth == 0 ? currYear-1 : currYear;
+                const data = `${year}-${month}-${day}`;
+                let isExpired = today >= new Date(data) ? 'expired': '';
+                bookings.forEach(date => {
+                    const [fromDate, toDate] = date.split('-');
+                    if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                });
+                let isInRange, isToDate, isFromDate;
+                if(fromDate && toDate){
+                    isInRange = new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data);
+                }
+                if(fromDate) isFromDate = fromDate == data;
+                if(toDate) isToDate = toDate == data;
+                
+                liTag += `<li class="inactive ${isExpired} ${isBooked ? 'booked' : ''} ${isInRange || isFromDate || isToDate ? 'selected' : ''}" data-day="${data}">${lastDateOfLastMonth-i+1}</li>`;
+            }
+            
+            for (let i = 1; i <= lastDateOfMonth; i++) {
+                let isBooked = false
+
+                const day = String(i).padStart(2, '0');
+                const month = String(currMonth+1).padStart(2, '0');
+                const year = currYear;
+                const data = `${year}-${month}-${day}`;
+                let isExpired = today >= new Date(data) ? 'expired': '';
+                bookings.forEach(date => {
+                    const [fromDate, toDate] = date.split('-');
+                    if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                });
+                let isInRange, isToDate, isFromDate;
+                if(fromDate && toDate){
+                    isInRange = new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data);
+                }
+                if(fromDate) isFromDate = fromDate == data;
+                if(toDate) isToDate = toDate == data;
+                liTag += `<li class="${isExpired} ${isBooked ? 'booked' : ''} ${isInRange || isFromDate || isToDate ? 'selected' : ''}" data-day="${data}">${i}</li>`;
+            }
+            const totalRows = Math.ceil((firstDateOfMonth + lastDateOfMonth)/7);
+            const missingDaysOfNextMonth = totalRows*7 - (firstDateOfMonth + lastDateOfMonth);
+            for (let i = 1; i <= missingDaysOfNextMonth; i++) {
+                let isBooked = false
+
+                const day = String(i).padStart(2, '0');
+                const month = currMonth == 11 ? 1 : String(currMonth+2).padStart(2, '0');
+                const year = currMonth == 11 ? currYear+1 : currYear;
+                const data = `${year}-${month}-${day}`;
+                bookings.forEach(date => {
+                    const [fromDate, toDate] = date.split('-');
+                    if(new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data)) isBooked = true;
+                });
+                let isInRange, isToDate, isFromDate;
+                if(fromDate && toDate){
+                    isInRange = new Date(fromDate) <= new Date(data) && new Date(toDate) >= new Date(data);
+                }
+                if(fromDate) isFromDate = fromDate == data;
+                if(toDate) isToDate = toDate == data;
+                liTag += `<li class="inactive ${isBooked ? 'booked' : ''} ${isInRange || isFromDate || isToDate ? 'selected' : ''}" data-day="${data}">${i}</li>`;
+            }
+            currentDate.innerText = `${months[currMonth]} ${currYear}`;
+            daysTag.innerHTML = liTag;
+            listenerDay();
+        }
+        renderCalendar();
+        const prevIcon = document.getElementById('prev');
+        for(const icon of prevNextIcons){
+            icon.addEventListener('click', () =>{
+                currMonth = icon.id == 'prev' ? currMonth - 1 : currMonth + 1;
+                
+                if(currMonth < 0 || currMonth > 11){
+                    date = new Date(currYear, currMonth);
+                    currYear = date.getFullYear();
+                    currMonth = date.getMonth();
+                    
+                }else{
+                    date = new Date();
+                    if(currMonth <= realMonth && currYear == realYear){
+                        prevIcon.style.display = 'none';
+                    }else{
+                        prevIcon.style.display = '';
+                    }
+                }
+                renderCalendar();
+            });
+        }
+
+        const priceElements = document.querySelectorAll('.price')
+        let prices = [];
+        priceElements.forEach( el => prices.push(el.dataset.price - 0));
+
+        const preventivoElement = document.getElementById('preventivoElement');
+        var fromDate, toDate, fromDateElement, toDateElement, kmIncluded = preventivoElement.innerText;
+
+        function listenerDay() {
+            const days = document.querySelectorAll('.days *');
+        
+            for (const day of days) {
+                const today = new Date();
+                if(new Date(day.dataset.day) <= today){
+                    if(day.classList.contains('booked')){
+                        day.classList.remove('booked')
+                    }
+                    continue;
+                }
+                if(day.classList.contains('booked')){
+                    continue;
+                }
+                day.addEventListener('click', () => {
+                    if(toDate && fromDate){
+                        days.forEach(d => d.classList.remove('selected'));
+                        fromDate = '';
+                        toDate = '';
+                        fromDateElement = '';
+                        toDateElement = '';
+
+                        preventivoElement.innerText = '';
+                        preventivoElement.style.display = 'none';
+                        document.getElementById('userForm').style.display = 'none';
+                    }
+                    if(!fromDate){
+                        day.classList.add(`selected`)
+                        fromDate = day.dataset.day;
+                        fromDateElement = day
+                        return;
+                    }
+                    day.classList.add(`selected`)
+                    if(new Date(day.dataset.day) < new Date(fromDate)){
+                        fromDate = day.dataset.day;
+                        toDate = '';
+                        fromDateElement.classList.remove('selected')
+                        fromDateElement = day;
+                        toDateElement = '';
+
+                        preventivoElement.innerText = '';
+                        return;
+                    }
+                    
+                    toDate = day.dataset.day;
+                    toDateElement = day;
+                    const fromDateObj = new Date(fromDate);
+                    const toDateObj = new Date(toDate);
+
+                    let prevDay;
+
+                    for(const d of days){
+
+                        const currentDay = new Date(d.dataset.day);
+                        const isInRange = currentDay >= fromDateObj && currentDay <= toDateObj;
+
+                        if (isInRange && d.classList.contains('booked')) {
+                            toDateElement.classList.remove('selected')
+                            toDate = prevDay;
+                            alert(`Ci spiace il mezzo non è disponibile nella data del ${d.dataset.day.split('-').reverse().join('/')} perciò il noleggio terminerà il ${toDate.split('-').reverse().join('/')}`)
+                            break;
+                        }
+                        if (isInRange) {
+                            d.classList.add('selected');
+                        }
+                        prevDay = d.dataset.day;
+                    }
+                    let startDay = new Date(fromDate).getDay() - 1;
+                    startDay = startDay < 0 ? 6 : startDay;
+                    
+                    let totalDays = Math.floor((new Date(toDate) - new Date(fromDate)) / (1000 * 60 *60 *24)) + 1;
+                    
+                    const finalPrice = Array.from({ length: totalDays }, () => prices[startDay++ % 7]).reduce((a, b) => a + b, 0);
+                    preventivoElement.innerText = `Il prezzo del noleggio partirà da ${finalPrice} € + IVA ${kmIncluded}` ;
+                    preventivoElement.style.display = 'block';
+                    document.getElementById('userForm').style.display = 'block';
+                    document.getElementById('userForm').scrollIntoView({ behavior: 'smooth' })
+                    document.querySelector('[name="fromDate"]').value = fromDate;
+                    document.querySelector('[name="toDate"]').value = toDate;
+                })
+            }
+        }
+    </script>
+    </main>
+    <%- include('components/footer.ejs') %>
+</body>
+</html>

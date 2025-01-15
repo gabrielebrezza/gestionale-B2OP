@@ -1,0 +1,562 @@
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const fsp = require('fs').promises;
+const { PDFDocument, rgb } = require('pdf-lib');
+const multer = require('multer');
+const bcrypt = require('bcrypt');
+const path = require('path');
+
+const { authenticateJWT } = require('../utils/authUtils');
+const { getNextFileNumber, resetImageNumbering } = require('../utils/fileUtils.js');
+const { sendEmail } = require('../utils/emailUtils.js');
+const { setCode } = require('../utils/discountUtils.js');
+const router = express.Router();
+
+const mezzi = require('./../DB/mezzi.js');
+const bookings = require('./../DB/bookings.js');
+const noleggiatori = require('./../DB/noleggiatori.js');
+const messages = require('./../DB/message.js');
+const { fork } = require('child_process');
+const codes = require('../DB/codes.js');
+
+
+router.use(cookieParser());
+
+router.use(bodyParser.json());
+
+router.use(bodyParser.urlencoded({ extended: true }));
+
+
+  const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        const mezzoId = req.body.id;
+        const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+  
+      try {
+        // Se la cartella non esiste, creala
+        await fsp.mkdir(folderPath, { recursive: true });
+        cb(null, folderPath);
+      } catch (error) {
+        console.error('Errore nella creazione della cartella:', error);
+        cb(error);
+      }
+    },
+    filename: async (req, file, cb) => {
+      const mezzoId = req.body.id;
+      const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+  
+      try {
+        const nextFileNumber = await getNextFileNumber(folderPath);
+        const newFilename = `${nextFileNumber}.jpg`;
+        cb(null, newFilename);
+      } catch (error) {
+        console.error('Errore nella generazione del nome file:', error);
+        cb(error);
+      }
+    }
+  });
+  
+  const upload = multer({ storage: storage });
+
+  router.post('/admin/mezzo/addImage', upload.single('image'), async (req, res) => {
+    try {
+        const folderPath = path.join('public', 'img', 'mezzi', req.body.id);
+        const fileNumber = await getNextFileNumber(folderPath) - 1;
+        const imageUrl = `/img/mezzi/${req.body.id}/${fileNumber}.jpg`;
+      res.status(200).json({ message: 'File caricato con successo', imageUrl, fileNumber });
+    } catch (error) {
+      console.error('Errore durante l\'upload del file:', error);
+      res.status(500).json({ error: 'Errore del server' });
+    }
+  });
+
+router.delete('/admin/deleteImage/:mezzoId/:imageN', async (req, res) => {
+    try {
+        const mezzoId = req.params.mezzoId;
+        const imageNumber = req.params.imageN;
+        const folderPath = path.join('public', 'img', 'mezzi', mezzoId);
+        const imagePath = path.join(folderPath, `${imageNumber}.jpg`);
+
+        await fsp.unlink(imagePath);
+
+        await resetImageNumbering(folderPath);
+      res.status(200).json({ message: 'File caricato con successo'});
+    } catch (error) {
+      console.error('Errore durante l\'upload del file:', error);
+      res.status(500).json({ error: 'Errore del server' });
+    }
+});
+
+router.get('/ciao', async (req, res) => await bookings.deleteMany())
+
+router.get('/admin/images', authenticateJWT, async (req, res) => {
+    try {
+        const imagePath = path.resolve(__dirname, '../../privateImages', req.query.dir);
+        await fsp.access(imagePath);
+        res.sendFile(imagePath);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            res.status(404).send('Immagine non trovata.');
+        } else {
+            console.log('Errore del Server')
+            res.status(500).send('Errore del server.');
+        }
+    }
+});
+
+router.post('/admin/images/delete', authenticateJWT, async (req, res) => {
+    try {
+        const imagePath = path.resolve(__dirname, '../../privateImages', req.body.dir);
+        await fsp.unlink(imagePath);
+        res.status(200).send('Immagine Eliminata con Successo.');
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            res.status(404).send('Immagine non trovata.');
+        } else {
+            console.log('Errore del Server: ', err)
+            res.status(500).send('Errore del server.');
+        }
+    }
+});
+
+
+// async function createCode(length, email, discount){
+//     const char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+//     let code = '';
+//     for (let i = 0; i < length; i++) {
+//         code += char[Math.floor(Math.random(0, char.length) * char.length)];
+//     }
+
+//     const subject = 'Codice Sconto CarMunfrà';
+//     const text = `Ecco il tuo codice sconto per poter noleggiare al ${discount}% di sconto sul nostro sito www.carmunfra.it \n${code}`;
+//     try {
+//         const result = await sendEmail(email, subject, text);
+//         console.log(result)
+//     } catch (error) {
+//         console.error(error)
+//         return res.render('errorPage', { error: 'Errore nell\'invio dell\'email con codice OTP' });
+//     }
+
+//     return await bcrypt.hash(code, 10);
+// }
+
+router.post('/admin/code/create', async (req, res) => {
+    try {
+        const customerId = req.body.customerId;
+        const dati = req.body;
+        const { discount } = dati;
+        
+        if (!customerId) {
+            await setCode(null, dati.email, dati.cf, discount);
+        } else {
+            await setCode(customerId, null, null, discount);
+        }
+        res.status(200).json({success: true});
+    } catch (error) {
+        console.log('Errore durante la creazione del codice: ', error);
+        res.status(500).json({success: false});
+    }
+});
+
+router.get('/admin', authenticateJWT, async (req, res) => {
+    res.redirect('/admin/mezzi');
+});
+
+router.get('/admin/mezzi', authenticateJWT, async (req, res) =>{
+    const veicoli = await mezzi.find();
+    const noleggi = await bookings.find();
+    res.render('admin/mezzi', {veicoli, noleggi});
+});
+
+router.post('/admin/mezzi/nuovoMezzo', authenticateJWT, async (req, res) =>{
+    try {
+        const dati = req.body;
+        const saveMezzo = new mezzi(dati);
+        await saveMezzo.save();
+        res.redirect('/admin/mezzi');
+    } catch (err) {
+        console.error(`si è verificato un errore nel salvataggio del mezzo: ${err}`);
+        res.render('errorPage', {err: 'Errore nel salvataggio del mezzo'});
+    }
+});
+
+router.post('/admin/mezzi/delete', authenticateJWT, async (req, res) =>{
+    const ids = (Object.keys(req.body)
+    .filter(key => key.startsWith('mezzo')))
+    .map(key => req.body[key]);
+    try {
+        for (const id of ids) {
+            await mezzi.deleteOne({"_id": id});
+            console.log(`mezzo ${id} eliminato definitivamente`);
+        }
+        return res.redirect('/admin/mezzi');
+    } catch (error) {
+        console.error(`errore durante l'eliminazione dei mezzi: ${error}`);
+        return res.render('errorPage', {error: `errore durante l'eliminazione dei mezzi`});
+    }
+});
+router.get('/admin/mezzo', authenticateJWT, async (req, res) =>{
+    try{
+        const id = req.query.id;
+        const mezzo = await mezzi.findOne({"_id": id});
+        const noleggi = await bookings.find({"mezzoId": id}, {});
+        const clienti = await noleggiatori.find({}, {"_id": 1, "nome": 1, "cognome": 1});
+        const folderPath = path.join('public', 'img', 'mezzi', id);
+        const totalImages = await getNextFileNumber(folderPath) - 1;
+        res.render('admin/mezzo', {mezzo, noleggi, clienti, totalImages});
+    } catch (err) {
+        res.render('errorPage', {err: 'Il mezzo selezionato potrebbe essere stato eliminato o essere inesistente'});
+    }
+});
+router.post('/admin/mezzi/updateDaysPrices', authenticateJWT, async (req, res) => {
+    const id = req.body.id;
+    const prices = (Object.keys(req.body)
+    .filter(key => key.startsWith('price')))
+    .map(key => req.body[key]);
+    await mezzi.findOneAndUpdate({"_id": id}, {"daysPrices": prices});
+    res.json({message: `Nuovi prezzi salvati con successo`});
+});
+router.post('/admin/mezzo/updateMezzo', authenticateJWT, async (req, res) =>{
+    try {
+        const id = req.body.id;
+        const dati = req.body;
+        await mezzi.findOneAndUpdate({"_id": id}, dati);
+        res.redirect(`/admin/mezzo?id=${encodeURIComponent(id)}`);
+    } catch (err) {
+        console.error(`Si è verificato un'errore nell'aggiornamento del mezzo: ${err}`);
+        res.render('errorPage', {err: `Errore nell'aggiornamento del mezzo`});
+    }
+});
+router.post('/admin/mezzi/newRent', authenticateJWT, async (req, res) =>{
+    try {
+        const mezzoId = req.body.id;
+        const dati = req.body;
+        dati.mezzoId = mezzoId;
+        const fromDate = new Date(dati.fromDate).getTime();
+        const toDate = new Date(dati.toDate).getTime();
+        dati.days = Math.floor((toDate - fromDate) / (1000 * 60 *60 *24)) + 1;
+        dati.startDay = new Date(dati.fromDate).getDay() - 1;
+        dati.startDay = dati.startDay < 0 ? 6 : dati.startDay;
+        if(dati.cf){
+            const user = new noleggiatori(dati)
+            await user.save();
+            dati.customerId = user._id;
+        }
+        if(dati.km) {
+            const { km, daysPrices, kmIncluded, kmPrice } = await mezzi.findOne({"_id": mezzoId});
+            await mezzi.findOneAndUpdate({"_id": mezzoId}, {"km" : dati.km});
+            dati.km = dati.km - km;
+            let day = dati.startDay;
+            dati.finalPrice = Array.from({ length: dati.days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
+            if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
+        }
+        
+        const newBooking = new bookings(dati);
+        await newBooking.save();
+        res.redirect(`/admin/mezzo?id=${encodeURIComponent(mezzoId)}`);
+    } catch (err) {
+        console.error(`Si è verificato un'errore nell'aggiornamento del mezzo: ${err}`);
+        res.render('errorPage', {err: `Errore nell'aggiornamento del mezzo`});
+    }
+});
+router.post('/admin/mezzi/rentEnded', authenticateJWT, async (req, res) =>{
+    try {
+        const idMezzo = req.body.idMezzo;
+        const rentId = req.body.rentId;
+        const dati = req.body;
+
+        if(dati.rentStarted == 'on'){
+            const { km } = await mezzi.findOne({"_id": idMezzo});
+            await bookings.findOneAndUpdate({"_id": rentId}, {"kmStarting": km});
+        }
+
+        const rent = await bookings.findOne({"_id": rentId});
+        const { km, serbatoioFine, kmStarting, days, startDay} = rent;
+        if(!dati.km){
+            dati.km = km ? km : 0;
+        }else{
+            await mezzi.findOneAndUpdate({"_id": idMezzo}, {"km" : dati.km});
+            dati.km -= kmStarting;
+            const { daysPrices, kmIncluded, kmPrice } = await mezzi.findOne({"_id": idMezzo});
+            let day = startDay;
+            dati.finalPrice = Array.from({ length: days }, () => daysPrices[day++ % 7]).reduce((a, b) => a + b, 0);
+            if(dati.km >= kmIncluded) dati.finalPrice += ((dati.km - kmIncluded) * kmPrice);
+        }
+        if(!dati.serbatoioFine) dati.serbatoioFine = serbatoioFine ? serbatoioFine : 0;
+        await bookings.findOneAndUpdate({"_id": rentId}, dati);
+        res.redirect(`/admin/mezzo?id=${encodeURIComponent(idMezzo)}`);
+    } catch (err) {
+        console.error(`Si è verificato un'errore nell'aggiornamento del mezzo: ${err}`);
+        res.render('errorPage', {err: `Errore nell'aggiornamento del mezzo`});
+    }
+});
+
+router.get('/admin/clienti', authenticateJWT, async (req, res) => {
+    const clienti = await noleggiatori.find();
+    res.render('admin/customers', {clienti});
+});
+
+router.post('/admin/clienti/delete', authenticateJWT, async (req, res) =>{
+    const ids = (Object.keys(req.body)
+    .filter(key => key.startsWith('cliente')))
+    .map(key => req.body[key]);
+    try {
+        for (const id of ids) {
+            await noleggiatori.deleteOne({"_id": id});
+            console.log(`utente ${id} eliminato definitivamente`);
+        }
+        return res.redirect('/admin/clienti');
+    } catch (error) {
+        console.error(`errore durante l'eliminazione degli utenti: ${error}`);
+        return res.render('errorPage', {error: `errore durante l'eliminazione degli utenti`});
+    }
+});
+
+router.get('/admin/cliente', authenticateJWT, async (req, res) =>{
+    try {
+        const id = req.query.id;
+        const customer = await noleggiatori.findOne({"_id": id});
+        res.render('admin/customer', {customer});
+    } catch (err) {
+        res.render('errorPage', {err: 'Il cliente selezionato potrebbe essere stato eliminato o essere inesistente'});
+    }
+});
+
+router.post('/admin/cliente/update', authenticateJWT, async (req, res) =>{
+    try {
+        const id = req.body.id;
+        const dati = req.body;
+        await noleggiatori.findOneAndUpdate({"_id": id}, dati);
+        res.redirect(`/admin/cliente?id=${encodeURIComponent(id)}`);
+    } catch (err) {
+        console.error(`Si è verificato un'errore nell'aggiornamento del cliente: ${err}`);
+        res.render('errorPage', {err: `Errore nell'aggiornamento del cliente`});
+    }
+});
+
+router.get('/admin/messages', authenticateJWT, async (req, res) => {
+    const msgs = await messages.find();
+    const users = await noleggiatori.find();
+    const usersFiltered = [];
+    for (const user of users) {
+        if (msgs.find(msg => msg.customerId == user._id)) usersFiltered.push(user)
+    }
+    res.render('admin/messages', { messages: msgs, users: usersFiltered })
+});
+router.post('/admin/markAsRead', authenticateJWT, async (req, res) => {
+    try {
+        await messages.findOneAndUpdate({ "_id": req.body.id }, { "seen": req.body.action });
+        res.redirect('admin/messages');
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+});
+
+
+
+
+
+
+
+async function compilaContratto() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const cf = 'RSSMRA99M48F205X'
+            const data = await fsp.readFile('./comuni.json', 'utf8');
+            const comuni = JSON.parse(data);
+            trimmedCf = cf.trim().slice(11, 15);
+            const comune = comuni.find(item => item.codiceCatastale == trimmedCf);
+
+            const mesi = ["A", "B", "C", "D", "E", "H", "L", "M", "P", "R", "S", "T"];
+            const trimmedDate = cf.trim().slice(6, 11);
+            const trimmedDay = trimmedDate[3] + trimmedDate[4];
+            const day = trimmedDay > 31 ? trimmedDay - 40 : trimmedDay;
+            const month = mesi.indexOf(trimmedDate[2]) + 1;
+            const year = trimmedDate[0] + trimmedDate[1];
+            const birthDate = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0') }/${year}`;
+            return;
+            // const data = await utenti.findOne({ "_id": id });
+
+            const existingPdfBytes = await fsp.readFile('contrattoNoleggio.pdf');
+
+            const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+            const pages = pdfDoc.getPages();
+            const firstPage = pages[0];
+
+            const nomeCognomePosition = { x: 113, y: 564 };
+            const indirizzoPosition = { x: 113, y: 555 };
+            const comuneResidenzaPosition = { x: 113, y: 536 };
+            const cfPiPosition = { x: 113, y: 518 };
+            const telPosition = { x: 113, y: 501 };
+            const gruppoPosition = { x: 270, y: 564 };
+            const targaPosition = { x: 270, y: 545 };
+            const marcaPosition = { x: 270, y: 527 };
+            const modelloPosition = { x: 270, y: 508 };
+            const versionePosition = { x: 270, y: 493 };
+
+            const codiceNoleggioPosition = { x: 406, y: 564 };
+            const tariffaPosition = { x: 406, y: 545 };
+
+            const luogoPartenzaPosition = { x: 406, y: 508 };
+            const dataPartenzaPosition = { x: 406, y: 493 };
+            const oraPartenzaPosition = { x: 406, y: 475 };
+            const fuelPartenzaPosition = { x: 406, y: 457 };
+            const kmPartenzaPosition = { x: 406, y: 439 };
+
+            const luogoRientroPosition = { x: 484, y: 508 };
+            const dataRientroPosition = { x: 484, y: 493 };
+            const oraRientroPosition = { x: 484, y: 475 };
+            const fuelRientroPosition = { x: 484, y: 457 };
+            const kmRientroPosition = { x: 484, y: 439 };
+
+            // const indirizzoPosition = { x: 140, y: 355 };
+            firstPage.drawText(`Brezza Gabriele`, {
+                x: nomeCognomePosition.x,
+                y: nomeCognomePosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Salita Sant\'anna 99', {
+                x: indirizzoPosition.x,
+                y: indirizzoPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Casale Monferrato (AL)', {
+                x: comuneResidenzaPosition.x,
+                y: comuneResidenzaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('BRZGRL06B27B885C', {
+                x: cfPiPosition.x,
+                y: cfPiPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('3314185824', {
+                x: telPosition.x,
+                y: telPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('2', {
+                x: gruppoPosition.x,
+                y: gruppoPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('EB000LA', {
+                x: targaPosition.x,
+                y: targaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Volkswagen', {
+                x: marcaPosition.x,
+                y: marcaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Tiguan', {
+                x: modelloPosition.x,
+                y: modelloPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Roadster', {
+                x: versionePosition.x,
+                y: versionePosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('126', {
+                x: codiceNoleggioPosition.x,
+                y: codiceNoleggioPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('256€', {
+                x: tariffaPosition.x,
+                y: tariffaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('Via Tarantelli 5, Casale M.to', {
+                x: luogoPartenzaPosition.x,
+                y: luogoPartenzaPosition.y,
+                size: 4,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('27/10/2024', {
+                x: dataPartenzaPosition.x,
+                y: dataPartenzaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('12:54', {
+                x: oraPartenzaPosition.x,
+                y: oraPartenzaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('56L', {
+                x: fuelPartenzaPosition.x,
+                y: fuelPartenzaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('46000', {
+                x: kmPartenzaPosition.x,
+                y: kmPartenzaPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+
+            firstPage.drawText('Via Tarantelli 5, Casale M.to', {
+                x: luogoRientroPosition.x,
+                y: luogoRientroPosition.y,
+                size: 4,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('31/11/2024', {
+                x: dataRientroPosition.x,
+                y: dataRientroPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('21:31', {
+                x: oraRientroPosition.x,
+                y: oraRientroPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('12L', {
+                x: fuelRientroPosition.x,
+                y: fuelRientroPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+            firstPage.drawText('46300', {
+                x: kmRientroPosition.x,
+                y: kmRientroPosition.y,
+                size: 7,
+                color: rgb(0, 0, 0),
+            });
+
+
+            const pdfBytes = await pdfDoc.save();
+            await fsp.writeFile(`nuovoCOntratto.pdf`, pdfBytes);
+            resolve(`autocertificazione di residenza salvata con successo`);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+compilaContratto();
+
+module.exports = router;

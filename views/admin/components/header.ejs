@@ -1,0 +1,111 @@
+<link rel="stylesheet" href="/styles/admin/components/header.css">
+<link rel="stylesheet" href="/styles/theme.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<script src="/scripts/admin/components/header.js"></script>
+<header class="header">
+    <div class="openMenu">
+        <span id="toggleMenuBtn" class="material-symbols-outlined">
+            menu
+        </span>
+    </div>
+    
+</header>
+<nav id="navBar">
+    <ul>
+        <li><a href="/admin/clienti">Utenti</a></li>
+        <li><a href="/admin/mezzi">Mezzi</a></li>
+        <li><a href="/admin/messages">Messaggi</a></li>
+        <li><a href="/admin/approveUsers">Approva Admin</a></li>
+        <!-- <li>
+            <details>
+                <summary><a>Fatture</a></summary>
+                <div class="headerField">
+                    <a href="/admin/storicoFatture">Storico Fatture</a>
+                    <a href="/admin/emettiFattura">Genera Fattura Medico</a>
+                </div>
+            </details>
+        </li> -->
+        <li id="logOutList">
+            <form action="/admin/logout" method="POST">
+                <button class="logoutBtn" type="submit">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                    <span>LOGOUT</span>
+                </button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    document.querySelectorAll('details').forEach(details => {
+        details.addEventListener('toggle', event => {
+            if (details.open) {
+                document.querySelectorAll('details').forEach(otherDetails => {
+                    if (otherDetails !== details) {
+                        otherDetails.removeAttribute('open');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    #loaderContainer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        background: #04080F;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transition: opacity .5s ease;
+    }
+    #loaderContainer img{
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(90deg);
+        animation: loader 2s infinite;
+    }
+    @keyframes loader {
+        0%{
+            transform: rotateX(45deg) rotateY(0deg) rotateZ(90deg);
+        }
+        25%{
+            transform: rotateX(0deg) rotateY(45deg);
+        }
+        50%{
+            transform: rotateX(45deg) rotateY(0deg);
+        }
+        75%{
+            transform: rotateX(0deg) rotateY(-45deg) rotateZ(-90deg);
+        }
+        100%{
+            transform: rotateX(-45deg) rotateY(0deg) rotateZ(90deg);
+        }
+    }
+</style>
+
+<div id="loaderContainer">
+    <img id="loader" src="/img/logo.png" alt="loader">
+</div>
+
+<script>
+    const loaderContainer = document.getElementById('loaderContainer');
+    const loader = document.getElementById('loader');
+    window.addEventListener('load', () =>{
+        setTimeout(() => {
+            loaderContainer.style.opacity = 0;
+            loaderContainer.style.pointerEvents = 'none';
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                loaderContainer.remove();
+            }, 1000);
+        }, 0);
+    });
+</script>

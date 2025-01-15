@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Cancellato - CarMunfrà</title>
+    <link rel="icon" href="/img/logo-icon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+
+        setTimeout(function() {
+            location.replace('/');
+        }, 25000);
+    </script>
+    <style>
+        .dark #loaderContainer {
+            background: var(--defaultBlackBg);
+        }
+        body{
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--pageBg);
+            color: var(--textColor);
+        }
+        section{
+            padding: 25px;
+            filter: drop-shadow(10px 10px 10px #0000005c);
+            background: var(--elementsBg);
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            border-radius: 5px;
+        }
+        section h2{
+            color: var(--accentColor);
+            text-transform: uppercase;
+        }
+        section p{
+            text-align: justify;
+            font-size: 1.1rem;
+        }
+        section .linkContainer{
+            text-align: right;
+        }
+        section .linkContainer a{
+            color: var(--defaultWhite);
+            background: var(--accentColor);
+            padding: 10px 15px;
+            text-decoration: none;
+            outline: 2px dashed var(--accentColor);
+            outline-offset: -2px;
+            transition: .05s;
+        }
+        section .linkContainer a:hover, section .linkContainer a:focus{
+            outline-offset: 2px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+<body>
+    <%- include('../components/header.ejs') %>
+    <main>
+        <section>
+            <h2>Peccato!</h2>
+            <p>Ci spiace che tu abbia deciso di non noleggiare con noi.</p>
+            <div class="linkContainer"><a href="/">Torna alla Home</a></div>
+        </section>
+    </main>
+    <%- include('../components/footer.ejs') %>
+</body>
+</html>
