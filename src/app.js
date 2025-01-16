@@ -6,6 +6,8 @@ const multer = require('multer');
 const path = require('path');
 const fsp = require('fs').promises;
 const bcrypt = require('bcrypt');
+const { SitemapStream, streamToPromise } = require('sitemap');
+const { Readable } = require('stream');
 
 const mezzi = require('./DB/mezzi.js');
 const bookings = require('./DB/bookings.js');
@@ -113,6 +115,24 @@ app.set('views', 'views');
 
 app.use(express.static('public'));
 
+const routes = [
+  { url: '/', changefreq: 'monthly', priority: 0.9 },
+  { url: '/mezzi', changefreq: 'weekly', priority: 1.0 },
+  { url: '/contatti', changefreq: 'monthly', priority: 0.8 },
+];
+
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const stream = new SitemapStream({ hostname: process.env.SERVER_URL });
+    const xml = await streamToPromise(Readable.from(routes).pipe(stream)).then((data) => data.toString());
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error(err);
+    res.status(500).end();
+  }
+});
+
 app.get('/cancel', userAuthenticateJWT, async (req, res) =>{
   const { method, session_id, bookingId } = req.query;
   if(method == 'stripe'){
@@ -194,7 +214,6 @@ app.get('/mezzi', userAuthenticateJWT, async (req, res) => {
     res.status(500).render('errorPage', {err: 'Errore del server'});
   }
 });
-app.get('ciao', async (req, res) => await bookings.deleteMany())
 app.get('/mezzo', userAuthenticateJWT, async (req, res) => {
   try {
     const id = req.query.id;
